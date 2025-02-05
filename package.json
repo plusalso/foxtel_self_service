@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/frontend",
+    "packages/backend"
+  ],
+  "scripts": {
+    "dev": "npm run dev -ws",
+    "build": "npm run build -ws"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
