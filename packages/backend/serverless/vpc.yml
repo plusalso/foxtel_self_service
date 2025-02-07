@@ -1,0 +1,13 @@
+# stage:
+#   securityGroupIds:
+#     - sg-096bdef149df3ed88
+#   subnetIds:
+#     - subnet-0291d156857a539e1
+#     - subnet-075461d920b4bebae
+
+# prod:
+#   securityGroupIds:
+#     - sg-prod # update with prod
+#   subnetIds:
+#     - subnet-prod-a # update with prod
+#     - subnet-prod-b # update with prod

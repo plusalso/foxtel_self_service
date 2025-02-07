@@ -9,6 +9,16 @@
     "build": "npm run build -ws"
   },
   "devDependencies": {
+    "@types/node": "^22.13.1",
+    "aws-lambda": "^1.0.7",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@codegenie/serverless-express": "^4.16.0",
+    "serverless": "^3.39.0",
+    "serverless-offline": "^13.6.0"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }

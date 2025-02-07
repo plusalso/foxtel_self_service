@@ -1,0 +1,33 @@
+# Supporting roles
+- Effect: Allow
+  Action:
+    - apigateway:GET
+    - apigateway:POST
+    - cognito-idp:AdminGetUser
+    - cognito-idp:AdminInitiateAuth
+    - cognito-idp:AdminListDevices
+    - cognito-idp:AdminListGroupsForUser
+    - cognito-idp:ListUsers
+    - lambda:*
+    - logs:CreateLogGroup
+    - logs:CreateLogStream
+    - logs:PutLogEvents
+    - sns:*
+    - sqs:*
+    - ssm:GetParameters
+    - states:StartExecution
+    - xray:PutTelemetryRecords
+    - xray:PutTraceSegments
+    - secretsmanager:GetSecretValue
+  Resource: '*'
+
+# S3 permissions for our bucket
+- Effect: Allow
+  Action:
+    - s3:PutObject
+    - s3:GetObject
+    - s3:DeleteObject
+    - s3:ListBucket
+  Resource:
+    - arn:aws:s3:::${self:custom.storage.bucket}
+    - arn:aws:s3:::${self:custom.storage.bucket}/*

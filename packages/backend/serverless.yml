@@ -1,0 +1,120 @@
+service: plusalso-self-service
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-southeast-2
+  stage: ${opt:stage, 'dev'}
+  architecture: x86_64
+  runtimeManagement: auto
+  memorySize: 3550
+  timeout: 30
+  environment:
+    NODE_ENV: ${self:provider.stage}
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    STORAGE_BUCKET: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.storage.bucket}
+    FIGMA_ACCESS_TOKEN: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.figma.accessToken}
+    # GS4JS_HOME: /opt/lib
+    # GHOSTSCRIPT_BIN: /opt/bin/gs
+  iam:
+    role:
+      name: foxtel_self_service_lambda_execution_iam
+      statements: ${file(./serverless/execution-iam.yml)}
+
+functions:
+  main:
+    name: ${self:service}-${self:provider.stage}-main
+    handler: dist/sls_handlers/main.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
+
+package:
+  excludeDevDependencies: true
+  exclude:
+    - .git/**
+    - .env
+    - .env.sample
+    - .editorconfig
+    - .eslintrc.jjs
+    - .gitignore
+    - .prettierrc
+    - cicd/**
+    - credentials*.json
+    - credentials*.txt
+    - serverless/**
+    - src/**
+    - test/**
+    - e2e/**
+    - tmp/**
+    - nodemon.json
+    - tsconfig*.json
+    - README.md
+    - lambda-layer-build/**
+    - node_modules/aws-sdk/**
+    - node_modules/@aws-sdk/**
+    - node_modules/@smithy/**
+    - node_modules/@types/**
+    - node_modules/@imgly/background-removal-node/node_modules/@types/**
+    - node_modules/typescript/**
+    - node_modules/rxjs/src/**
+    - node_modules/date-fns/locale/**
+    - '!node_modules/date-fns/locale/en*'
+    - '!node_modules/date-fns/locale/en-AU/**'
+    - '!node_modules/date-fns/locale/en-GB/**'
+    - '!node_modules/date-fns/locale/en-US/**'
+    - '!node_modules/date-fns/locale/_lib/**'
+    - '!node_modules/date-fns/locale/en*'
+    - node_modules/date-fns/fp/*
+    - node_modules/lodash/fp/*
+    - node_modules/**/*.map
+    - node_modules/onnxruntime-node/bin/napi-v3/linux/arm64/*
+    - node_modules/onnxruntime-node/bin/napi-v3/linux/x64/libonnxruntime_providers_cuda.so
+    - node_modules/onnxruntime-node/bin/napi-v3/linux/x64/libonnxruntime_providers_tensorrt.so
+    - node_modules/onnxruntime-node/bin/napi-v3/win32/**
+    - node_modules/onnxruntime-node/bin/napi-v3/darwin/**
+
+custom:
+  serverless-offline:
+    noPrependStageInUrl: true
+  storage:
+    bucket: foxtel-figma-self-service-assets
+  SELF_SERVICE_SECRETS_MANAGER: ${ssm:/aws/reference/secretsmanager/plus_also/foxtel-figma-self-service/${self:provider.stage}}
+
+resources:
+  Resources:
+    AssetsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.storage.bucket}
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: false
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: false
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders: ['*']
+              AllowedMethods: [GET]
+              AllowedOrigins: ['*'] #todo update this
+              MaxAge: 3000
+
+    AssetsBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref AssetsBucket
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal: '*'
+              Action: s3:GetObject
+              Resource: !Join ['', [!GetAtt AssetsBucket.Arn, '/*']]

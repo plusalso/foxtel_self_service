@@ -52,3 +52,10 @@ lerna-debug.log*
 
 # Local Netlify folder
 .netlify 
+
+# dist folder
+dist
+
+#serverless folder amd serverless related ignores
+.serverless
+.serverless/*

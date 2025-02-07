@@ -1,0 +1,6 @@
+[*]
+insert_newline = true
+
+[*.{ts,js,json,md}]
+indent_style = space
+indent_size = 2
