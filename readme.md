@@ -11,13 +11,17 @@ Current stuff works like now.
 
 In the background do the full page download and sync in background. Only do this if the file version has changed.
 
-If file version changed
-for each page of current template
-download whole page [details omitted]
-compare hash to hash in s3. Can we put the hash on metadata? yes.
-if hash is different, pull the new file into s3.
+If figma file version changed
+save the new file version (where?)
+request pages from figma api
+for each page which is a template page (has a / in the title)
+download whole page using API
+for each top level frame/group:
+generate a hash and compute the image filename
+compare hash to hash in s3.
+if hash is different, call the figma api to render the image and pull the new file into s3.
 
-Don't worry about refreshing the image. We can set a stale timeout on the images maybe or something?
+Don't worry about refreshing the image in the imageOverlay . We can set a stale timeout on the images maybe or something?
 
 Perhaps the Update Database button can trigger the whole refresh. But make it less prominent. Keep it simple and add a:
 "This may take a few minutes" message.
