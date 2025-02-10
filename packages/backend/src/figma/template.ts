@@ -9,6 +9,7 @@ export interface FigmaAsset {
   name?: string;
   groupName?: string;
   url?: string;
+  order?: number;
 }
 
 export interface FigmaTemplateGroup {

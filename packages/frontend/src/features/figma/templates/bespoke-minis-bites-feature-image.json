@@ -1,0 +1,30 @@
+{
+  "textFields": [
+    {
+      "name": "title",
+      "label": "mini Title",
+      "defaultValue": "Bespoke Minis",
+      "style": {
+        "position": "absolute",
+        "top": "10px",
+        "left": "10px",
+        "color": "white",
+        "fontSize": "72px",
+        "zIndex": 100
+      }
+    },
+    {
+      "name": "subtitle",
+      "label": "mini Subtitle",
+      "defaultValue": "Bites",
+      "style": {
+        "position": "absolute",
+        "top": "50px",
+        "left": "10px",
+        "color": "white",
+        "fontSize": "18px",
+        "zIndex": 100
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+.draggableImageContainer {
+  z-index: 1;
+
+  &:hover {
+    outline: 1px solid #6688ff;
+  }
+}

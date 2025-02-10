@@ -1,5 +1,12 @@
 import { Box } from "@radix-ui/themes";
-
+import { ImageOverlay } from "@/features/figma/components/ImageOverlay";
+import { useTemplate } from "@/features/figma/context/TemplateContext";
 export function Workspace({ children }: { children: React.ReactNode }) {
-  return <Box p="6">{children}</Box>;
+  const { overlayAssets, templateConfig, textInputs } = useTemplate();
+  return (
+    <Box p="6">
+      <ImageOverlay selectedAssets={overlayAssets} templateConfig={templateConfig} textInputs={textInputs} />
+      {children}
+    </Box>
+  );
 }

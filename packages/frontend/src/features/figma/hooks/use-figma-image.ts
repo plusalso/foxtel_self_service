@@ -1,11 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFigmaImages } from "../api/get-figma-images";
 
-const getS3ImageUrl = (templateName: string, groupName: string, assetId: string) => {
-  const bucket = import.meta.env.VITE_STORAGE_BUCKET;
-  return `https://${bucket}.s3.amazonaws.com/figma-cache/${templateName}/${groupName}/${assetId}.png`;
-};
+export const getS3ImageUrl = (templateName: string, groupName: string, assetId: string, version?: string) => {
+  const encodedTemplate = templateName.replace(/ /g, "+");
+  const encodedGroup = groupName.replace(/ /g, "+");
+  const encodedAssetId = assetId.replace(":", "%3A");
 
+  // const versionSuffix = version ? `-v${version}` : "";
+
+  return `https://foxtel-figma-self-service-assets.s3.ap-southeast-2.amazonaws.com/figma-cache/${encodedTemplate}/${encodedGroup}/${encodedAssetId}`;
+};
 export const useFigmaImage = (fileId: string, templateName: string, groupName: string, assetId: string) => {
   return useQuery({
     queryKey: ["figma-image", fileId, assetId],

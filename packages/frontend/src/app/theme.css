@@ -1,0 +1,74 @@
+/* I don't know how to ser */
+:root,
+.light,
+.light-theme {
+  --orange-1: #fcfcfd;
+  --orange-2: #f9f9fb;
+  --orange-3: #eff0f3;
+  --orange-4: #e7e8ec;
+  --orange-5: #e0e1e6;
+  --orange-6: #d8d9e0;
+  --orange-7: #cdced7;
+  --orange-8: #b9bbc6;
+  --orange-9: #000;
+  --orange-10: #2c2d33;
+  --orange-11: #62636c;
+  --orange-12: #1e1f24;
+
+  --orange-a1: #00005503;
+  --orange-a2: #00005506;
+  --orange-a3: #00104010;
+  --orange-a4: #000b3618;
+  --orange-a5: #0009321f;
+  --orange-a6: #00073527;
+  --orange-a7: #00063332;
+  --orange-a8: #00083046;
+  --orange-a9: #000000;
+  --orange-a10: #000109d3;
+  --orange-a11: #0002119d;
+  --orange-a12: #000107e1;
+
+  --orange-contrast: #fff;
+  --orange-surface: #f8f8facc;
+  --orange-indicator: #000;
+  --orange-track: #000;
+}
+
+@supports (color: color(display-p3 1 1 1)) {
+  @media (color-gamut: p3) {
+    :root,
+    .light,
+    .light-theme {
+      --orange-1: oklch(99.1% 0.0015 277.7);
+      --orange-2: oklch(98.2% 0.003 277.7);
+      --orange-3: oklch(95.6% 0.0045 277.7);
+      --orange-4: oklch(93.1% 0.0061 277.7);
+      --orange-5: oklch(91% 0.0077 277.7);
+      --orange-6: oklch(88.8% 0.0093 277.7);
+      --orange-7: oklch(85.3% 0.0117 277.7);
+      --orange-8: oklch(79.4% 0.016 277.7);
+      --orange-9: oklch(0% 0 none);
+      --orange-10: oklch(30% 0.0099 277.7);
+      --orange-11: oklch(50.3% 0.0139 277.7);
+      --orange-12: oklch(24.1% 0.0099 277.7);
+
+      --orange-a1: color(display-p3 0.0235 0.0235 0.349 / 0.012);
+      --orange-a2: color(display-p3 0.0235 0.0235 0.349 / 0.024);
+      --orange-a3: color(display-p3 0.0078 0.0667 0.2549 / 0.063);
+      --orange-a4: color(display-p3 0.0118 0.051 0.2157 / 0.095);
+      --orange-a5: color(display-p3 0.0039 0.0392 0.2 / 0.122);
+      --orange-a6: color(display-p3 0.0039 0.0275 0.1804 / 0.153);
+      --orange-a7: color(display-p3 0.0078 0.0275 0.1843 / 0.197);
+      --orange-a8: color(display-p3 0.0039 0.0314 0.1765 / 0.275);
+      --orange-a9: color(display-p3 0 0 0);
+      --orange-a10: color(display-p3 0 0.0039 0.0275 / 0.828);
+      --orange-a11: color(display-p3 0 0.0078 0.0588 / 0.616);
+      --orange-a12: color(display-p3 0 0.0039 0.0275 / 0.883);
+
+      --orange-contrast: #fff;
+      --orange-surface: color(display-p3 0.9725 0.9725 0.9804 / 0.8);
+      --orange-indicator: oklch(0% 0 none);
+      --orange-track: oklch(0% 0 none);
+    }
+  }
+}

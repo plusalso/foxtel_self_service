@@ -1,5 +1,9 @@
 import { useSyncTemplate } from "../hooks/use-sync-template";
 import { FigmaTemplate } from "../types/template";
+import { Button } from "@radix-ui/themes";
+
+//refresh icon
+import { LuRefreshCw } from "react-icons/lu";
 
 interface TemplateHeaderProps {
   fileId: string;
@@ -23,11 +27,12 @@ export const TemplateHeader = ({ fileId, template }: TemplateHeaderProps) => {
   };
 
   return (
-    <div>
-      <button onClick={handleSync} disabled={syncTemplate.isPending}>
+    <>
+      <Button onClick={handleSync} disabled={syncTemplate.isPending} variant="outline">
+        <LuRefreshCw className="w-4 h-4" />
         {syncTemplate.isPending ? "Syncing..." : "Update Database"}
-      </button>
+      </Button>
       {syncTemplate.isError && <div className="text-red-500">Failed to sync assets</div>}
-    </div>
+    </>
   );
 };

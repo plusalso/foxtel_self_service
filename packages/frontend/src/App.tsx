@@ -1,16 +1,12 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Theme } from "@radix-ui/themes";
 import { ApiTest } from "./components/ApiTest/ApiTest";
-
-const queryClient = new QueryClient();
+import { AppProvider } from "./app/AppProvider";
+import "./fonts.css";
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Theme>
-        <ApiTest />
-      </Theme>
-    </QueryClientProvider>
+    <AppProvider>
+      <ApiTest />
+    </AppProvider>
   );
 }
 

@@ -2,6 +2,7 @@ export interface FigmaAsset {
   id: string;
   name: string;
   imageUrl?: string;
+  order?: number;
 }
 
 export interface FigmaTemplateGroup {

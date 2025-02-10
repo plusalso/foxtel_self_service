@@ -1,0 +1,33 @@
+{
+  "fields": [
+    {
+      "name": "title",
+      "label": "Title",
+      "defaultValue": "Fixture Title",
+      "containerStyle": {
+        "position": "absolute",
+        "top": "70px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "72px",
+        "textAlign": "right",
+        "zIndex": 100
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "name": "subtitle",
+      "label": "Subtitle",
+      "defaultValue": "Fixture Subtitle",
+      "containerStyle": {
+        "position": "absolute",
+        "top": "50px",
+        "left": "10px",
+        "color": "white",
+        "fontSize": "48px",
+        "zIndex": 100
+      },
+      "renderer": "DefaultTextRenderer"
+    }
+  ]
+}

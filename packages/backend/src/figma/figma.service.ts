@@ -87,9 +87,13 @@ export class FigmaService {
     }));
   }
 
-  async getImages(fileId: string, nodeIds: string[]) {
+  async getImages(
+    fileId: string,
+    nodeIds: string[],
+  ): Promise<{ images: Record<string, string> }> {
+    console.log('getting images', fileId, nodeIds);
     const response = await fetch(
-      `${this.FIGMA_API_BASE}/images/${fileId}?ids=${nodeIds.join(',')}&format=png&scale=2`,
+      `${this.FIGMA_API_BASE}/images/${fileId}?ids=${nodeIds.join(',')}&format=png&scale=1`,
       {
         headers: {
           'X-Figma-Token': this.figmaToken,
@@ -101,6 +105,8 @@ export class FigmaService {
     if (!response.ok) {
       throw new Error(`Figma API error: ${response.statusText}`);
     }
+
+    console.log('retrieved images:', response);
 
     return response.json();
   }
@@ -213,9 +219,10 @@ export class FigmaService {
 
       template.groups.push({
         name: groupName,
-        assets: assets.map((asset) => ({
+        assets: assets.map((asset, index) => ({
           id: asset.id,
           name: asset.name,
+          order: index,
         })),
       });
     }
@@ -255,7 +262,7 @@ export class FigmaService {
       // Check which assets need caching
       const assetResults = await Promise.all(
         groupAssets.map(async (asset) => {
-          const key = `figma-cache/${templateName}/${groupName}/${asset.id}-v${fileVersion}.png`;
+          const key = `figma-cache/${templateName}/${groupName}/${asset.id}`;
           const exists = await this.storageService.headObject(key);
           return { ...asset, exists, key };
         }),
@@ -266,7 +273,11 @@ export class FigmaService {
       console.log(`Found ${missingAssets.length} uncached assets`);
 
       if (missingAssets.length > 0) {
-        const figmaImages = await this.getImages(
+        // const figmaImages = await this.getImages(
+        //   fileId,
+        //   missingAssets.map((a) => a.id),
+        // );
+        const figmaImages = await this.processImagesInBatches(
           fileId,
           missingAssets.map((a) => a.id),
         );
@@ -298,5 +309,27 @@ export class FigmaService {
     }
 
     console.log('Finished caching assets');
+  }
+  chunkArray<T>(array: T[], chunkSize: number): T[][] {
+    const chunks: T[][] = [];
+    for (let i = 0; i < array.length; i += chunkSize) {
+      chunks.push(array.slice(i, i + chunkSize));
+    }
+    return chunks;
+  }
+
+  async processImagesInBatches(
+    fileId: string,
+    imageIds: string[],
+  ): Promise<{ images: Record<string, string> }> {
+    const imageChunks = this.chunkArray(imageIds, 20);
+    const allImages: Record<string, string> = {};
+
+    for (const chunk of imageChunks) {
+      const figmaImages = await this.getImages(fileId, chunk);
+      Object.assign(allImages, figmaImages.images);
+    }
+
+    return { images: allImages };
   }
 }
