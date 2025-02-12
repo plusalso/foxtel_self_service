@@ -1,8 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { FigmaImages } from "@/lib/figma-client";
+
 import { QueryConfig } from "@/lib/react-query";
 
-export const getFigmaImages = (fileId: string, nodeIds: string[]): Promise<FigmaImages> => {
+export const getFigmaImages = (fileId: string, nodeIds: string[]) => {
   return fetch(`/api/figma/images?fileId=${fileId}&nodeIds=${nodeIds.join(",")}`).then((res) => res.json());
 };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Flex, Select, Text } from "@radix-ui/themes";
 import { FigmaAsset, FigmaTemplateGroup } from "../../features/figma/types/template";
 import { LuCornerDownRight } from "react-icons/lu";
@@ -14,83 +14,54 @@ interface GroupedAssetSelectProps {
     assets: FigmaAsset[];
     value?: string;
   };
+  selection?: {
+    mainGroup: string | null;
+    assetId: string | null;
+  };
   onSelect: (group: FigmaTemplateGroup, pageName: string, assetId: string) => void;
 }
 
-export function GroupedAssetSelect({ group, onSelect, pageName, fileId }: GroupedAssetSelectProps) {
-  const [selectedMainGroup, setSelectedMainGroup] = useState<string | null>(null);
-  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState<string>("");
-
-  // Memoize the groupedAssets calculation
+export function GroupedAssetSelect({
+  group,
+  selection = { mainGroup: null, assetId: null },
+  onSelect,
+  pageName,
+  fileId,
+}: GroupedAssetSelectProps) {
+  // Group assets by their main group
   const groupedAssets = useMemo(() => {
     return group.assets.reduce(
       (acc, asset) => {
-        const [mainGroupName, itemName] = asset.name.split("/");
-        if (!itemName) {
-          acc[""] = acc[""] || [];
-          acc[""].push(asset);
-        } else {
-          if (!acc[mainGroupName]) {
-            acc[mainGroupName] = [];
-          }
-          acc[mainGroupName].push({ ...asset, name: itemName });
-        }
+        const [mainGroup, itemName] = asset.name.split("/");
+        const group = itemName ? mainGroup : "";
+        acc[group] = acc[group] || [];
+        acc[group].push({ ...asset, name: itemName || asset.name });
         return acc;
       },
       {} as Record<string, Array<{ id: string; name: string }>>
     );
   }, [group.assets]);
 
-  // Memoize the mainGroupNames array
-  const mainGroupNames = useMemo(() => {
-    return Object.keys(groupedAssets).filter((name) => name !== "");
-  }, [groupedAssets]);
+  const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
 
-  // Memoize the assets array for Combobox to prevent unnecessary rerenders
-  const comboboxAssets = useMemo(() => {
-    if (!selectedMainGroup) return [];
-    return (
-      groupedAssets[selectedMainGroup]?.map((asset) => ({
-        id: asset.id,
-        name: asset.name,
-        imageUrl: getS3ImageUrl(fileId, pageName, asset.id),
-      })) || []
-    );
-  }, [selectedMainGroup, groupedAssets, fileId, pageName]);
+  const comboboxAssets = useMemo(
+    () =>
+      selection.mainGroup
+        ? groupedAssets[selection.mainGroup]?.map((asset) => ({
+            id: asset.id,
+            name: asset.name,
+            imageUrl: getS3ImageUrl(fileId, pageName, asset.id),
+          })) || []
+        : [],
+    [selection.mainGroup, groupedAssets, fileId, pageName]
+  );
 
-  // Update selection when value prop changes
-  useEffect(() => {
-    if (!group.assets.length) return;
-
-    if (group.value) {
-      const matchingAsset = group.assets.find((asset) => asset.name === group.value);
-      if (matchingAsset) {
-        const [mainGroup, itemName] = matchingAsset.name.split("/");
-        if (itemName) {
-          setSelectedMainGroup(mainGroup);
-          setSelectedAsset(matchingAsset.id);
-          setInputValue(itemName);
-          onSelect(group, pageName, matchingAsset.id);
-        }
-      }
-    }
-  }, [group.value, group.assets]); // Only depend on value and assets
-
-  const handleMainGroupChange = (mainGroupName: string) => {
-    setSelectedMainGroup(mainGroupName);
-    setSelectedAsset(null);
-    setInputValue("");
-  };
-
-  const handleAssetChange = (assetId: string) => {
-    setSelectedAsset(assetId);
-    if (selectedMainGroup) {
-      onSelect(group, selectedMainGroup, assetId);
-    } else {
-      onSelect(group, pageName, assetId);
-    }
-  };
+  // Find the selected asset's name for the combobox input value
+  const selectedAssetName = useMemo(() => {
+    if (!selection.mainGroup || !selection.assetId) return "";
+    const asset = groupedAssets[selection.mainGroup]?.find((a) => a.id === selection.assetId);
+    return asset?.name || "";
+  }, [selection.mainGroup, selection.assetId, groupedAssets]);
 
   return (
     <Flex direction="column" gap="2">
@@ -99,31 +70,40 @@ export function GroupedAssetSelect({ group, onSelect, pageName, fileId }: Groupe
       </Text>
       {mainGroupNames.length > 0 ? (
         <>
-          <Select.Root value={selectedMainGroup || ""} onValueChange={handleMainGroupChange}>
+          <Select.Root
+            value={selection.mainGroup || ""}
+            onValueChange={(mainGroup) => {
+              // When main group changes, select the first asset in that group
+              const firstAssetInGroup = groupedAssets[mainGroup]?.[0];
+              if (firstAssetInGroup) {
+                onSelect(group, mainGroup, firstAssetInGroup.id);
+              }
+            }}
+          >
             <Select.Trigger placeholder="Select Main Group" />
             <Select.Content>
-              {mainGroupNames.map((mainGroupName) => (
-                <Select.Item key={mainGroupName} value={mainGroupName}>
-                  {mainGroupName}
+              {mainGroupNames.map((name) => (
+                <Select.Item key={name} value={name}>
+                  {name}
                 </Select.Item>
               ))}
             </Select.Content>
           </Select.Root>
-          {selectedMainGroup && (
+          {selection.mainGroup && (
             <Flex direction="row" gap="2" align="center">
               <LuCornerDownRight />
               <Combobox
                 assets={comboboxAssets}
-                value={selectedAsset}
-                inputValue={inputValue}
-                onInputValueChange={setInputValue}
-                onValueChange={handleAssetChange}
+                value={selection.assetId || null}
+                inputValue={selectedAssetName}
+                onInputValueChange={() => {}} // No-op since we're controlling the value
+                onValueChange={(assetId) => onSelect(group, selection.mainGroup || pageName, assetId)}
               />
             </Flex>
           )}
         </>
       ) : (
-        <Select.Root onValueChange={(value) => onSelect(group, pageName, value)}>
+        <Select.Root value={selection.assetId || ""} onValueChange={(value) => onSelect(group, pageName, value)}>
           <Select.Trigger />
           <Select.Content>
             {group.assets.map((asset) => (

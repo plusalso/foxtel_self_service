@@ -104,7 +104,6 @@ interface OverlayImageProps {
 }
 
 const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) => {
-  console.log("rerendering overlay image");
   const imageUrl = getS3ImageUrl(fileId, pageName, assetId);
 
   return (

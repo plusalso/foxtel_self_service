@@ -1,6 +1,7 @@
 export interface FigmaAsset {
   id: string;
   name: string;
+  pageId?: string;
   imageUrl?: string;
   order?: number;
 }

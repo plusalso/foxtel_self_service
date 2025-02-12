@@ -5,6 +5,7 @@ export interface FigmaAsset {
   id: string;
   name: string;
   pageName: string;
+  pageId?: string;
 }
 
 export interface FigmaAssetsResponse {

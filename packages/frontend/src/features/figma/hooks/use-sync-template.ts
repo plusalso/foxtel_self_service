@@ -1,15 +1,14 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AssetToSync } from "../types/template";
+import { useMutation } from "@tanstack/react-query";
 
-export const useSyncTemplate = () => {
-  const queryClient = useQueryClient();
+export const useCacheAssets = () => {
+  // const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ fileId, assets }: { fileId: string; assets: AssetToSync[] }) => {
-      const response = await fetch("/api/figma/sync-assets", {
+    mutationFn: async ({ fileId, nodeIds }: { fileId: string; nodeIds: string[] }) => {
+      const response = await fetch("/api/figma/cache-assets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fileId, assets }),
+        body: JSON.stringify({ fileId, nodeIds }),
       });
 
       if (!response.ok) {
@@ -18,14 +17,14 @@ export const useSyncTemplate = () => {
 
       return response.json();
     },
-    onSuccess: (_, { fileId, assets }) => {
-      // Group invalidations by template
-      const templates = new Set(assets.map((a) => a.templateName));
-      templates.forEach((templateName) => {
-        queryClient.invalidateQueries({
-          queryKey: ["figma-template-assets", fileId, templateName],
-        });
-      });
-    },
+    // onSuccess: (_, { fileId, nodeIds }) => {
+    //   // Group invalidations by template
+    //   const templates = new Set(nodeIds);
+    //   templates.forEach((templateName) => {
+    //     queryClient.invalidateQueries({
+    //       queryKey: ["figma-template-assets", fileId, templateName],
+    //     });
+    //   });
+    // },
   });
 };

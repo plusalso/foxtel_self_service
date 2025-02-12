@@ -66,14 +66,12 @@ export class FigmaController {
     return this.figmaService.getTemplates(fileId, templateNames);
   }
 
-  @Post('sync-assets')
-  async syncTemplateAssets(
-    @Body() body: { fileId: string; pageNodeIds: string[] },
-  ) {
-    console.log('Syncing template assets', body.fileId, body.pageNodeIds);
+  @Post('cache-assets')
+  async cacheAssets(@Body() body: { fileId: string; nodeIds: string[] }) {
+    console.log('Caching assets', body.fileId, body.nodeIds);
     const result = await this.figmaService.cacheAssets(
       body.fileId,
-      body.pageNodeIds,
+      body.nodeIds,
     );
 
     return result;

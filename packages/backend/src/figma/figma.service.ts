@@ -385,7 +385,6 @@ export class FigmaService {
     console.log('Page nodes', pageNodeIds);
 
     const assetsToUpdate: Array<{
-      pageId: string;
       pageName: string;
       assetId: string;
       assetName: string;
@@ -401,14 +400,13 @@ export class FigmaService {
         const assetName = child.name;
         const hash = await this.createNodeHash(child);
         console.log('hash', hash);
-        const key = `figma-cache/${pageName}/${assetName}`;
+        const key = `figma-cache/${pageName}/${assetId}`;
         try {
           const metadata = await this.storageService.getObjectMetadata(key);
           console.log('metadata', metadata);
           if (!metadata || metadata.hash !== hash) {
             console.log(`Asset ${assetName} needs to be updated.`);
             assetsToUpdate.push({
-              pageId: page.id,
               pageName,
               assetId,
               assetName,
@@ -424,6 +422,12 @@ export class FigmaService {
     }
 
     console.log('assetsToUpdate', assetsToUpdate);
+    //now we need to download and upload the assets
+    this.downloadAndUploadAssets(fileId, assetsToUpdate);
+
+    return {
+      assetsToUpdate,
+    };
   }
   chunkArray<T>(array: T[], chunkSize: number): T[][] {
     const chunks: T[][] = [];
@@ -490,7 +494,6 @@ export class FigmaService {
   async downloadAndUploadAssets(
     fileId: string,
     assets: Array<{
-      pageId: string;
       pageName: string;
       assetId: string;
       assetName: string;
@@ -522,7 +525,7 @@ export class FigmaService {
           return (buffer.length / 1024 / 1024).toFixed(2);
         };
 
-        const key = `figma-cache/${asset.pageName}/${asset.assetName}`;
+        const key = `figma-cache/${asset.pageName}/${asset.assetId}`;
         console.log(
           `Uploading asset ${asset.assetName} to S3. Size ${calcSizeInMB(buffer)} MB`,
         );
@@ -533,6 +536,7 @@ export class FigmaService {
         console.log(`Uploaded asset ${asset.assetName} to S3.`);
       }
     }
+    console.log(`Uploaded ${assets.length} assets. Complete`);
   }
 
   async getAssets(
@@ -557,8 +561,9 @@ export class FigmaService {
 
     // Process each page's frames
     Object.values(nodesResponse.nodes).forEach((pageData) => {
-      const page = pageData as { document: FigmaNode };
+      const page = pageData as { document: FigmaNode; id: string };
       const pageName = page.document.name;
+      const pageId = page.document.id;
 
       if (page.document.children) {
         response[pageName] = page.document.children
@@ -567,6 +572,7 @@ export class FigmaService {
             id: frame.id,
             name: frame.name,
             pageName,
+            pageId: pageId,
           }));
       }
     });

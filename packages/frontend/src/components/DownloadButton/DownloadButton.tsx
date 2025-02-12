@@ -35,7 +35,7 @@ const DownloadButton = () => {
           placeholder="Enter filename"
         />
       </div>
-      <div style={{ marginBottom: "10px" }}>
+      <div style={{ marginBottom: "24px" }}>
         <div>
           <label htmlFor="filetype">Filetype</label>
         </div>
@@ -49,7 +49,9 @@ const DownloadButton = () => {
           </Select.Content>
         </Select.Root>
       </div>
-      <Button onClick={handleDownload}>Download</Button>
+      <Button onClick={handleDownload} style={{ width: "100%" }}>
+        Download
+      </Button>
     </div>
   );
 };
