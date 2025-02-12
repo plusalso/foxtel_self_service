@@ -5,7 +5,7 @@ export const useCacheAssets = () => {
 
   return useMutation({
     mutationFn: async ({ fileId, nodeIds }: { fileId: string; nodeIds: string[] }) => {
-      const response = await fetch("/api/figma/cache-assets", {
+      const response = await fetch("/figma/cache-assets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileId, nodeIds }),
