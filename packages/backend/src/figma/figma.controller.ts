@@ -2,7 +2,6 @@ import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { FigmaService } from './figma.service';
 import { FigmaTemplateResponse } from './template';
 import { StorageService } from 'src/storage/storage.service';
-import { AssetToSync } from './template';
 
 @Controller('figma')
 export class FigmaController {
@@ -50,11 +49,15 @@ export class FigmaController {
 
   @Post('sync-assets')
   async syncTemplateAssets(
-    @Body() body: { fileId: string; assets: AssetToSync[] },
-  ): Promise<{ success: boolean }> {
-    console.log('Syncing template assets', body.fileId, body.assets);
-    await this.figmaService.cacheAssets(body.fileId, body.assets);
-    return { success: true };
+    @Body() body: { fileId: string; pageNodeIds: string[] },
+  ) {
+    console.log('Syncing template assets', body.fileId, body.pageNodeIds);
+    const result = await this.figmaService.cacheAssets(
+      body.fileId,
+      body.pageNodeIds,
+    );
+
+    return result;
   }
 
   @Get('file-version')

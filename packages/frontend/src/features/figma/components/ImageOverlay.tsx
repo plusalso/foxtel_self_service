@@ -77,9 +77,7 @@ export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: Ima
       {/* Render text fields with styles */}
       {templateConfig?.fields?.map((field: any) => {
         const RendererComponent = renderers[field.renderer as keyof typeof renderers];
-        console.log("renderers", renderers);
-        console.log("field", field);
-        console.log("RendererComponent", RendererComponent);
+
         return <RendererComponent key={field.name} field={field} value={textInputs[field.name] || ""} />;
       })}
     </div>
@@ -94,8 +92,7 @@ interface OverlayImageProps {
 }
 
 const OverlayImage = ({ templateName, groupName, assetId, zIndex }: OverlayImageProps) => {
-  const { fileVersion } = useTemplate();
-  const imageUrl = getS3ImageUrl(templateName, groupName, assetId, fileVersion);
+  const imageUrl = getS3ImageUrl(templateName, groupName, assetId);
 
   return (
     <img

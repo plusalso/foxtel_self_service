@@ -1,7 +1,7 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Container, Flex, Text, TextField } from "@radix-ui/themes";
 import { useFigmaTemplates } from "@/features/figma/api/get-figma-templates";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import { useQuery } from "@tanstack/react-query";
@@ -10,8 +10,16 @@ import bespokeMinisConfig from "@/features/figma/templates/bespoke-minis-bites-f
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
+import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
+import { FigmaTemplateGroup } from "@/features/figma/types/template";
+// packages/frontend/src/components/GroupedAssetSelect/GroupedAssetSelector.tsx
 //const FIGMA_FILE_ID = "p2dpdOtFr225vT3jjEaIkS";
-const FIGMA_FILE_ID = "51R2nLVvwmccZxjiIgo29P";
+
+//these are selected form the Source dropdown
+const FIGMA_FILE_IDS = {
+  "Single Event Fixture Tile File": "51R2nLVvwmccZxjiIgo29P",
+  "Misc Templates": "nj0cfZj9WsfxoVJUIMcE6U",
+};
 
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig,
@@ -20,23 +28,25 @@ const templateConfigs = {
 };
 
 export function TemplateGenerator() {
+  const [selectedFile, setSelectedFile] = useState<string>("File 1");
   const [selectedTemplate, setSelectedTemplate] = useState<keyof typeof templateConfigs>("Single Event Fixture Tile");
   const [selectedAssets, setSelectedAssets] = useState<Record<string, string>>({});
   const { setOverlayAssets, setFileVersion, templateConfig, setTemplateConfig, textInputs, setTextInputs } =
     useTemplate();
 
   const { data: templateData } = useFigmaTemplates({
-    fileId: FIGMA_FILE_ID,
+    fileId: FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS],
     templateNames: [selectedTemplate],
   });
 
   const template = templateData?.templates.find((t) => t.name === selectedTemplate);
 
-  // Add version query
   const { data: versionData } = useQuery({
-    queryKey: ["figma-file-version", FIGMA_FILE_ID],
+    queryKey: ["figma-file-version", FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]],
     queryFn: async () => {
-      const response = await fetch(`/api/figma/file-version?fileId=${FIGMA_FILE_ID}`);
+      const response = await fetch(
+        `/api/figma/file-version?fileId=${FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]}`
+      );
       return response.json();
     },
   });
@@ -47,7 +57,7 @@ export function TemplateGenerator() {
     setTemplateConfig(templateConfigs[selectedTemplate as keyof typeof templateConfigs]);
   }, [selectedTemplate, setTemplateConfig]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const assets =
       template?.groups
         .map((group) => ({
@@ -60,21 +70,41 @@ export function TemplateGenerator() {
     setOverlayAssets(assets);
   }, [template, selectedAssets, setOverlayAssets]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (versionData) {
       setFileVersion(versionData);
     }
   }, [versionData, setFileVersion]);
 
+  console.log("selectedAssets", selectedAssets);
+
+  const handleAssetSelection = (group: FigmaTemplateGroup, _: string, assetId: string) => {
+    setSelectedAssets((prev) => ({
+      ...prev,
+      [group.name]: assetId,
+    }));
+  };
+
   return (
     <Container size="2">
       <Flex direction="column" gap="4">
-        {/* <Button variant="soft" onClick={() => refetch()}>
-          <LuRefreshCw />
-          Update Database
-        </Button> */}
+        <TemplateHeader fileId={FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]} template={template} />
 
-        <TemplateHeader fileId={FIGMA_FILE_ID} template={template} />
+        <Flex direction="column" gap="2">
+          <Text as="label" size="2" weight="bold">
+            Source
+          </Text>
+          <Select.Root value={selectedFile} onValueChange={(value) => setSelectedFile(value)}>
+            <Select.Trigger />
+            <Select.Content>
+              {Object.keys(FIGMA_FILE_IDS).map((file) => (
+                <Select.Item key={file} value={file}>
+                  {file}
+                </Select.Item>
+              ))}
+            </Select.Content>
+          </Select.Root>
+        </Flex>
 
         <Flex direction="column" gap="2">
           <Text as="label" size="2" weight="bold">
@@ -98,29 +128,12 @@ export function TemplateGenerator() {
         <Form>
           <Flex direction="column" gap="4">
             {template?.groups.map((group) => (
-              <Flex key={`${group.name}-${group.assets[0]?.id}`} direction="column" gap="2">
-                <Text as="label" size="2" weight="bold">
-                  {group.name}
-                </Text>
-                <Select.Root
-                  defaultValue={group.assets[0]?.id}
-                  onValueChange={(value) => {
-                    setSelectedAssets((prev) => ({
-                      ...prev,
-                      [group.name]: value,
-                    }));
-                  }}
-                >
-                  <Select.Trigger />
-                  <Select.Content>
-                    {group.assets.map((asset) => (
-                      <Select.Item key={asset.order} value={asset.id}>
-                        {asset.name}
-                      </Select.Item>
-                    ))}
-                  </Select.Content>
-                </Select.Root>
-              </Flex>
+              <GroupedAssetSelect
+                key={group.id}
+                group={group}
+                onSelect={handleAssetSelection}
+                templateName={selectedTemplate}
+              />
             ))}
           </Flex>
         </Form>

@@ -7,6 +7,7 @@ export interface FigmaAsset {
 
 export interface FigmaTemplateGroup {
   name: string; // e.g., "Wedge1", "logo"
+  id: string;
   assets: FigmaAsset[];
 }
 

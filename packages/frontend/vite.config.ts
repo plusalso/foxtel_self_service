@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
@@ -8,7 +9,12 @@ console.log("@ alias resolves to:", resolvedPath);
 
 export default defineConfig({
   plugins: [react()],
-
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.ts",
+    // exclude: [...configDefaults.exclude, "e2e/*"],
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -17,6 +23,7 @@ export default defineConfig({
 
   server: {
     cors: true,
+
     proxy: {
       "/api": {
         target: "http://localhost:3000",

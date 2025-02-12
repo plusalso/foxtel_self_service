@@ -95,7 +95,24 @@ export class StorageService {
       throw error;
     }
   }
-
+  async getObjectMetadata(key: string): Promise<Record<string, string> | null> {
+    try {
+      const command = new HeadObjectCommand({
+        Bucket: this.appConfig.storage.bucket,
+        Key: key,
+      });
+      const response = await this.s3Client.send(command);
+      return response.Metadata || null;
+    } catch (error) {
+      if (
+        (error as any).name === 'NotFound' ||
+        (error as any).name === 'NoSuchKey'
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
   async deleteObject(key: string) {
     const command = new DeleteObjectCommand({
       Bucket: this.appConfig.storage.bucket,

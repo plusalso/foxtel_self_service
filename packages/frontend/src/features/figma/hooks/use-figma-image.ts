@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFigmaImages } from "../api/get-figma-images";
 
-export const getS3ImageUrl = (templateName: string, groupName: string, assetId: string, version?: string) => {
+export const getS3ImageUrl = (templateName: string, groupName: string, assetId: string) => {
   const encodedTemplate = templateName.replace(/ /g, "+");
   const encodedGroup = groupName.replace(/ /g, "+");
   const encodedAssetId = assetId.replace(":", "%3A");

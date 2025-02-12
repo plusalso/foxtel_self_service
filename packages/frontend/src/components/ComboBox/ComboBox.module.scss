@@ -1,0 +1,76 @@
+.comboboxContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.comboboxInputContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #f9f9f9;
+}
+
+.comboboxInput {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  font-size: 16px;
+  background-color: transparent;
+}
+
+.comboboxButton,
+.comboboxClearButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+}
+
+.comboboxList {
+  display: none;
+  border: 1px solid #ccc;
+  list-style-type: none;
+  padding: 0;
+  margin: 5px 0 0;
+  border-radius: 4px;
+  background-color: #fff;
+  max-height: 350px;
+  overflow-y: auto;
+  // position: absolute;
+  width: 100%;
+  z-index: 1000;
+}
+
+.comboboxList.comboboxListOpen {
+  display: block;
+}
+
+.comboboxItem {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.comboboxItem:hover,
+.comboboxItemHighlighted {
+  background-color: #bde4ff;
+}
+
+.comboboxItemImage {
+  width: 60px;
+  margin-right: 10px;
+  object-fit: contain;
+
+  background-color: #eee;
+  // border-radius: 50%;
+}

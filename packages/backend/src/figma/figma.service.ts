@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StorageService } from '../storage/storage.service';
-import {
-  AssetToSync,
-  FigmaAsset,
-  FigmaTemplate,
-  FigmaTemplateResponse,
-} from './template';
+import { FigmaAsset, FigmaTemplate, FigmaTemplateResponse } from './template';
+import { createHash } from 'crypto';
 
 interface GetFileOptions {
   nodeIds?: string[];
@@ -43,7 +39,7 @@ export class FigmaService {
     });
 
     if (!response.ok) {
-      throw new Error(`Figma API error: ${response.statusText}`);
+      throw new Error(`Figma API error for url ${url}: ${response}`);
     }
 
     return response.json();
@@ -71,7 +67,7 @@ export class FigmaService {
     });
 
     if (!response.ok) {
-      throw new Error(`Figma API error: ${response.statusText}`);
+      throw new Error(`Figma API error for url ${url}: ${response}`);
     }
 
     return response.json();
@@ -105,8 +101,6 @@ export class FigmaService {
     if (!response.ok) {
       throw new Error(`Figma API error: ${response.statusText}`);
     }
-
-    console.log('retrieved images:', response);
 
     return response.json();
   }
@@ -190,9 +184,33 @@ export class FigmaService {
     }
   }
 
+  /**
+   * Gets the version of the file from the Figma API
+   */
   async getFileVersion(fileId: string): Promise<string> {
     const data = await this.getFile(fileId, { depth: 1 });
     return data.version;
+  }
+
+  /**
+   * Sets the version of the file that is stored in the cache
+   */
+  async setCachedFileVersion(fileId: string, version: string): Promise<void> {
+    const key = `figma-file-versions/${fileId}.json`;
+    const data = JSON.stringify({ version });
+    await this.storageService.putObject(key, data, {
+      contentType: 'application/json',
+    });
+  }
+
+  async getCachedFileVersion(fileId: string): Promise<string | null> {
+    const key = `figma-file-versions/${fileId}.json`;
+    const data = await this.storageService.getObject(key);
+    if (!data) {
+      return null;
+    }
+    const parsedData = JSON.parse(data.toString());
+    return parsedData.version;
   }
 
   async getTemplates(
@@ -201,6 +219,14 @@ export class FigmaService {
   ): Promise<FigmaTemplateResponse> {
     const pages = await this.getPages(fileId);
     const templates = new Map<string, FigmaTemplate>();
+
+    // Collect all page IDs
+    const pageIds = pages.map((page) => page.id);
+
+    // Fetch all nodes for the collected page IDs
+    const nodesResponse = await this.getFileNodes(fileId, pageIds, {
+      depth: 1,
+    });
 
     for (const page of pages) {
       const [templateName, groupName] = page.name.split('/');
@@ -215,16 +241,23 @@ export class FigmaService {
       }
 
       const template = templates.get(templateName);
-      const assets = await this.getPageAssets(fileId, page.id);
+      const pageNode = nodesResponse.nodes[page.id]?.document;
 
-      template.groups.push({
-        name: groupName,
-        assets: assets.map((asset, index) => ({
-          id: asset.id,
-          name: asset.name,
-          order: index,
-        })),
-      });
+      if (pageNode && pageNode.children) {
+        const assets = pageNode.children
+          .filter((node) => node?.id && node?.name)
+          .map(({ id, name }) => ({ id, name }));
+
+        template.groups.push({
+          name: groupName,
+          id: page.id,
+          assets: assets.map((asset, index) => ({
+            id: asset.id,
+            name: asset.name,
+            order: index,
+          })),
+        });
+      }
     }
 
     return {
@@ -232,83 +265,57 @@ export class FigmaService {
     };
   }
 
-  async cacheAssets(fileId: string, assets: AssetToSync[]): Promise<void> {
+  //fast hash
+  async createNodeHash(node: any): Promise<string> {
+    return createHash('sha256').update(JSON.stringify(node)).digest('hex');
+  }
+
+  async cacheAssets(fileId: string, pageNodeIds: string[]) {
     console.log(`Starting to cache assets for file ${fileId}`);
 
-    // Get current file version for cache key
-    const fileVersion = await this.getFileVersion(fileId);
-    console.log(`File version: ${fileVersion}`);
+    // Get the full file nodes for the specified pageNodeIds
+    const file = await this.getFileNodes(fileId, pageNodeIds);
+    console.log('Page nodes', pageNodeIds);
 
-    // Group assets by template/group for efficient processing
-    const assetsByGroup = assets.reduce(
-      (acc, asset) => {
-        const key = `${asset.templateName}/${asset.groupName}`;
-        if (!acc[key]) {
-          acc[key] = [];
+    const assetsToUpdate: Array<{
+      pageId: string;
+      pageName: string;
+      assetId: string;
+      assetName: string;
+      hash: string;
+    }> = [];
+
+    for (const [pageId, pageData] of Object.entries(file.nodes)) {
+      for (const child of (pageData as any).document.children) {
+        const pageName = (pageData as any).document.name;
+        const assetId = child.id;
+        const assetName = child.name;
+        const hash = await this.createNodeHash(child);
+        console.log('hash', hash);
+        const key = `figma-cache/${pageName}/${assetName}`;
+        try {
+          const metadata = await this.storageService.getObjectMetadata(key);
+          console.log('metadata', metadata);
+          if (!metadata || metadata.hash !== hash) {
+            console.log(`Asset ${assetName} needs to be updated.`);
+            assetsToUpdate.push({ pageId, pageName, assetId, assetName, hash });
+          } else {
+            console.log(`Asset ${assetName} is up-to-date in S3.`);
+          }
+        } catch (error) {
+          console.log('Error caching asset', error);
         }
-        acc[key].push(asset);
-        return acc;
-      },
-      {} as Record<string, AssetToSync[]>,
-    );
-
-    console.log(`Processing ${Object.keys(assetsByGroup).length} asset groups`);
-
-    // Process each group
-    for (const [key, groupAssets] of Object.entries(assetsByGroup)) {
-      const [templateName, groupName] = key.split('/');
-      console.log(`Processing group ${key} with ${groupAssets.length} assets`);
-
-      // Check which assets need caching
-      const assetResults = await Promise.all(
-        groupAssets.map(async (asset) => {
-          const key = `figma-cache/${templateName}/${groupName}/${asset.id}`;
-          const exists = await this.storageService.headObject(key);
-          return { ...asset, exists, key };
-        }),
-      );
-
-      // Get missing images from Figma
-      const missingAssets = assetResults.filter((a) => !a.exists);
-      console.log(`Found ${missingAssets.length} uncached assets`);
-
-      if (missingAssets.length > 0) {
-        // const figmaImages = await this.getImages(
-        //   fileId,
-        //   missingAssets.map((a) => a.id),
-        // );
-        const figmaImages = await this.processImagesInBatches(
-          fileId,
-          missingAssets.map((a) => a.id),
-        );
-        console.log(
-          `Retrieved ${Object.keys(figmaImages.images).length} images from Figma`,
-        );
-
-        // Cache missing images in S3
-        await Promise.all(
-          missingAssets.map(async (asset) => {
-            const imageUrl = figmaImages.images[asset.id];
-            if (!imageUrl) {
-              console.warn(`No image URL found for asset ${asset.id}`);
-              return;
-            }
-
-            console.log(`Caching asset ${asset.id} to ${asset.key}`);
-            const response = await fetch(imageUrl);
-            const buffer = Buffer.from(await response.arrayBuffer());
-
-            await this.storageService.upload({
-              key: asset.key,
-              body: buffer,
-              contentType: 'image/png',
-            });
-          }),
-        );
       }
     }
 
-    console.log('Finished caching assets');
+    console.log('assetsToUpdate', assetsToUpdate);
+
+    // Call the function to handle downloading and uploading assets
+    this.downloadAndUploadAssets(fileId, assetsToUpdate).catch((error) =>
+      console.error('Error updating assets:', error),
+    );
+
+    return assetsToUpdate;
   }
   chunkArray<T>(array: T[], chunkSize: number): T[][] {
     const chunks: T[][] = [];
@@ -331,5 +338,92 @@ export class FigmaService {
     }
 
     return { images: allImages };
+  }
+
+  // async syncAssetsWithS3(
+  //   fileId: string,
+  //   assets: Array<{
+  //     pageId: string;
+  //     pageName: string;
+  //     assetId: string;
+  //     assetName: string;
+  //     hash: string;
+  //   }>,
+  // ) {
+  //   for (const asset of assets) {
+  //     const key = `figma-cache/${asset.pageName}/${asset.assetName}`;
+  //     const metadata = await this.storageService.getObjectMetadata(key);
+
+  //     if (metadata && metadata.hash === asset.hash) {
+  //       console.log(`Asset ${asset.assetName} is up-to-date in S3.`);
+  //       continue;
+  //     }
+
+  //     console.log(`Fetching image for asset ${asset.assetName} from Figma.`);
+  //     const figmaImages = await this.getImages(fileId, [asset.assetId]);
+  //     const imageUrl = figmaImages.images[asset.assetId];
+
+  //     if (!imageUrl) {
+  //       console.warn(`No image URL found for asset ${asset.assetId}`);
+  //       continue;
+  //     }
+
+  //     const response = await fetch(imageUrl);
+  //     const buffer = Buffer.from(await response.arrayBuffer());
+
+  //     console.log(`Uploading asset ${asset.assetName} to S3.`);
+  //     await this.storageService.putObject(key, buffer, {
+  //       contentType: 'image/png',
+  //       metadata: { hash: asset.hash },
+  //     });
+  //   }
+  // }
+
+  async downloadAndUploadAssets(
+    fileId: string,
+    assets: Array<{
+      pageId: string;
+      pageName: string;
+      assetId: string;
+      assetName: string;
+      hash: string;
+    }>,
+  ) {
+    const batchSize = 5; // Define a sensible batch size
+
+    for (let i = 0; i < assets.length; i += batchSize) {
+      const batch = assets.slice(i, i + batchSize);
+
+      const assetIds = batch.map((asset) => asset.assetId);
+      console.log(
+        `Getting images for ${assetIds.length} assets. Assets from ${i} to ${i + batchSize} of ${assets.length}`,
+      );
+      const figmaImages = await this.getImages(fileId, assetIds);
+      console.log('figmaImages', figmaImages);
+      for (const asset of batch) {
+        const imageUrl = figmaImages.images[asset.assetId];
+        if (!imageUrl) {
+          console.warn(`No image URL found for asset ${asset.assetId}`);
+          continue;
+        }
+
+        const response = await fetch(imageUrl);
+        const buffer = Buffer.from(await response.arrayBuffer());
+
+        const calcSizeInMB = (buffer: Buffer) => {
+          return (buffer.length / 1024 / 1024).toFixed(2);
+        };
+
+        const key = `figma-cache/${asset.pageName}/${asset.assetName}`;
+        console.log(
+          `Uploading asset ${asset.assetName} to S3. Size ${calcSizeInMB(buffer)} MB`,
+        );
+        await this.storageService.putObject(key, buffer, {
+          contentType: 'image/png',
+          metadata: { hash: asset.hash },
+        });
+        console.log(`Uploaded asset ${asset.assetName} to S3.`);
+      }
+    }
   }
 }
