@@ -1,8 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
-
+import { fetchFromApi } from "@/lib/fetchFromApi";
 export const getFigmaFile = (fileId: string) => {
-  return fetch(`/api/figma/file?fileId=${fileId}`).then((res) => res.json());
+  return fetchFromApi(`/api/figma/file?fileId=${fileId}`);
 };
 
 export const getFigmaFileQueryOptions = (fileId: string) => {

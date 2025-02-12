@@ -1,14 +1,14 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { FigmaTemplateResponse } from "../types/template";
 import { QueryConfig } from "@/lib/react-query";
-
+import { fetchFromApi } from "@/lib/fetchFromApi";
 export const getFigmaTemplates = (fileId: string, templateNames?: string[]): Promise<FigmaTemplateResponse> => {
   const params = new URLSearchParams({ fileId });
   if (templateNames?.length) {
     params.append("templateNames", templateNames.join(","));
   }
 
-  return fetch(`/api/figma/templates?${params.toString()}`).then((res) => res.json());
+  return fetchFromApi(`/api/figma/templates?${params.toString()}`);
 };
 
 export const getFigmaTemplatesQueryOptions = (fileId: string, templateNames?: string[]) => {

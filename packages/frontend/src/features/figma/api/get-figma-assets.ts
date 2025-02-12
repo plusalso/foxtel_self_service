@@ -1,6 +1,6 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { QueryConfig } from "@/lib/react-query";
-
+import { fetchFromApi } from "@/lib/fetchFromApi";
 export interface FigmaAsset {
   id: string;
   name: string;
@@ -18,7 +18,7 @@ export const getFigmaAssets = async (fileId: string, pages: string[]): Promise<F
     pages: pages.join(","),
   });
 
-  return fetch(`/api/figma/assets?${params.toString()}`).then((res) => res.json());
+  return fetchFromApi(`/api/figma/assets?${params.toString()}`);
 };
 
 export const getFigmaAssetsQueryOptions = (fileId: string, pages: string[]) => {

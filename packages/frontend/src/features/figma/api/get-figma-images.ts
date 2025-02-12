@@ -1,9 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 
 import { QueryConfig } from "@/lib/react-query";
+import { fetchFromApi } from "@/lib/fetchFromApi";
 
 export const getFigmaImages = (fileId: string, nodeIds: string[]) => {
-  return fetch(`/api/figma/images?fileId=${fileId}&nodeIds=${nodeIds.join(",")}`).then((res) => res.json());
+  return fetchFromApi(`/api/figma/images?fileId=${fileId}&nodeIds=${nodeIds.join(",")}`);
 };
 
 export const getFigmaImagesQueryOptions = (fileId: string, nodeIds: string[]) => {
