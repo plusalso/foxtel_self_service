@@ -18,7 +18,7 @@ export const getFigmaAssets = async (fileId: string, pages: string[]): Promise<F
     pages: pages.join(","),
   });
 
-  return fetchFromApi(`/api/figma/assets?${params.toString()}`);
+  return fetchFromApi(`/figma/assets?${params.toString()}`);
 };
 
 export const getFigmaAssetsQueryOptions = (fileId: string, pages: string[]) => {

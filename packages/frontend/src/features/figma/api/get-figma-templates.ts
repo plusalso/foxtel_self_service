@@ -8,7 +8,7 @@ export const getFigmaTemplates = (fileId: string, templateNames?: string[]): Pro
     params.append("templateNames", templateNames.join(","));
   }
 
-  return fetchFromApi(`/api/figma/templates?${params.toString()}`);
+  return fetchFromApi(`/figma/templates?${params.toString()}`);
 };
 
 export const getFigmaTemplatesQueryOptions = (fileId: string, templateNames?: string[]) => {

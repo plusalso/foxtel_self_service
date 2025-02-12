@@ -4,7 +4,7 @@ import { QueryConfig } from "@/lib/react-query";
 import { fetchFromApi } from "@/lib/fetchFromApi";
 
 export const getFigmaImages = (fileId: string, nodeIds: string[]) => {
-  return fetchFromApi(`/api/figma/images?fileId=${fileId}&nodeIds=${nodeIds.join(",")}`);
+  return fetchFromApi(`/figma/images?fileId=${fileId}&nodeIds=${nodeIds.join(",")}`);
 };
 
 export const getFigmaImagesQueryOptions = (fileId: string, nodeIds: string[]) => {
