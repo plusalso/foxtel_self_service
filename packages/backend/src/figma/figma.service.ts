@@ -16,6 +16,19 @@ interface GetFileNodesOptions {
   pluginData?: string;
 }
 
+interface FigmaNode {
+  id: string;
+  name: string;
+  type: string;
+  children?: FigmaNode[];
+}
+
+export interface FigmaAssetResponse {
+  id: string;
+  name: string;
+  pageName: string;
+}
+
 @Injectable()
 export class FigmaService {
   private readonly FIGMA_API_BASE = 'https://api.figma.com/v1';
@@ -213,50 +226,145 @@ export class FigmaService {
     return parsedData.version;
   }
 
+  // async getTemplates(
+  //   fileId: string,
+  //   templateNames?: string[],
+  // ): Promise<FigmaTemplateResponse> {
+  //   const pages = await this.getPages(fileId);
+  //   const templates = new Map<string, FigmaTemplate>();
+
+  //   // Collect all page IDs
+  //   const pageIds = pages.map((page) => page.id);
+
+  //   // Fetch all nodes for the collected page IDs
+  //   const nodesResponse = await this.getFileNodes(fileId, pageIds, {
+  //     depth: 1,
+  //   });
+
+  //   for (const page of pages) {
+  //     const [templateName, groupName] = page.name.split('/');
+  //     if (!groupName) continue;
+  //     if (templateNames && !templateNames.includes(templateName)) continue;
+
+  //     if (!templates.has(templateName)) {
+  //       templates.set(templateName, {
+  //         name: templateName,
+  //         groups: [],
+  //       });
+  //     }
+
+  //     const template = templates.get(templateName);
+  //     const pageNode = nodesResponse.nodes[page.id]?.document;
+
+  //     if (pageNode && pageNode.children) {
+  //       const assets = pageNode.children
+  //         .filter((node) => node?.id && node?.name)
+  //         .map(({ id, name }) => ({ id, name }));
+
+  //       template.groups.push({
+  //         name: groupName,
+  //         id: page.id,
+  //         assets: assets.map((asset, index) => ({
+  //           id: asset.id,
+  //           name: asset.name,
+  //           order: index,
+  //         })),
+  //       });
+  //     }
+  //   }
+
+  //   return {
+  //     templates: Array.from(templates.values()),
+  //   };
+  // }
   async getTemplates(
     fileId: string,
     templateNames?: string[],
   ): Promise<FigmaTemplateResponse> {
     const pages = await this.getPages(fileId);
     const templates = new Map<string, FigmaTemplate>();
+    console.log('templatenames', templateNames);
+    // Find all template pages
+    const templatePages = pages.filter((page) =>
+      page.name.endsWith('/Template'),
+    );
 
-    // Collect all page IDs
-    const pageIds = pages.map((page) => page.id);
+    if (templatePages.length === 0) {
+      throw new Error('No template pages found');
+    }
 
-    // Fetch all nodes for the collected page IDs
-    const nodesResponse = await this.getFileNodes(fileId, pageIds, {
-      depth: 1,
+    // get the part before the / to get the prefix
+    const assetPageIds = pages
+      .filter((page) => page.name.includes('/'))
+      .map((page) => page.id);
+
+    // Fetch nodes for all template pages at once
+    const nodesResponse = await this.getFileNodes(fileId, assetPageIds, {
+      depth: 2,
     });
-
-    for (const page of pages) {
-      const [templateName, groupName] = page.name.split('/');
-      if (!groupName) continue;
-      if (templateNames && !templateNames.includes(templateName)) continue;
-
-      if (!templates.has(templateName)) {
-        templates.set(templateName, {
-          name: templateName,
-          groups: [],
-        });
+    console.log('nodesResponse', nodesResponse);
+    for (const templatePage of templatePages) {
+      const templatePageNode = nodesResponse.nodes[templatePage.id]?.document;
+      const templatePrefix = templatePage.name.split('/')[0];
+      console.log(
+        `reading template page ${templatePage.name}. Found ${templatePageNode?.children?.length} frames`,
+      );
+      if (!templatePageNode || !templatePageNode.children) {
+        continue; // Skip if no frames found in the template page
       }
 
-      const template = templates.get(templateName);
-      const pageNode = nodesResponse.nodes[page.id]?.document;
+      // Parse frames to extract template and group information
+      for (const frame of templatePageNode.children) {
+        console.log(`reading frame ${frame.name}`);
+        const parts = frame.name.split('/');
+        const templateName = parts.shift();
+        console.log(`templateName ${templateName}`);
+        if (!templateName) continue;
 
-      if (pageNode && pageNode.children) {
-        const assets = pageNode.children
-          .filter((node) => node?.id && node?.name)
-          .map(({ id, name }) => ({ id, name }));
+        // if (templateNames && !templateNames.includes(templateName)) continue;
 
-        template.groups.push({
-          name: groupName,
-          id: page.id,
-          assets: assets.map((asset, index) => ({
-            id: asset.id,
-            name: asset.name,
-            order: index,
-          })),
+        if (!templates.has(templateName)) {
+          templates.set(templateName, {
+            name: templateName,
+            prefix: templatePrefix,
+            groups: [],
+          });
+        }
+
+        const template = templates.get(templateName);
+
+        // Create groups based on the remaining parts
+        parts.forEach((groupName, index) => {
+          const groupId = `${frame.id}:${index}`;
+          const existingGroup = template.groups.find(
+            (group) => group.name === groupName,
+          );
+
+          if (!existingGroup) {
+            template.groups.push({
+              name: groupName,
+              id: groupId,
+              assets: [],
+            });
+          }
         });
+
+        // Extract assets from the corresponding page
+        for (const group of template.groups) {
+          const pageName = `${templatePrefix}/${group.name}`;
+          console.log(`getting assets for pageName ${pageName}`);
+          const page = pages.find((p) => p.name === pageName);
+          if (page) {
+            console.log(`found page ${page}`);
+            const pageNodes = nodesResponse.nodes[page.id]?.document?.children;
+            console.log(`pageNodes ${pageNodes}`);
+            if (pageNodes) {
+              group.assets = pageNodes
+                .filter((node) => node?.id && node?.name)
+                .map(({ id, name }) => ({ id, name }));
+            }
+          }
+        }
       }
     }
 
@@ -264,7 +372,6 @@ export class FigmaService {
       templates: Array.from(templates.values()),
     };
   }
-
   //fast hash
   async createNodeHash(node: any): Promise<string> {
     return createHash('sha256').update(JSON.stringify(node)).digest('hex');
@@ -285,9 +392,11 @@ export class FigmaService {
       hash: string;
     }> = [];
 
-    for (const [pageId, pageData] of Object.entries(file.nodes)) {
-      for (const child of (pageData as any).document.children) {
-        const pageName = (pageData as any).document.name;
+    for (const [nodeId, pageData] of Object.entries(file.nodes)) {
+      console.log('looking for children of', nodeId);
+      const page = pageData as { document: FigmaNode; id: string };
+      const pageName = page.document.name;
+      for (const child of page.document.children) {
         const assetId = child.id;
         const assetName = child.name;
         const hash = await this.createNodeHash(child);
@@ -298,7 +407,13 @@ export class FigmaService {
           console.log('metadata', metadata);
           if (!metadata || metadata.hash !== hash) {
             console.log(`Asset ${assetName} needs to be updated.`);
-            assetsToUpdate.push({ pageId, pageName, assetId, assetName, hash });
+            assetsToUpdate.push({
+              pageId: page.id,
+              pageName,
+              assetId,
+              assetName,
+              hash,
+            });
           } else {
             console.log(`Asset ${assetName} is up-to-date in S3.`);
           }
@@ -309,13 +424,6 @@ export class FigmaService {
     }
 
     console.log('assetsToUpdate', assetsToUpdate);
-
-    // Call the function to handle downloading and uploading assets
-    this.downloadAndUploadAssets(fileId, assetsToUpdate).catch((error) =>
-      console.error('Error updating assets:', error),
-    );
-
-    return assetsToUpdate;
   }
   chunkArray<T>(array: T[], chunkSize: number): T[][] {
     const chunks: T[][] = [];
@@ -425,5 +533,44 @@ export class FigmaService {
         console.log(`Uploaded asset ${asset.assetName} to S3.`);
       }
     }
+  }
+
+  async getAssets(
+    fileId: string,
+    pages: string[],
+  ): Promise<Record<string, FigmaAssetResponse[]>> {
+    // First get just the pages to find the IDs we need
+    const allPages = await this.getPages(fileId);
+    const targetPageIds = allPages
+      .filter((page) => pages.includes(page.name))
+      .map((page) => page.id);
+
+    if (targetPageIds.length === 0) {
+      return {};
+    }
+
+    // Fetch only the needed pages with their frames
+    const nodesResponse = await this.getFileNodes(fileId, targetPageIds, {
+      depth: 1,
+    });
+    const response: Record<string, FigmaAssetResponse[]> = {};
+
+    // Process each page's frames
+    Object.values(nodesResponse.nodes).forEach((pageData) => {
+      const page = pageData as { document: FigmaNode };
+      const pageName = page.document.name;
+
+      if (page.document.children) {
+        response[pageName] = page.document.children
+          .filter((node) => node.type === 'FRAME')
+          .map((frame) => ({
+            id: frame.id,
+            name: frame.name,
+            pageName,
+          }));
+      }
+    });
+
+    return response;
   }
 }

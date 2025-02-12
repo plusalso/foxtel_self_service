@@ -30,29 +30,21 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
     }
   }, [assets, inputValue]);
 
-  const {
-    isOpen,
-    getToggleButtonProps,
-    getLabelProps,
-    getMenuProps,
-    getInputProps,
-    highlightedIndex,
-    getItemProps,
-    reset,
-  } = useCombobox({
-    items: inputItems,
-    itemToString: (item) => (item ? item.name : ""),
-    inputValue,
-    selectedItem: assets.find((item) => item.id === value) || null,
-    onInputValueChange: ({ inputValue }) => {
-      onInputValueChange(inputValue || "");
-    },
-    onSelectedItemChange: ({ selectedItem }) => {
-      if (selectedItem) {
-        onValueChange(selectedItem.id);
-      }
-    },
-  });
+  const { isOpen, getToggleButtonProps, getMenuProps, getInputProps, highlightedIndex, getItemProps, reset } =
+    useCombobox({
+      items: inputItems,
+      itemToString: (item) => (item ? item.name : ""),
+      inputValue,
+      selectedItem: assets.find((item) => item.id === value) || null,
+      onInputValueChange: ({ inputValue }) => {
+        onInputValueChange(inputValue || "");
+      },
+      onSelectedItemChange: ({ selectedItem }) => {
+        if (selectedItem) {
+          onValueChange(selectedItem.id);
+        }
+      },
+    });
 
   return (
     <div className={styles.comboboxContainer}>

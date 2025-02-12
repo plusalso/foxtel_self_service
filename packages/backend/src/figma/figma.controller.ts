@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Post,
+  Body,
+  BadRequestException,
+} from '@nestjs/common';
 import { FigmaService } from './figma.service';
 import { FigmaTemplateResponse } from './template';
 import { StorageService } from 'src/storage/storage.service';
@@ -22,6 +29,18 @@ export class FigmaController {
       nodeIds: nodeIdsArray,
       depth,
       geometry,
+    });
+  }
+
+  @Get('file-nodes')
+  getFileNodes(
+    @Query('fileId') fileId: string,
+    @Query('nodeIds') nodeIds: string,
+    @Query('depth') depth?: number,
+  ) {
+    const nodeIdsArray = nodeIds.split(',');
+    return this.figmaService.getFileNodes(fileId, nodeIdsArray, {
+      depth,
     });
   }
 
@@ -63,5 +82,18 @@ export class FigmaController {
   @Get('file-version')
   getFileVersion(@Query('fileId') fileId: string) {
     return this.figmaService.getFileVersion(fileId);
+  }
+
+  @Get('assets')
+  async getAssets(
+    @Query('fileId') fileId: string,
+    @Query('pages') pages: string,
+  ) {
+    if (!fileId || !pages) {
+      throw new BadRequestException('fileId and pages are required');
+    }
+
+    const pagesList = pages.split(',').filter(Boolean);
+    return this.figmaService.getAssets(fileId, pagesList);
   }
 }

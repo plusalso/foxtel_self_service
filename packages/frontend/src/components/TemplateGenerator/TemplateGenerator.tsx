@@ -1,105 +1,123 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Container, Flex, Text, TextField } from "@radix-ui/themes";
-import { useFigmaTemplates } from "@/features/figma/api/get-figma-templates";
-import { useEffect, useState } from "react";
-import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
+import { useEffect, useState, useCallback } from "react";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
-import { useQuery } from "@tanstack/react-query";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
-import bespokeMinisConfig from "@/features/figma/templates/bespoke-minis-bites-feature-image.json";
-import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
+import { FigmaTemplateGroup } from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
-import { FigmaTemplateGroup } from "@/features/figma/types/template";
-// packages/frontend/src/components/GroupedAssetSelect/GroupedAssetSelector.tsx
-//const FIGMA_FILE_ID = "p2dpdOtFr225vT3jjEaIkS";
-
-//these are selected form the Source dropdown
-const FIGMA_FILE_IDS = {
-  "Single Event Fixture Tile File": "51R2nLVvwmccZxjiIgo29P",
-  "Misc Templates": "nj0cfZj9WsfxoVJUIMcE6U",
-};
+import { useFigmaAssets } from "@/features/figma/api/get-figma-assets";
 
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig,
-  "Bespoke Minis + Bites - Feature Image": bespokeMinisConfig,
-  "Editorial Clippages": editorialClippagesConfig,
 };
 
 export function TemplateGenerator() {
-  const [selectedFile, setSelectedFile] = useState<string>("File 1");
-  const [selectedTemplate, setSelectedTemplate] = useState<keyof typeof templateConfigs>("Single Event Fixture Tile");
-  const [selectedAssets, setSelectedAssets] = useState<Record<string, string>>({});
-  const { setOverlayAssets, setFileVersion, templateConfig, setTemplateConfig, textInputs, setTextInputs } =
-    useTemplate();
+  const [selectedSource, setSelectedSource] = useState<string>("Single Event Fixture Tile");
+  const [selectedPreset, setSelectedPreset] = useState<string>("");
+  const [selectedAssets, setSelectedAssets] = useState<Record<string, { pageName: string; assetId: string }>>({});
+  const [groupedFields, setGroupedFields] = useState<
+    Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
+  >({});
+  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs } = useTemplate();
 
-  const { data: templateData } = useFigmaTemplates({
-    fileId: FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS],
-    templateNames: [selectedTemplate],
-  });
+  const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
+  const presets = templateConfig.presets || [];
 
-  const template = templateData?.templates.find((t) => t.name === selectedTemplate);
-
-  const { data: versionData } = useQuery({
-    queryKey: ["figma-file-version", FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]],
-    queryFn: async () => {
-      const response = await fetch(
-        `/api/figma/file-version?fileId=${FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]}`
-      );
-      return response.json();
-    },
-  });
-
-  console.log("fe version", versionData);
-
+  // Set the first preset as default when component mounts or when presets change
   useEffect(() => {
-    setTemplateConfig(templateConfigs[selectedTemplate as keyof typeof templateConfigs]);
-  }, [selectedTemplate, setTemplateConfig]);
-
-  useEffect(() => {
-    const assets =
-      template?.groups
-        .map((group) => ({
-          templateName: template.name,
-          groupName: group.name,
-          assetId: selectedAssets[group.name] || group.assets[0]?.id,
-        }))
-        .filter((asset) => asset.assetId) || [];
-
-    setOverlayAssets(assets);
-  }, [template, selectedAssets, setOverlayAssets]);
-
-  useEffect(() => {
-    if (versionData) {
-      setFileVersion(versionData);
+    if (presets.length > 0 && !selectedPreset) {
+      setSelectedPreset(presets[0].id);
     }
-  }, [versionData, setFileVersion]);
+  }, [presets]);
 
-  console.log("selectedAssets", selectedAssets);
+  const selectedPresetConfig = presets.find((preset) => preset.id === selectedPreset);
 
-  const handleAssetSelection = (group: FigmaTemplateGroup, _: string, assetId: string) => {
+  // Get all unique assetSourcePages from the template config
+  const assetPages = templateConfig.fields
+    .filter((field) => field.type === "figmaAssetDropdownSelect")
+    .map((field) => field.assetSourcePage)
+    .filter((page): page is string => !!page);
+
+  // Fetch assets for all pages
+  const { data: assets } = useFigmaAssets({
+    fileId: templateConfig.fileId,
+    pages: assetPages,
+  });
+
+  console.log("Template Generator rerender");
+
+  useEffect(() => {
+    console.log("setting template config");
+    setTemplateConfig(templateConfig);
+  }, [selectedSource, setTemplateConfig]);
+
+  // Set the overlay assets when the preset changes
+  useEffect(() => {
+    console.log("setting overlay assets");
+    const assets =
+      selectedPresetConfig?.fields
+        .map((field) => {
+          const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+          const selected = selectedAssets[field.fieldId];
+          if (!selected || !fullField?.assetSourcePage) return null;
+
+          return {
+            templateName: selectedSource,
+            pageName: selected.pageName,
+            assetId: selected.assetId,
+            fileId: templateConfig.fileId,
+          };
+        })
+        .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)) || [];
+    console.log("assets", assets);
+    setOverlayAssets(assets);
+  }, [selectedPresetConfig, selectedAssets, setOverlayAssets, templateConfig.fields]);
+
+  // Create grouped fields when assets or config changes
+  useEffect(() => {
+    if (!assets || !selectedPresetConfig) return;
+
+    const newGroupedFields: Record<string, { name: string; id: string; assets: any[]; defaultValue: any }> = {};
+
+    selectedPresetConfig.fields.forEach((field) => {
+      const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+      if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
+        newGroupedFields[field.fieldId] = {
+          name: fullField.label || "unknown",
+          id: field.fieldId,
+          assets: assets[fullField.assetSourcePage] || [],
+          defaultValue: field.value,
+        };
+      }
+    });
+
+    setGroupedFields(newGroupedFields);
+  }, [assets, selectedPresetConfig, templateConfig.fields]);
+
+  const handleAssetSelection = useCallback((group: FigmaTemplateGroup, pageName: string, assetId: string) => {
     setSelectedAssets((prev) => ({
       ...prev,
-      [group.name]: assetId,
+      [group.id]: { pageName, assetId },
     }));
-  };
+  }, []);
 
   return (
     <Container size="2">
       <Flex direction="column" gap="4">
-        <TemplateHeader fileId={FIGMA_FILE_IDS[selectedFile as keyof typeof FIGMA_FILE_IDS]} template={template} />
+        {/* <TemplateHeader fileId={templateConfig.fileId} template={templateConfig} /> */}
 
         <Flex direction="column" gap="2">
           <Text as="label" size="2" weight="bold">
             Source
           </Text>
-          <Select.Root value={selectedFile} onValueChange={(value) => setSelectedFile(value)}>
+          <Select.Root value={selectedSource} onValueChange={(value) => setSelectedSource(value)}>
             <Select.Trigger />
             <Select.Content>
-              {Object.keys(FIGMA_FILE_IDS).map((file) => (
-                <Select.Item key={file} value={file}>
-                  {file}
+              {Object.keys(templateConfigs).map((source) => (
+                <Select.Item key={source} value={source}>
+                  {source}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -108,17 +126,14 @@ export function TemplateGenerator() {
 
         <Flex direction="column" gap="2">
           <Text as="label" size="2" weight="bold">
-            Template
+            Preset
           </Text>
-          <Select.Root
-            value={selectedTemplate}
-            onValueChange={(value) => setSelectedTemplate(value as keyof typeof templateConfigs)}
-          >
+          <Select.Root value={selectedPreset} onValueChange={(value) => setSelectedPreset(value)}>
             <Select.Trigger />
             <Select.Content>
-              {Object.keys(templateConfigs).map((template) => (
-                <Select.Item key={template} value={template}>
-                  {template}
+              {presets.map((preset) => (
+                <Select.Item key={preset.id} value={preset.id}>
+                  {preset.label}
                 </Select.Item>
               ))}
             </Select.Content>
@@ -127,31 +142,42 @@ export function TemplateGenerator() {
 
         <Form>
           <Flex direction="column" gap="4">
-            {template?.groups.map((group) => (
-              <GroupedAssetSelect
-                key={group.id}
-                group={group}
-                onSelect={handleAssetSelection}
-                templateName={selectedTemplate}
-              />
-            ))}
+            {selectedPresetConfig?.fields.map((field) => {
+              const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+              switch (fullField?.type) {
+                case "figmaAssetDropdownSelect":
+                  const groupData = groupedFields[field.fieldId];
+                  return groupData ? (
+                    <GroupedAssetSelect
+                      key={field.fieldId}
+                      group={{
+                        ...groupData,
+                        value: field.value,
+                      }}
+                      onSelect={handleAssetSelection}
+                      pageName={fullField?.assetSourcePage || ""}
+                      fileId={templateConfig.fileId}
+                    />
+                  ) : null;
+                case "text":
+                  return (
+                    <Flex direction="column" gap="2" key={field.fieldId}>
+                      <Text as="label" size="2" weight="bold">
+                        {fullField?.label}
+                      </Text>
+                      <TextField.Root
+                        type="text"
+                        value={textInputs[field.fieldId] || ""}
+                        onChange={(e) => setTextInputs({ ...textInputs, [field.fieldId]: e.target.value })}
+                        placeholder={`Enter ${fullField?.label}`}
+                      />
+                    </Flex>
+                  );
+              }
+            })}
           </Flex>
         </Form>
 
-        {/* Render text fields based on template config */}
-        {templateConfig?.fields?.map((field: any) => (
-          <Flex direction="column" gap="2" key={field.name}>
-            <Text as="label" size="2" weight="bold">
-              {field.label}
-            </Text>
-            <TextField.Root
-              type="text"
-              value={textInputs[field.name] || ""}
-              onChange={(e) => setTextInputs({ ...textInputs, [field.name]: e.target.value })}
-              placeholder={`Enter ${field.label}`}
-            />
-          </Flex>
-        ))}
         <ImageUpload />
         <DownloadButton />
       </Flex>

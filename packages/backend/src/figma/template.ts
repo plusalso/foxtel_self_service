@@ -20,6 +20,7 @@ export interface FigmaTemplateGroup {
 
 export interface FigmaTemplate {
   name: string; // e.g., "Single Event Fixture Title"
+  prefix: string; // e.g., "Single Event"
   groups: FigmaTemplateGroup[];
 }
 

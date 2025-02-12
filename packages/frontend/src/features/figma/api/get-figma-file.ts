@@ -1,8 +1,7 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { FigmaFile } from "@/lib/figma-client";
 import { QueryConfig } from "@/lib/react-query";
 
-export const getFigmaFile = (fileId: string): Promise<FigmaFile> => {
+export const getFigmaFile = (fileId: string) => {
   return fetch(`/api/figma/file?fileId=${fileId}`).then((res) => res.json());
 };
 

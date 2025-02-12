@@ -1,3 +1,4 @@
+import { Rnd } from "react-rnd";
 //after adding new renderers, add them to the renderers object in ImageOverlay.tsx
 export const DefaultTextRenderer = ({
   field, //the json template config
@@ -23,10 +24,28 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
   );
 };
 
-// if you can't just use the containerStyle to get what you want, add custom componentsto design more complicated text overlays,
-//  Update the json to map to the new component.
-// export const CustomTextField = ({ field, value, onChange }) => (
-//   <div style={{ ...field.containerStyle, border: '3px dashed red' }}>
-//        <icon />
-//   </div>
-// );
+export const ResizableImageRenderer = ({ field, value }: { field: any; value: string }) => (
+  <Rnd
+    default={{
+      x: field.containerStyle?.x || 0,
+      y: field.containerStyle?.y || 0,
+      width: field.containerStyle?.width || 100,
+      height: field.containerStyle?.height || 100,
+    }}
+    lockAspectRatio={true}
+    style={{
+      zIndex: field.containerStyle?.zIndex || 1,
+    }}
+  >
+    <img
+      src={value}
+      alt={field.label}
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        pointerEvents: "none",
+      }}
+    />
+  </Rnd>
+);

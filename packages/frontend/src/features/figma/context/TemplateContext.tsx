@@ -1,22 +1,19 @@
 import { createContext, useContext, ReactNode, useState } from "react";
+import { TemplateConfig } from "../types/template";
+
+interface OverlayAsset {
+  fileId: string;
+  pageName: string;
+  assetId: string;
+}
 
 interface TemplateContextType {
-  overlayAssets: Array<{
-    templateName: string;
-    groupName: string;
-    assetId: string;
-  }>;
+  overlayAssets: OverlayAsset[];
   fileVersion?: string;
-  templateConfig: any;
+  templateConfig: TemplateConfig;
   textInputs: Record<string, string>;
   customImage: string;
-  setOverlayAssets: (
-    assets: Array<{
-      templateName: string;
-      groupName: string;
-      assetId: string;
-    }>
-  ) => void;
+  setOverlayAssets: (assets: OverlayAsset[]) => void;
   setFileVersion: (version: string) => void;
   setTemplateConfig: (config: any) => void;
   setTextInputs: (inputs: Record<string, string>) => void;
@@ -26,13 +23,7 @@ interface TemplateContextType {
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
 
 export function TemplateProvider({ children }: { children: ReactNode }) {
-  const [overlayAssets, setOverlayAssets] = useState<
-    Array<{
-      templateName: string;
-      groupName: string;
-      assetId: string;
-    }>
-  >([]);
+  const [overlayAssets, setOverlayAssets] = useState<OverlayAsset[]>([]);
   const [fileVersion, setFileVersion] = useState<string>();
   const [templateConfig, setTemplateConfig] = useState<any>(null);
   const [textInputs, setTextInputs] = useState<Record<string, string>>({});

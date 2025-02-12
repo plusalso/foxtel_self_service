@@ -1,12 +1,16 @@
 import { getS3ImageUrl } from "../hooks/use-figma-image";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
-import { DefaultTextRenderer, CornerTextRenderer } from "@/components/CustomFieldRenderers/CustomFieldRenderers";
+import {
+  DefaultTextRenderer,
+  CornerTextRenderer,
+  ResizableImageRenderer,
+} from "@/components/CustomFieldRenderers/CustomFieldRenderers";
 import { Rnd } from "react-rnd";
 import styles from "./ImageOverlay.module.scss";
 interface ImageOverlayProps {
   selectedAssets: Array<{
-    templateName: string;
-    groupName: string;
+    fileId: string;
+    pageName: string;
     assetId: string;
   }>;
   templateConfig: any;
@@ -15,7 +19,8 @@ interface ImageOverlayProps {
 export const renderers = {
   DefaultTextRenderer: DefaultTextRenderer,
   CornerTextRenderer: CornerTextRenderer,
-  // Add other renderers here as needed
+  ResizableImageRenderer: ResizableImageRenderer,
+  // add other renderers here as needed
 };
 export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: ImageOverlayProps) => {
   const { customImage } = useTemplate();
@@ -64,40 +69,48 @@ export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: Ima
         </Rnd>
       )}
       {selectedAssets.map((asset, index) => (
-        <div style={{ pointerEvents: "none" }}>
+        <div key={asset.assetId} style={{ pointerEvents: "none" }}>
           <OverlayImage
             key={asset.assetId}
-            templateName={asset.templateName}
-            groupName={asset.groupName}
+            fileId={asset.fileId}
+            pageName={asset.pageName}
             assetId={asset.assetId}
             zIndex={selectedAssets.length - index + 1}
           />
         </div>
       ))}
       {/* Render text fields with styles */}
-      {templateConfig?.fields?.map((field: any) => {
+      {Object.entries(textInputs).map(([fieldId, value]) => {
+        //find the field in the template config
+        const field = templateConfig?.fields?.find((field: any) => field.id === fieldId);
         const RendererComponent = renderers[field.renderer as keyof typeof renderers];
 
-        return <RendererComponent key={field.name} field={field} value={textInputs[field.name] || ""} />;
+        if (!RendererComponent) {
+          console.warn(`Renderer for ${field.id} - ${field.renderer} not found.`);
+          return null;
+        }
+
+        return <RendererComponent key={field.name} field={field} value={value} />;
       })}
     </div>
   );
 };
 
 interface OverlayImageProps {
-  templateName: string;
-  groupName: string;
+  fileId: string;
+  pageName: string;
   assetId: string;
   zIndex: number;
 }
 
-const OverlayImage = ({ templateName, groupName, assetId, zIndex }: OverlayImageProps) => {
-  const imageUrl = getS3ImageUrl(templateName, groupName, assetId);
+const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) => {
+  console.log("rerendering overlay image");
+  const imageUrl = getS3ImageUrl(fileId, pageName, assetId);
 
   return (
     <img
       src={imageUrl}
-      alt={`${templateName}/${groupName}`}
+      alt={pageName}
       style={{
         position: "absolute",
         top: 0,

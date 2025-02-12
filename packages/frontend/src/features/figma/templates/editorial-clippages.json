@@ -30,7 +30,7 @@
         "fontWeight": "300",
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
-        "transform": "skewX(-21.68deg)"
+        "transform": "skewX(-21deg)"
       },
       "renderer": "CornerTextRenderer"
     },
@@ -57,7 +57,7 @@
         "alignItems": "center",
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
-        "transform": "skewX(-21.68deg)"
+        "transform": "skewX(-21deg)"
       },
       "renderer": "CornerTextRenderer"
     }

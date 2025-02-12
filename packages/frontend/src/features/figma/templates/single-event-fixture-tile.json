@@ -1,7 +1,114 @@
 {
+  "id": "SingleEventFixtureTile",
+  "label": "Single Event Fixture Tile",
+  "fileId": "51R2nLVvwmccZxjiIgo29P",
+  "supportsUploadedImages": true,
+  "presets": [
+    {
+      "id": "foxEvent",
+      "label": "Fox Event",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Fox Mini"
+        },
+        {
+          "fieldId": "textTeaser"
+        },
+        {
+          "fieldId": "background",
+          "value": "F1"
+        }
+      ]
+    },
+    {
+      "id": "foxMini",
+      "label": "Fox Mini",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Fox Mini"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "foxBite",
+      "label": "Fox Bite",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Fox Bite"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    }
+  ],
   "fields": [
     {
-      "name": "title",
+      "id": "overlay",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Overlay",
+      "assetSourcePage": "Single Event Fixture Tile/Overlay"
+    },
+    {
+      "id": "textTeaser",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Text Teaser",
+      "assetSourcePage": "Single Event Fixture Tile/Text Teaser"
+    },
+    {
+      "id": "wedge1",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Wedge 1",
+      "assetSourcePage": "Single Event Fixture Tile/Wedge 1"
+    },
+    {
+      "id": "wedge2",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Wedge 2",
+      "assetSourcePage": "Single Event Fixture Tile/Wedge 2"
+    },
+    {
+      "id": "background",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Background",
+      "assetSourcePage": "Single Event Fixture Tile/Background"
+    },
+
+    {
+      "id": "title",
+      "type": "text",
       "label": "Title",
       "defaultValue": "Fixture Title",
       "containerStyle": {
@@ -16,7 +123,8 @@
       "renderer": "DefaultTextRenderer"
     },
     {
-      "name": "subtitle",
+      "id": "subtitle",
+      "type": "text",
       "label": "Subtitle",
       "defaultValue": "Fixture Subtitle",
       "containerStyle": {
@@ -28,6 +136,62 @@
         "zIndex": 100
       },
       "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "bottomRightTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "145px",
+        "right": "66.62px",
+        "color": "#B1B1BB",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Gibson",
+        "alignItems": "center",
+        "fontWeight": "300",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)"
+      },
+      "renderer": "CornerTextRenderer"
+    },
+    {
+      "id": "bottomRightTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "0px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Gibson",
+        "fontWeight": "500",
+        "alignItems": "center",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)"
+      },
+      "renderer": "CornerTextRenderer"
     }
   ]
 }
