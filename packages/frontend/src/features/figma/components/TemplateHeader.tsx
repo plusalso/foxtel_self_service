@@ -13,6 +13,7 @@ export const TemplateHeader = ({ fileId, nodeIds }: TemplateHeaderProps) => {
   const cacheAssets = useCacheAssets();
 
   const handleSync = () => {
+    console.log("nodeIds", nodeIds);
     if (!nodeIds || nodeIds.length === 0) return;
     cacheAssets.mutate({ fileId, nodeIds });
   };

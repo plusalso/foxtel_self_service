@@ -3,15 +3,16 @@ import { Select, Flex, Text, TextField } from "@radix-ui/themes";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
-import { FigmaTemplateGroup } from "@/features/figma/types/template";
+import { FigmaTemplateGroup, TemplateConfig } from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
 import { useFigmaAssets } from "@/features/figma/api/get-figma-assets";
 import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
-
+import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
 const templateConfigs = {
-  "Single Event Fixture Tile": singleEventFixtureTileConfig,
+  "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
+  "Editorial Clippages": editorialClippagesConfig as TemplateConfig,
 };
 
 interface GroupedAssetState {
@@ -30,6 +31,7 @@ export function TemplateGenerator() {
   const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs } = useTemplate();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
+  console.log("templateConfig", templateConfig);
   const presets = templateConfig.presets || [];
 
   // Set the first preset as default when component mounts or when presets change
@@ -65,7 +67,7 @@ export function TemplateGenerator() {
         }
       }
     });
-
+    
     return Array.from(uniquePageIds);
   }, [assets]);
 

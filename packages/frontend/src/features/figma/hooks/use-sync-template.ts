@@ -1,21 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
+import { fetchFromApi } from "@/lib/fetchFromApi";
 
 export const useCacheAssets = () => {
   // const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ fileId, nodeIds }: { fileId: string; nodeIds: string[] }) => {
-      const response = await fetch("/figma/cache-assets", {
+      return fetchFromApi("/figma/cache-assets", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fileId, nodeIds }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to sync assets");
-      }
-
-      return response.json();
     },
     // onSuccess: (_, { fileId, nodeIds }) => {
     //   // Group invalidations by template

@@ -56,11 +56,11 @@ export interface PresetField {
 
 export interface Preset {
   id: string;
-  name: string;
+  label: string;
   fields: PresetField[];
 }
 export interface TemplateConfig {
-  name: string;
+  id: string;
   fileId: string;
   supportsUploadedImages?: boolean;
   presets: Preset[];

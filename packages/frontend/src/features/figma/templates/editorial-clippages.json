@@ -1,14 +1,30 @@
 {
+  "id": "EditorialClippages",
+  "label": "Editorial Clippages",
+  "fileId": "nj0cfZj9WsfxoVJUIMcE6U",
   "supportsUploadedImages": true,
-  "uploadedImageDefaults": {
-    "x": 960,
-    "y": 0,
-    "width": 300,
-    "height": 600
-  },
+  "presets": [
+    {
+      "id": "foxEvent",
+      "label": "Fox Event",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Fox Mini"
+        }
+      ]
+    }
+  ],
   "fields": [
     {
-      "name": "topText",
+      "id": "overlay",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Overlay",
+      "assetSourcePage": "Editorial Clippages/Overlay"
+    },
+    {
+      "id": "bottomRightTextTop",
+      "type": "text",
       "label": "Top Text",
       "defaultValue": "Top Text",
       "containerStyle": {
@@ -21,7 +37,7 @@
         "textTransform": "uppercase",
         "backgroundColor": "#140C11",
         "padding": "0 100px 0 57px",
-        "margin-right": "-100px",
+        "marginRight": "-100px",
         "height": "145px",
         "zIndex": 100,
         "display": "flex",
@@ -35,7 +51,8 @@
       "renderer": "CornerTextRenderer"
     },
     {
-      "name": "bottomText",
+      "id": "bottomRightTextBottom",
+      "type": "text",
       "label": "Bottom Text",
       "defaultValue": "Bottom Text",
       "containerStyle": {
@@ -48,7 +65,7 @@
         "textTransform": "uppercase",
         "backgroundColor": "#140C11",
         "padding": "0 100px 0 57px",
-        "margin-right": "-100px",
+        "marginRight": "-100px",
         "height": "145px",
         "zIndex": 100,
         "display": "flex",

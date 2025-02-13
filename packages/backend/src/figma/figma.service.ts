@@ -543,12 +543,16 @@ export class FigmaService {
     fileId: string,
     pages: string[],
   ): Promise<Record<string, FigmaAssetResponse[]>> {
+
     // First get just the pages to find the IDs we need
     const allPages = await this.getPages(fileId);
     const targetPageIds = allPages
       .filter((page) => pages.includes(page.name))
       .map((page) => page.id);
 
+
+    console.log('targetPageIds', targetPageIds);
+    console.log('pages', pages);
     if (targetPageIds.length === 0) {
       return {};
     }
@@ -558,7 +562,7 @@ export class FigmaService {
       depth: 1,
     });
     const response: Record<string, FigmaAssetResponse[]> = {};
-
+    console.log('nodesResponse', nodesResponse);
     // Process each page's frames
     Object.values(nodesResponse.nodes).forEach((pageData) => {
       const page = pageData as { document: FigmaNode; id: string };
@@ -567,7 +571,6 @@ export class FigmaService {
 
       if (page.document.children) {
         response[pageName] = page.document.children
-          .filter((node) => node.type === 'FRAME')
           .map((frame) => ({
             id: frame.id,
             name: frame.name,

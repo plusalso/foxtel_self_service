@@ -8,6 +8,10 @@ import path from "path";
 const resolvedPath = path.resolve(__dirname, "./src/");
 console.log("@ alias resolves to:", resolvedPath);
 
+//load the .env from ../../
+import dotenv from "dotenv";
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+
 export default defineConfig({
   plugins: [react()],
   test: {
