@@ -43,7 +43,7 @@ export function GroupedAssetSelect({
   }, [group.assets]);
 
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
-
+  console.log("pagename is ", pageName);
   const comboboxAssets = useMemo(
     () =>
       selection.mainGroup
@@ -63,6 +63,7 @@ export function GroupedAssetSelect({
     return asset?.name || "";
   }, [selection.mainGroup, selection.assetId, groupedAssets]);
 
+
   return (
     <Flex direction="column" gap="2">
       <Text as="label" size="2" weight="bold">
@@ -76,7 +77,7 @@ export function GroupedAssetSelect({
               // When main group changes, select the first asset in that group
               const firstAssetInGroup = groupedAssets[mainGroup]?.[0];
               if (firstAssetInGroup) {
-                onSelect(group, mainGroup, firstAssetInGroup.id);
+                onSelect(group, pageName, firstAssetInGroup.id);
               }
             }}
           >
@@ -97,7 +98,7 @@ export function GroupedAssetSelect({
                 value={selection.assetId || null}
                 inputValue={selectedAssetName}
                 onInputValueChange={() => {}} // No-op since we're controlling the value
-                onValueChange={(assetId) => onSelect(group, selection.mainGroup || pageName, assetId)}
+                onValueChange={(assetId) => onSelect(group, pageName, assetId)}
               />
             </Flex>
           )}

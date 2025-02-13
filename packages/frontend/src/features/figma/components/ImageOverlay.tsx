@@ -28,7 +28,7 @@ export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: Ima
   const { customImage } = useTemplate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
-
+  console.log("selected assets", selectedAssets);
   useEffect(() => {
     const updateScale = () => {
       if (containerRef.current) {
