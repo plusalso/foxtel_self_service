@@ -10,6 +10,7 @@ import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAsset
 import { useFigmaAssets } from "@/features/figma/api/get-figma-assets";
 import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
+
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
   "Editorial Clippages": editorialClippagesConfig as TemplateConfig,

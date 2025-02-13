@@ -10,7 +10,21 @@ const DownloadButton = () => {
     const node = document.getElementById("image-overlay");
     if (node) {
       try {
-        const dataUrl = format === "png" ? await toPng(node) : await toJpeg(node, { quality: 0.95 });
+        const options = {
+          width: 1920,
+          height: 1080,
+          pixelRatio: 1,
+          style: {
+            width: '1920px',
+            height: '1080px',
+            transform: 'none'
+          }
+        };
+        
+        const dataUrl = format === "png" 
+          ? await toPng(node, options)
+          : await toJpeg(node, { ...options, quality: 1.0 });
+
         const link = document.createElement("a");
         link.download = `${filename}.${format}`;
         link.href = dataUrl;
