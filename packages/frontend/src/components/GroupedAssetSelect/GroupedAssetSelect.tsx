@@ -60,12 +60,6 @@ export function GroupedAssetSelect({
   // Add state for input value
   const [inputValue, setInputValue] = useState("");
 
-  // Find the selected asset's name for the combobox input value
-  const selectedAssetName = useMemo(() => {
-    if (!selection.mainGroup || !selection.assetId) return "";
-    const asset = groupedAssets[selection.mainGroup]?.find((a) => a.id === selection.assetId);
-    return asset?.name || "";
-  }, [selection.mainGroup, selection.assetId, groupedAssets]);
 
   return (
     <Flex direction="column" gap="2">
