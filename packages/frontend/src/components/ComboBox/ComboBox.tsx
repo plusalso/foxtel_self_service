@@ -20,15 +20,16 @@ interface ComboboxProps {
 
 const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputValueChange, onValueChange }) => {
   const [inputItems, setInputItems] = useState(assets);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   useEffect(() => {
-    if (inputValue) {
+    if (isFiltering && inputValue) {
       const results = fuzzysort.go(inputValue, assets, { key: "name" });
       setInputItems(results.map((result) => result.obj));
     } else {
       setInputItems(assets);
     }
-  }, [assets, inputValue]);
+  }, [assets, inputValue, isFiltering]);
 
   const { isOpen, getToggleButtonProps, getMenuProps, getInputProps, highlightedIndex, getItemProps, reset } =
     useCombobox({
@@ -36,12 +37,31 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
       itemToString: (item) => (item ? item.name : ""),
       inputValue,
       selectedItem: assets.find((item) => item.id === value) || null,
-      onInputValueChange: ({ inputValue }) => {
-        onInputValueChange(inputValue || "");
-      },
-      onSelectedItemChange: ({ selectedItem }) => {
-        if (selectedItem) {
-          onValueChange(selectedItem.id);
+      defaultHighlightedIndex: -1,
+      defaultIsOpen: false,
+      onStateChange: ({ type, selectedItem: newSelectedItem, inputValue: newInputValue }) => {
+        switch (type) {
+          case useCombobox.stateChangeTypes.InputChange:
+            setIsFiltering(true);
+            onInputValueChange(newInputValue || "");
+            break;
+          case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          case useCombobox.stateChangeTypes.ItemClick:
+            if (newSelectedItem) {
+              setIsFiltering(false);
+              onValueChange(newSelectedItem.id);
+              onInputValueChange(newSelectedItem.name);
+            }
+            break;
+          case useCombobox.stateChangeTypes.ToggleButtonClick:
+          case useCombobox.stateChangeTypes.InputClick:
+            if (!isOpen) {
+              setIsFiltering(false);
+              // Keep the selected item's name in the input
+              const selectedItem = assets.find((item) => item.id === value);
+              onInputValueChange(selectedItem?.name || "");
+            }
+            break;
         }
       },
     });

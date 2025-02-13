@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Flex, Select, Text } from "@radix-ui/themes";
 import { FigmaAsset, FigmaTemplateGroup } from "../../features/figma/types/template";
 import { LuCornerDownRight } from "react-icons/lu";
@@ -17,13 +17,14 @@ interface GroupedAssetSelectProps {
   selection?: {
     mainGroup: string | null;
     assetId: string | null;
+    inputValue?: string;
   };
   onSelect: (group: FigmaTemplateGroup, pageName: string, assetId: string) => void;
 }
 
 export function GroupedAssetSelect({
   group,
-  selection = { mainGroup: null, assetId: null },
+  selection = { mainGroup: null, assetId: null, inputValue: "" },
   onSelect,
   pageName,
   fileId,
@@ -56,13 +57,15 @@ export function GroupedAssetSelect({
     [selection.mainGroup, groupedAssets, fileId, pageName]
   );
 
+  // Add state for input value
+  const [inputValue, setInputValue] = useState("");
+
   // Find the selected asset's name for the combobox input value
   const selectedAssetName = useMemo(() => {
     if (!selection.mainGroup || !selection.assetId) return "";
     const asset = groupedAssets[selection.mainGroup]?.find((a) => a.id === selection.assetId);
     return asset?.name || "";
   }, [selection.mainGroup, selection.assetId, groupedAssets]);
-
 
   return (
     <Flex direction="column" gap="2">
@@ -74,10 +77,10 @@ export function GroupedAssetSelect({
           <Select.Root
             value={selection.mainGroup || ""}
             onValueChange={(mainGroup) => {
-              // When main group changes, select the first asset in that group
               const firstAssetInGroup = groupedAssets[mainGroup]?.[0];
               if (firstAssetInGroup) {
                 onSelect(group, pageName, firstAssetInGroup.id);
+                setInputValue(""); // Reset input value when group changes
               }
             }}
           >
@@ -96,9 +99,14 @@ export function GroupedAssetSelect({
               <Combobox
                 assets={comboboxAssets}
                 value={selection.assetId || null}
-                inputValue={selectedAssetName}
-                onInputValueChange={() => {}} // No-op since we're controlling the value
-                onValueChange={(assetId) => onSelect(group, pageName, assetId)}
+                inputValue={inputValue}
+                onInputValueChange={(value) => setInputValue(value)}
+                onValueChange={(assetId) => {
+                  onSelect(group, pageName, assetId);
+                  // Reset input value when an item is selected
+                  const selectedAsset = comboboxAssets.find((asset) => asset.id === assetId);
+                  setInputValue(selectedAsset?.name || "");
+                }}
               />
             </Flex>
           )}

@@ -156,12 +156,15 @@ export function TemplateGenerator() {
   }, [selectedPresetConfig, assets, templateConfig.fields]);
 
   const handleAssetSelection = useCallback((group: FigmaTemplateGroup, pageName: string, assetId: string) => {
-    // Update both the asset selections and the grouped asset state
     setSelectedAssets((prev) => ({
       ...prev,
-      [group.id]: { pageName, assetId },
+      [group.id]: { 
+        fileId: templateConfig.fileId, 
+        pageName: pageName,
+        assetId 
+      },
     }));
-
+    
     const selectedAsset = group.assets.find((asset) => asset.id === assetId);
     if (selectedAsset) {
       const [mainGroup, itemName] = selectedAsset.name.split("/");
@@ -173,7 +176,8 @@ export function TemplateGenerator() {
         },
       }));
     }
-  }, []);
+  }, [templateConfig.fileId]);
+
   console.log("allAssetPages", pageNodeIds);
   console.log("assets", assets);
   return (
