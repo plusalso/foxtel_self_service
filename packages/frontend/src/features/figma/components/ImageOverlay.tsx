@@ -69,8 +69,8 @@ export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: Ima
               templateConfig?.uploadedImageDefaults ?? {
                 x: 0,
                 y: 0,
-                width: 300,
-                height: 600,
+                // width: 300,
+                // height: 600,
               }
             }
             lockAspectRatio={true}

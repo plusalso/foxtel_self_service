@@ -13,7 +13,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   padding: 5px;
-  background-color: #f9f9f9;
+  background-color: #fff;
 }
 
 .comboboxInput {
@@ -30,8 +30,15 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
   padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+
+  &:hover {
+    color: #000;
+  }
 }
 
 .comboboxList {

@@ -3,7 +3,7 @@ import { useCombobox } from "downshift";
 import fuzzysort from "fuzzysort";
 import styles from "./ComboBox.module.scss";
 import clsx from "clsx";
-
+import { LuChevronDown, LuX } from "react-icons/lu";
 interface Asset {
   id: string;
   name: string;
@@ -81,10 +81,10 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
           className={styles.comboboxClearButton}
           aria-label="clear selection"
         >
-          &#x2715;
+          <LuX size={16} color="#666" />
         </button>
         <button type="button" {...getToggleButtonProps()} className={styles.comboboxButton} aria-label="toggle menu">
-          &#8595;
+          <LuChevronDown size={16} color="#666" />
         </button>
       </div>
       <ul
