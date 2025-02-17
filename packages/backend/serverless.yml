@@ -11,7 +11,7 @@ provider:
   architecture: x86_64
   runtimeManagement: auto
   memorySize: 3550
-  timeout: 300 # 5 min
+  timeout: 900 #15 min timeout
   environment:
     NODE_ENV: ${self:provider.stage}
     STAGE: ${self:provider.stage}

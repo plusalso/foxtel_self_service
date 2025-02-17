@@ -102,6 +102,8 @@ export class StorageService {
         Key: key,
       });
       const response = await this.s3Client.send(command);
+      //log metadata
+      console.log('Metadata from getObjectMetadata:', response.Metadata);
       return response.Metadata || null;
     } catch (error) {
       if (

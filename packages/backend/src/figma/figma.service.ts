@@ -403,7 +403,7 @@ export class FigmaService {
         const key = `figma-cache/${pageName}/${assetId}`;
         try {
           const metadata = await this.storageService.getObjectMetadata(key);
-          console.log('metadata', metadata);
+          console.log('current metadata', metadata);
           if (!metadata || metadata.hash !== hash) {
             console.log(`Asset ${assetName} needs to be updated.`);
             assetsToUpdate.push({
@@ -500,43 +500,51 @@ export class FigmaService {
       hash: string;
     }>,
   ) {
-    const batchSize = 5; // Define a sensible batch size
+    const batchSize = 20; // Define a sensible batch size
+    try {
+      const startTime = Date.now();
+      for (let i = 0; i < assets.length; i += batchSize) {
+        const batch = assets.slice(i, i + batchSize);
 
-    for (let i = 0; i < assets.length; i += batchSize) {
-      const batch = assets.slice(i, i + batchSize);
-
-      const assetIds = batch.map((asset) => asset.assetId);
-      console.log(
-        `Getting images for ${assetIds.length} assets. Assets from ${i} to ${i + batchSize} of ${assets.length}`,
-      );
-      const figmaImages = await this.getImages(fileId, assetIds);
-      console.log('figmaImages', figmaImages);
-      for (const asset of batch) {
-        const imageUrl = figmaImages.images[asset.assetId];
-        if (!imageUrl) {
-          console.warn(`No image URL found for asset ${asset.assetId}`);
-          continue;
-        }
-
-        const response = await fetch(imageUrl);
-        const buffer = Buffer.from(await response.arrayBuffer());
-
-        const calcSizeInMB = (buffer: Buffer) => {
-          return (buffer.length / 1024 / 1024).toFixed(2);
-        };
-
-        const key = `figma-cache/${asset.pageName}/${asset.assetId}`;
+        const assetIds = batch.map((asset) => asset.assetId);
         console.log(
-          `Uploading asset ${asset.assetName} to S3. Size ${calcSizeInMB(buffer)} MB`,
+          `Getting images for ${assetIds.length} assets. Assets from ${i} to ${i + batchSize} of ${assets.length}`,
         );
-        await this.storageService.putObject(key, buffer, {
-          contentType: 'image/png',
-          metadata: { hash: asset.hash },
-        });
-        console.log(`Uploaded asset ${asset.assetName} to S3.`);
-      }
+        const figmaImages = await this.getImages(fileId, assetIds);
+        console.log('figmaImages', figmaImages);
+        //log elapsed time
+        const elapsedTime = Date.now() - startTime;
+        console.log(`Elapsed time: ${elapsedTime / 1000} seconds`);
+        for (const asset of batch) {
+          const imageUrl = figmaImages.images[asset.assetId];
+          if (!imageUrl) {
+            console.warn(`No image URL found for asset ${asset.assetId}`);
+            continue;
+          }
+          console.log(`Downloading asset ${asset.assetName} from ${imageUrl}`);
+          const response = await fetch(imageUrl);
+          console.log(`Downloaded asset ${asset.assetName} from ${imageUrl}`);
+          const buffer = Buffer.from(await response.arrayBuffer());
+
+          const calcSizeInMB = (buffer: Buffer) => {
+            return (buffer.length / 1024 / 1024).toFixed(2);
+          };
+
+          const key = `figma-cache/${asset.pageName}/${asset.assetId}`;
+          console.log(
+            `Uploading asset ${asset.assetName} to S3. Size ${calcSizeInMB(buffer)} MB`,
+          );
+          await this.storageService.putObject(key, buffer, {
+            contentType: 'image/png',
+            metadata: { hash: asset.hash },
+          });
+            console.log(`Uploaded asset ${asset.assetName} to S3.`);
+          }
+        }
+        console.log(`Uploaded ${assets.length} assets. Complete`);
+    } catch (error) {
+      console.error('Error downloading and uploading assets', error);
     }
-    console.log(`Uploaded ${assets.length} assets. Complete`);
   }
 
   async getAssets(

@@ -16,7 +16,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "start:serverless-offline": "nest build && npx serverless offline --stage local",
+    "start:serverless-offline": "nest build && npx serverless offline --stage local --verbose --noTimeout",
     "deploy:dev": "npm run build && npx serverless deploy --verbose --stage dev",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
