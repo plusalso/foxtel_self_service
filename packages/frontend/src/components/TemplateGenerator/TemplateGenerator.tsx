@@ -59,7 +59,7 @@ export function TemplateGenerator() {
   const pageNodeIds = useMemo(() => {
     if (!assets) return [];
     const uniquePageIds = new Set<string>();
-
+    console.log("assets", assets);
     Object.values(assets).forEach((pageAssets) => {
       if (pageAssets.length > 0) {
         const firstAsset = pageAssets[0];
@@ -68,7 +68,7 @@ export function TemplateGenerator() {
         }
       }
     });
-    
+
     return Array.from(uniquePageIds);
   }, [assets]);
 
@@ -155,28 +155,31 @@ export function TemplateGenerator() {
     setSelectedAssets(newSelectedAssets);
   }, [selectedPresetConfig, assets, templateConfig.fields]);
 
-  const handleAssetSelection = useCallback((group: FigmaTemplateGroup, pageName: string, assetId: string) => {
-    setSelectedAssets((prev) => ({
-      ...prev,
-      [group.id]: { 
-        fileId: templateConfig.fileId, 
-        pageName: pageName,
-        assetId 
-      },
-    }));
-    
-    const selectedAsset = group.assets.find((asset) => asset.id === assetId);
-    if (selectedAsset) {
-      const [mainGroup, itemName] = selectedAsset.name.split("/");
-      setGroupedAssetSelections((prev) => ({
+  const handleAssetSelection = useCallback(
+    (group: FigmaTemplateGroup, pageName: string, assetId: string) => {
+      setSelectedAssets((prev) => ({
         ...prev,
         [group.id]: {
-          mainGroup: itemName ? mainGroup : null,
+          fileId: templateConfig.fileId,
+          pageName: pageName,
           assetId,
         },
       }));
-    }
-  }, [templateConfig.fileId]);
+
+      const selectedAsset = group.assets.find((asset) => asset.id === assetId);
+      if (selectedAsset) {
+        const [mainGroup, itemName] = selectedAsset.name.split("/");
+        setGroupedAssetSelections((prev) => ({
+          ...prev,
+          [group.id]: {
+            mainGroup: itemName ? mainGroup : null,
+            assetId,
+          },
+        }));
+      }
+    },
+    [templateConfig.fileId]
+  );
 
   console.log("allAssetPages", pageNodeIds);
   console.log("assets", assets);

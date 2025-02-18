@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { StorageService } from '../storage/storage.service';
 import { FigmaAsset, FigmaTemplate, FigmaTemplateResponse } from './template';
 import { createHash } from 'crypto';
+import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
+import { v4 as uuidv4 } from 'uuid';
+import { Readable } from 'stream';
 
 interface GetFileOptions {
   nodeIds?: string[];
@@ -118,68 +121,6 @@ export class FigmaService {
     return response.json();
   }
 
-  // async getTemplateAssets(
-  //   fileId: string,
-  //   templateName: string,
-  //   groupName: string,
-  //   assets: FigmaAsset[],
-  // ): Promise<AssetWithCache[]> {
-  //   // Get current file version for cache key
-  //   console.log('getting file version', fileId);
-  //   const fileVersion = await this.getFileVersion(fileId);
-  //   console.log('fileVersion', fileVersion);
-  //   // Check cache status for all assets
-  //   const assetResults = await Promise.all(
-  //     assets.map(async (asset) => {
-  //       const key = `figma-cache/${templateName}/${groupName}/${asset.id}-v${fileVersion}.png`;
-  //       const exists = await this.storageService.headObject(key);
-  //       return {
-  //         id: asset.id,
-  //         name: asset.name,
-  //         groupName,
-  //         exists,
-  //         key,
-  //       };
-  //     }),
-  //   );
-
-  //   // Get missing images from Figma
-  //   const missingAssetIds = assetResults
-  //     .filter((a) => !a.exists)
-  //     .map((a) => a.id);
-
-  //   if (missingAssetIds.length > 0) {
-  //     const figmaImages = await this.getImages(fileId, missingAssetIds);
-
-  //     // Cache missing images in S3
-  //     await Promise.all(
-  //       assetResults
-  //         .filter((asset) => !asset.exists)
-  //         .map(async (asset) => {
-  //           const imageUrl = figmaImages.images[asset.id];
-  //           if (!imageUrl) return;
-
-  //           const response = await fetch(imageUrl);
-  //           const buffer = Buffer.from(await response.arrayBuffer());
-
-  //           await this.storageService.upload({
-  //             key: asset.key,
-  //             body: buffer,
-  //             contentType: 'image/png',
-  //           });
-  //         }),
-  //     );
-  //   }
-
-  //   // Return all asset URLs
-  //   return assetResults.map((asset) => ({
-  //     id: asset.id,
-  //     groupName: asset.groupName,
-  //     assetName: asset.name,
-  //     url: this.storageService.getPublicUrl(asset.key),
-  //   }));
-  // }
-
   async getPageAssets(fileId: string, pageId: string): Promise<FigmaAsset[]> {
     try {
       const response = await this.getFileNodes(fileId, [pageId], { depth: 1 });
@@ -226,57 +167,6 @@ export class FigmaService {
     return parsedData.version;
   }
 
-  // async getTemplates(
-  //   fileId: string,
-  //   templateNames?: string[],
-  // ): Promise<FigmaTemplateResponse> {
-  //   const pages = await this.getPages(fileId);
-  //   const templates = new Map<string, FigmaTemplate>();
-
-  //   // Collect all page IDs
-  //   const pageIds = pages.map((page) => page.id);
-
-  //   // Fetch all nodes for the collected page IDs
-  //   const nodesResponse = await this.getFileNodes(fileId, pageIds, {
-  //     depth: 1,
-  //   });
-
-  //   for (const page of pages) {
-  //     const [templateName, groupName] = page.name.split('/');
-  //     if (!groupName) continue;
-  //     if (templateNames && !templateNames.includes(templateName)) continue;
-
-  //     if (!templates.has(templateName)) {
-  //       templates.set(templateName, {
-  //         name: templateName,
-  //         groups: [],
-  //       });
-  //     }
-
-  //     const template = templates.get(templateName);
-  //     const pageNode = nodesResponse.nodes[page.id]?.document;
-
-  //     if (pageNode && pageNode.children) {
-  //       const assets = pageNode.children
-  //         .filter((node) => node?.id && node?.name)
-  //         .map(({ id, name }) => ({ id, name }));
-
-  //       template.groups.push({
-  //         name: groupName,
-  //         id: page.id,
-  //         assets: assets.map((asset, index) => ({
-  //           id: asset.id,
-  //           name: asset.name,
-  //           order: index,
-  //         })),
-  //       });
-  //     }
-  //   }
-
-  //   return {
-  //     templates: Array.from(templates.values()),
-  //   };
-  // }
   async getTemplates(
     fileId: string,
     templateNames?: string[],
@@ -413,7 +303,7 @@ export class FigmaService {
               hash,
             });
           } else {
-            console.log(`Asset ${assetName} is up-to-date in S3.`);
+            console.log(`Asset ${assetName} is up to date in S3.`);
           }
         } catch (error) {
           console.log('Error caching asset', error);
@@ -422,77 +312,77 @@ export class FigmaService {
     }
 
     console.log('assetsToUpdate', assetsToUpdate);
-    //now we need to download and upload the assets
-    this.downloadAndUploadAssets(fileId, assetsToUpdate);
+    // Invoke the download/upload lambda asynchronously (fire-and-forget) so that the long-running process doesn't block the current lambda.
+    const jobId = uuidv4();
+    if (assetsToUpdate.length === 0) {
+      console.log('No assets to update. Returning early.');
+      return {
+        jobId: null,
+        assetsToUpdate,
+      };
+    }
+
+    // write a started marker file
+    const markerKey = `job-markers/${jobId}.json`;
+    const markerData = {
+      jobId,
+      status: 'started',
+      fileId,
+      assetsCount: assetsToUpdate.length,
+      startedAt: new Date().toISOString(),
+    };
+    try {
+      await this.storageService.putObject(
+        markerKey,
+        Buffer.from(JSON.stringify(markerData)),
+        { contentType: 'application/json' },
+      );
+      console.log(`Marker file ${markerKey} created`);
+    } catch (markerError) {
+      console.error('Error creating marker file:', markerError);
+    }
+
+    const lambdaClient = new LambdaClient({
+      region: process.env.AWS_REGION || 'ap-southeast-2',
+      ...(process.env.STAGE === 'local' && {
+        endpoint: 'http://localhost:3002',
+      }),
+    });
+
+    // Ensure the function name is set via env var so it works in both local and prod environments.
+    const functionName = process.env.DOWNLOAD_UPLOAD_ASSETS_FUNCTION_NAME;
+    if (!functionName) {
+      console.error('DOWNLOAD_UPLOAD_ASSETS_FUNCTION_NAME env var is not set.');
+    } else {
+      // Pass jobId in the payload
+      const payload = {
+        fileId,
+        assets: assetsToUpdate,
+        jobId,
+      };
+      console.log('invoking lambda:', functionName);
+      const command = new InvokeCommand({
+        FunctionName: functionName,
+        InvocationType: 'Event', // asynchronous invocation (fire-and-forget)
+        Payload: Buffer.from(JSON.stringify(payload)),
+      });
+      try {
+        await lambdaClient.send(command);
+        console.log('Asynchronous lambda invoked for downloadAndUploadAssets');
+      } catch (invokeError) {
+        console.error('Error invoking asynchronous lambda:', invokeError);
+      }
+    }
 
     return {
+      jobId,
       assetsToUpdate,
     };
   }
-  chunkArray<T>(array: T[], chunkSize: number): T[][] {
-    const chunks: T[][] = [];
-    for (let i = 0; i < array.length; i += chunkSize) {
-      chunks.push(array.slice(i, i + chunkSize));
-    }
-    return chunks;
-  }
-
-  async processImagesInBatches(
-    fileId: string,
-    imageIds: string[],
-  ): Promise<{ images: Record<string, string> }> {
-    const imageChunks = this.chunkArray(imageIds, 20);
-    const allImages: Record<string, string> = {};
-
-    for (const chunk of imageChunks) {
-      const figmaImages = await this.getImages(fileId, chunk);
-      Object.assign(allImages, figmaImages.images);
-    }
-
-    return { images: allImages };
-  }
-
-  // async syncAssetsWithS3(
-  //   fileId: string,
-  //   assets: Array<{
-  //     pageId: string;
-  //     pageName: string;
-  //     assetId: string;
-  //     assetName: string;
-  //     hash: string;
-  //   }>,
-  // ) {
-  //   for (const asset of assets) {
-  //     const key = `figma-cache/${asset.pageName}/${asset.assetName}`;
-  //     const metadata = await this.storageService.getObjectMetadata(key);
-
-  //     if (metadata && metadata.hash === asset.hash) {
-  //       console.log(`Asset ${asset.assetName} is up-to-date in S3.`);
-  //       continue;
-  //     }
-
-  //     console.log(`Fetching image for asset ${asset.assetName} from Figma.`);
-  //     const figmaImages = await this.getImages(fileId, [asset.assetId]);
-  //     const imageUrl = figmaImages.images[asset.assetId];
-
-  //     if (!imageUrl) {
-  //       console.warn(`No image URL found for asset ${asset.assetId}`);
-  //       continue;
-  //     }
-
-  //     const response = await fetch(imageUrl);
-  //     const buffer = Buffer.from(await response.arrayBuffer());
-
-  //     console.log(`Uploading asset ${asset.assetName} to S3.`);
-  //     await this.storageService.putObject(key, buffer, {
-  //       contentType: 'image/png',
-  //       metadata: { hash: asset.hash },
-  //     });
-  //   }
-  // }
 
   async downloadAndUploadAssets(
     fileId: string,
+    jobId: string,
     assets: Array<{
       pageName: string;
       assetId: string;
@@ -500,6 +390,7 @@ export class FigmaService {
       hash: string;
     }>,
   ) {
+    console.log('downloading and uploading. JobId', jobId);
     const batchSize = 20; // Define a sensible batch size
     try {
       const startTime = Date.now();
@@ -538,12 +429,48 @@ export class FigmaService {
             contentType: 'image/png',
             metadata: { hash: asset.hash },
           });
-            console.log(`Uploaded asset ${asset.assetName} to S3.`);
-          }
+          console.log(`Uploaded asset ${asset.assetName} to S3.`);
         }
-        console.log(`Uploaded ${assets.length} assets. Complete`);
+      }
+      console.log(`Uploaded ${assets.length} assets. Complete`);
+
+      // On success, update marker to completed.
+      if (jobId) {
+        const markerData = {
+          jobId,
+          status: 'completed',
+          fileId,
+          assetsCount: assets.length,
+          completedAt: new Date().toISOString(),
+        };
+        const markerKey = `job-markers/${jobId}.json`;
+        await this.storageService.putObject(
+          markerKey,
+          Buffer.from(JSON.stringify(markerData)),
+          { contentType: 'application/json' },
+        );
+        console.log(`Marker file ${markerKey} updated to completed`);
+      }
     } catch (error) {
       console.error('Error downloading and uploading assets', error);
+      // Update marker to failed on error
+      if (jobId) {
+        const markerData = {
+          jobId,
+          status: 'failed',
+          fileId,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          completedAt: new Date().toISOString(),
+        };
+        const markerKey = `job-markers/${jobId}.json`;
+        await this.storageService.putObject(
+          markerKey,
+          Buffer.from(JSON.stringify(markerData)),
+          { contentType: 'application/json' },
+        );
+        console.log(`Marker file ${markerKey} updated to failed`);
+      }
+      throw error;
     }
   }
 
@@ -551,13 +478,11 @@ export class FigmaService {
     fileId: string,
     pages: string[],
   ): Promise<Record<string, FigmaAssetResponse[]>> {
-
     // First get just the pages to find the IDs we need
     const allPages = await this.getPages(fileId);
     const targetPageIds = allPages
       .filter((page) => pages.includes(page.name))
       .map((page) => page.id);
-
 
     console.log('targetPageIds', targetPageIds);
     console.log('pages', pages);
@@ -578,16 +503,54 @@ export class FigmaService {
       const pageId = page.document.id;
 
       if (page.document.children) {
-        response[pageName] = page.document.children
-          .map((frame) => ({
-            id: frame.id,
-            name: frame.name,
-            pageName,
-            pageId: pageId,
-          }));
+        response[pageName] = page.document.children.map((frame) => ({
+          id: frame.id,
+          name: frame.name,
+          pageName,
+          pageId: pageId,
+        }));
       }
     });
 
     return response;
+  }
+
+  async getJobStatus(jobId: string): Promise<any> {
+    const markerKey = `job-markers/${jobId}.json`;
+    try {
+      const marker = await this.storageService.getObject(markerKey);
+      if (!marker) {
+        return {
+          jobId,
+          status: 'pending',
+          message:
+            'Job marker not available yet, the job might still be processing',
+        };
+      }
+
+      // Check if marker is a stream (which it typically is)
+      if (marker instanceof Readable) {
+        const markerStr = await this.streamToString(marker);
+        return JSON.parse(markerStr);
+      } else {
+        // Otherwise, if marker is already a Buffer or string, handle accordingly.
+        const resultStr = Buffer.isBuffer(marker)
+          ? marker.toString('utf8')
+          : marker.toString();
+        return JSON.parse(resultStr);
+      }
+    } catch (error) {
+      console.error('Error retrieving job status', error);
+      throw new Error('Failed to get job status');
+    }
+  }
+
+  // Helper: Convert a Readable stream to a string.
+  private async streamToString(stream: Readable): Promise<string> {
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return Buffer.concat(chunks).toString('utf8');
   }
 }

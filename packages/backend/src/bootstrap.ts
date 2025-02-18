@@ -7,6 +7,14 @@ import * as bodyParser from 'body-parser';
 let app: INestApplication | null = null;
 
 export async function bootstrapApp(): Promise<INestApplication> {
+  console.log('Bootstrapping app');
+
+  // print the time elapsed every 10 seconds
+  const startTime = Date.now();
+  setInterval(() => {
+    console.log('Time elapsed in seconds', (Date.now() - startTime) / 1000);
+  }, 10000);
+
   if (!app) {
     app = await NestFactory.create(AppModule, {
       cors: true,

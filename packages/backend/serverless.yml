@@ -2,12 +2,14 @@ service: plusalso-self-service
 
 plugins:
   - serverless-offline
+  - serverless-offline-direct-lambda
 
 provider:
   name: aws
   runtime: nodejs20.x
   region: ap-southeast-2
   stage: ${opt:stage, 'dev'}
+  profile: foxtel_self_service
   architecture: x86_64
   runtimeManagement: auto
   memorySize: 3550
@@ -18,6 +20,9 @@ provider:
     REGION: ${self:provider.region}
     STORAGE_BUCKET: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.storage.bucket}
     FIGMA_ACCESS_TOKEN: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.figma.accessToken}
+    AWS_PROFILE: foxtel_self_service
+    DOWNLOAD_UPLOAD_ASSETS_FUNCTION_NAME: ${self:service}-${self:provider.stage}-downloadUploadAssets
+
     # GS4JS_HOME: /opt/lib
     # GHOSTSCRIPT_BIN: /opt/bin/gs
   iam:
@@ -26,6 +31,13 @@ provider:
       statements: ${file(./serverless/execution-iam.yml)}
 
 functions:
+  downloadUploadAssets:
+    name: ${self:service}-${self:provider.stage}-downloadUploadAssets
+    handler: dist/sls_handlers/downloadUploadAssets.handler
+    events:
+      - http:
+          method: ANY
+          path: /download-upload-assets
   main:
     name: ${self:service}-${self:provider.stage}-main
     handler: dist/sls_handlers/main.handler

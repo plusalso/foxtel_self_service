@@ -94,4 +94,12 @@ export class FigmaController {
     const pagesList = pages.split(',').filter(Boolean);
     return this.figmaService.getAssets(fileId, pagesList);
   }
+
+  @Get('job-status')
+  async getJobStatus(@Query('jobId') jobId: string) {
+    if (!jobId) {
+      throw new BadRequestException('jobId query parameter is required');
+    }
+    return this.figmaService.getJobStatus(jobId);
+  }
 }

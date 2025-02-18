@@ -11,7 +11,7 @@ const extraModules = [];
 if (['local', 'stage'].includes(process.env.STAGE)) {
   extraModules.push(TestModule);
 }
-
+console.log('STAGE', process.env.STAGE);
 @Module({
   imports: [ConfigModule, FigmaModule, StorageModule, ...extraModules],
   controllers: [AppController],
