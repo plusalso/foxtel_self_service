@@ -18,6 +18,7 @@ export const TemplateHeader = ({ fileId, nodeIds }: TemplateHeaderProps) => {
   const { startPolling, stopPolling } = useFigmaJobStatus({
     pollInterval: 5000,
     onComplete: () => {
+      console.log("onComplete!");
       toastRef.current?.publish("Asset upload completed successfully.");
       stopPolling();
     },
@@ -57,7 +58,7 @@ export const TemplateHeader = ({ fileId, nodeIds }: TemplateHeaderProps) => {
     <>
       <Button onClick={handleSync} disabled={isCaching} variant="outline">
         <LuRefreshCw className="w-4 h-4" />
-        {isCaching ? "Syncing..." : "Update Database"}
+        {isCaching ? "Syncing..." : "Update Database from File"}
       </Button>
 
       <ImperativeToast ref={toastRef} />

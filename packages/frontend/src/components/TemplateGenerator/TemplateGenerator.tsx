@@ -12,8 +12,8 @@ import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
 
 const templateConfigs = {
-  "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
-  "Editorial Clippages": editorialClippagesConfig as TemplateConfig,
+  "File 1 - Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
+  "File 2 - Editorial Clippages etc": editorialClippagesConfig as TemplateConfig,
 };
 
 interface GroupedAssetState {
@@ -22,7 +22,7 @@ interface GroupedAssetState {
 }
 
 export function TemplateGenerator() {
-  const [selectedSource, setSelectedSource] = useState<string>("Single Event Fixture Tile");
+  const [selectedSource, setSelectedSource] = useState<string>(Object.keys(templateConfigs)[0]);
   const [selectedPreset, setSelectedPreset] = useState<string>("");
   const [selectedAssets, setSelectedAssets] = useState<Record<string, { pageName: string; assetId: string }>>({});
   const [groupedAssetSelections, setGroupedAssetSelections] = useState<Record<string, GroupedAssetState>>({});
@@ -190,7 +190,7 @@ export function TemplateGenerator() {
           <TemplateHeader fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
 
           <Flex direction="column" gap="2">
-            <Text as="label" size="2" weight="bold">
+            <Text as="label" size="2">
               Source
             </Text>
             <Select.Root value={selectedSource} onValueChange={(value) => setSelectedSource(value)}>
@@ -206,7 +206,7 @@ export function TemplateGenerator() {
           </Flex>
 
           <Flex direction="column" gap="2">
-            <Text as="label" size="2" weight="bold">
+            <Text as="label" size="2">
               Preset
             </Text>
             <Select.Root value={selectedPreset} onValueChange={(value) => setSelectedPreset(value)}>
@@ -244,7 +244,7 @@ export function TemplateGenerator() {
                   case "text":
                     return (
                       <Flex direction="column" gap="2" key={field.fieldId}>
-                        <Text as="label" size="2" weight="bold">
+                        <Text as="label" size="2">
                           {fullField?.label}
                         </Text>
                         <TextField.Root
@@ -260,7 +260,9 @@ export function TemplateGenerator() {
             </Flex>
           </Form>
 
-          <ImageUpload />
+          {selectedPresetConfig?.supportsUploadedImages && (
+            <ImageUpload label={selectedPresetConfig?.uploadedImageLabel || "Custom Image"} />
+          )}
         </Flex>
         <Flex direction="column" pt="5" gap="2" style={{ marginTop: "auto", borderTop: "1px solid var(--gray-4)" }}>
           <DownloadButton />

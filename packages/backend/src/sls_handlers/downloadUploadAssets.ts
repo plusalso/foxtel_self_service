@@ -13,6 +13,7 @@ const getFigmaService = async (): Promise<FigmaService> => {
   return app.get(FigmaService);
 };
 
+// This handler is used to download and upload assets from Figma to S3
 export const handler: Handler = async (event) => {
   console.log('starting downloadAndUploadAssets');
   try {

@@ -1,12 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { fetchFromApi } from "@/lib/fetchFromApi";
 
 export interface FigmaJobStatusResponse {
   jobId: string;
   status: "pending" | "completed" | "failed";
   message?: string;
-  // additional fields like fileId, assetsCount, etc.
 }
 
 export type UseFigmaJobStatusOptions = {
@@ -17,18 +16,17 @@ export type UseFigmaJobStatusOptions = {
 
 export function useFigmaJobStatus(options?: UseFigmaJobStatusOptions) {
   const { pollInterval = 5000, onComplete, onError } = options || {};
-  // Internal state to control when to poll and hold the jobId.
   const [jobId, setJobId] = useState<string | null>(null);
   const [shouldPoll, setShouldPoll] = useState(false);
+  // Track completed jobs to prevent multiple onComplete calls
+  const completedJobsRef = useRef<Set<string>>(new Set());
 
   const query = useQuery<FigmaJobStatusResponse>({
     queryKey: ["figma", "job-status", jobId],
     queryFn: async () => {
       return await fetchFromApi(`/figma/job-status?jobId=${jobId}`);
     },
-    // Polling enabled only when we have a jobId and have been told to poll:
     enabled: shouldPoll && Boolean(jobId),
-    // Stop polling once the job is complete or failed.
     refetchInterval: (data) => {
       return data && (data?.state?.data?.status === "completed" || data?.state?.data?.status === "failed")
         ? false
@@ -37,26 +35,40 @@ export function useFigmaJobStatus(options?: UseFigmaJobStatusOptions) {
   });
 
   useEffect(() => {
-    if (query.data) {
-      if (query.data.status === "completed") {
-        onComplete && onComplete(query.data);
-      } else if (query.data.status === "failed") {
-        onError && onError(query.data);
-      }
-    }
-  }, [query.data, onComplete, onError]);
+    if (!query.data || !jobId) return;
 
-  // When this function is called with a jobId, we start polling.
+    if (query.data.status === "completed" && !completedJobsRef.current.has(jobId)) {
+      completedJobsRef.current.add(jobId);
+      onComplete?.(query.data);
+    } else if (query.data.status === "failed" && !completedJobsRef.current.has(jobId)) {
+      completedJobsRef.current.add(jobId);
+      onError?.(query.data);
+    }
+  }, [query.data, jobId, onComplete, onError]);
+
   const startPolling = useCallback((newJobId: string) => {
     console.log("startPolling", newJobId);
     setJobId(newJobId);
     setShouldPoll(true);
   }, []);
 
-  // Optionally, you can also stop polling when needed.
   const stopPolling = useCallback(() => {
     setShouldPoll(false);
   }, []);
 
-  return { ...query, startPolling, stopPolling };
+  // Clear completed status when stopping or starting new poll
+  const clearCompletedStatus = useCallback((jobIdToClear?: string) => {
+    if (jobIdToClear) {
+      completedJobsRef.current.delete(jobIdToClear);
+    } else {
+      completedJobsRef.current.clear();
+    }
+  }, []);
+
+  return {
+    ...query,
+    startPolling,
+    stopPolling,
+    clearCompletedStatus,
+  };
 }

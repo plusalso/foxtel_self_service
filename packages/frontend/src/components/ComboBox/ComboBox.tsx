@@ -81,10 +81,14 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
           className={styles.comboboxClearButton}
           aria-label="clear selection"
         >
-          <LuX size={16} color="#666" />
+          <div className={styles.comboboxClearButtonIcon}>
+            <LuX size={15} color="#666" />
+          </div>
         </button>
         <button type="button" {...getToggleButtonProps()} className={styles.comboboxButton} aria-label="toggle menu">
-          <LuChevronDown size={16} color="#666" />
+          <div className={styles.comboboxButtonIcon}>
+            <LuChevronDown size={15} color="#666" />
+          </div>
         </button>
       </div>
       <ul

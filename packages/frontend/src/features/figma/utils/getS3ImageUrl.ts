@@ -1,6 +1,7 @@
 export const getS3ImageUrl = (fileId: string, pageName: string, assetId: string) => {
   // const encodedFileId = fileId.replace(/ /g, "+");
-  const encodedPage = pageName.replace(/ /g, "+");
+  const encodedPage = pageName.replace("+", "%2B").replace(/ /g, "+");
+
   const encodedAssetId = assetId.replace(":", "%3A");
   console.log("fileId", fileId);
 

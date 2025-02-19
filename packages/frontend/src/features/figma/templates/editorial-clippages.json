@@ -1,26 +1,70 @@
 {
-  "id": "EditorialClippages",
-  "label": "Editorial Clippages",
+  "id": "File 2",
+  "label": "File 2",
   "fileId": "nj0cfZj9WsfxoVJUIMcE6U",
   "supportsUploadedImages": true,
   "presets": [
     {
       "id": "foxEvent",
-      "label": "Fox Event",
+      "label": "Editorial Clippages",
       "fields": [
         {
           "fieldId": "overlay",
           "value": "Fox Mini"
         }
       ]
+    },
+    {
+      "id": "singleEvent",
+      "label": "Single Event + Show",
+      "supportsUploadedImages": true,
+      "uploadedImageLabel": "Background Image",
+      "fields": [
+        {
+          "fieldId": "singleEventTextBackground",
+          "value": "Single Event + Show/Background"
+        }
+      ]
+    },
+    {
+      "id": "bestpokeMinis",
+      "label": "Bespoke Minis + Bites",
+      "fields": [
+        {
+          "fieldId": "bestpokeMinis",
+          "value": "Bespoke Minis + Bites/Overlay"
+        },
+        {
+          "fieldId": "bestpokeBites",
+          "value": "Bespoke Minis + Bites/Event"
+        }
+      ]
     }
   ],
   "fields": [
+    {
+      "id": "bestpokeMinis",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Overlay",
+      "assetSourcePage": "Bespoke Minis + Bites - Feature Image/Overlay"
+    },
+    {
+      "id": "bestpokeBites",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Event",
+      "assetSourcePage": "Bespoke Minis + Bites - Feature Image/Event"
+    },
     {
       "id": "overlay",
       "type": "figmaAssetDropdownSelect",
       "label": "Overlay",
       "assetSourcePage": "Editorial Clippages/Overlay"
+    },
+    {
+      "id": "singleEventTextBackground",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Background",
+      "assetSourcePage": "Single Event + Show/Background"
     },
     {
       "id": "bottomRightTextTop",

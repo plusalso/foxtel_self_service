@@ -1,4 +1,4 @@
-import { getS3ImageUrl } from "../hooks/use-figma-image";
+import { getS3ImageUrl } from "../utils/getS3ImageUrl";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import {
   DefaultTextRenderer,
@@ -7,7 +7,7 @@ import {
 } from "@/components/CustomFieldRenderers/CustomFieldRenderers";
 import { Rnd } from "react-rnd";
 import styles from "./ImageOverlay.module.scss";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 interface ImageOverlayProps {
   selectedAssets: Array<{
@@ -38,15 +38,12 @@ export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: Ima
     };
 
     updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      style={{ width: "100%", maxWidth: "1920px", margin: "0 auto" }}
-    >
+    <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto" }}>
       <div
         id="image-overlay"
         style={{

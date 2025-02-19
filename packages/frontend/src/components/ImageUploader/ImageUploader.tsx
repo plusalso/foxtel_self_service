@@ -2,15 +2,16 @@
 import { useRef, useState } from "react";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import { Button, Text, Flex } from "@radix-ui/themes";
+import { DeleteImageModalTrigger } from "../DeleteImageModalTrigger/DeleteImageModalTrigger";
+import styles from "./ImageUploader.module.scss";
+interface ImageUploaderProps {
+  label: string;
+}
 
-const ImageUpload = () => {
+const ImageUpload = ({ label }: ImageUploaderProps) => {
   const { setCustomImage, customImage, templateConfig } = useTemplate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
-
-  if (!templateConfig?.supportsUploadedImages) {
-    return null; // Do not render if uploaded images are not supported
-  }
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -40,21 +41,25 @@ const ImageUpload = () => {
 
   return (
     <Flex direction="column" gap="2">
-      <Button variant="surface" onClick={triggerFileInput}>
-        Upload Image
-      </Button>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        ref={fileInputRef}
-        style={{ display: "none" }} // Hide the default file input
-      />
-      {fileName && <Text size="1">{fileName}</Text>} {/* Display the filename */}
-      {customImage && (
-        <Button variant="ghost" onClick={handleRemoveImage}>
-          Remove Image
-        </Button>
+      <Text size="2">{label}</Text>
+      {fileName && customImage ? (
+        <Flex justify="between" align="center" className={styles.uploadedImageDisplay}>
+          <Text size="1">{fileName}</Text>
+          <DeleteImageModalTrigger onDelete={handleRemoveImage} onCancel={() => {}} />
+        </Flex>
+      ) : (
+        <>
+          <Button variant="surface" onClick={triggerFileInput}>
+            Upload Image
+          </Button>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            ref={fileInputRef}
+            style={{ display: "none" }} // Hide the default file input
+          />
+        </>
       )}
     </Flex>
   );

@@ -3,8 +3,8 @@ import { Flex, Select, Text } from "@radix-ui/themes";
 import { FigmaAsset, FigmaTemplateGroup } from "../../features/figma/types/template";
 import { LuCornerDownRight } from "react-icons/lu";
 import Combobox from "../ComboBox/ComboBox";
-import { getS3ImageUrl } from "@/features/figma/hooks/use-figma-image";
-
+import { getS3ImageUrl } from "@/features/figma/utils/getS3ImageUrl";
+import styles from "./GroupedAssetSelect.module.scss";
 interface GroupedAssetSelectProps {
   fileId: string;
   pageName: string;
@@ -31,16 +31,13 @@ export function GroupedAssetSelect({
 }: GroupedAssetSelectProps) {
   // Group assets by their main group
   const groupedAssets = useMemo(() => {
-    return group.assets.reduce(
-      (acc, asset) => {
-        const [mainGroup, itemName] = asset.name.split("/");
-        const group = itemName ? mainGroup : "";
-        acc[group] = acc[group] || [];
-        acc[group].push({ ...asset, name: itemName || asset.name });
-        return acc;
-      },
-      {} as Record<string, Array<{ id: string; name: string }>>
-    );
+    return group.assets.reduce((acc, asset) => {
+      const [mainGroup, itemName] = asset.name.split("/");
+      const group = itemName ? mainGroup : "";
+      acc[group] = acc[group] || [];
+      acc[group].push({ ...asset, name: itemName || asset.name });
+      return acc;
+    }, {} as Record<string, Array<{ id: string; name: string }>>);
   }, [group.assets]);
 
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
@@ -60,10 +57,9 @@ export function GroupedAssetSelect({
   // Add state for input value
   const [inputValue, setInputValue] = useState("");
 
-
   return (
     <Flex direction="column" gap="2">
-      <Text as="label" size="2" weight="bold">
+      <Text as="label" size="2">
         {group.name}
       </Text>
       {mainGroupNames.length > 0 ? (
@@ -88,8 +84,10 @@ export function GroupedAssetSelect({
             </Select.Content>
           </Select.Root>
           {selection.mainGroup && (
-            <Flex direction="row" gap="2" align="center">
-              <LuCornerDownRight />
+            <Flex direction="row" gap="2" align="start">
+              <div className={styles.groupedAssetSelectIcon}>
+                <LuCornerDownRight />
+              </div>
               <Combobox
                 assets={comboboxAssets}
                 value={selection.assetId || null}

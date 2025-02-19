@@ -12,7 +12,10 @@
   align-items: center;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 5px;
+  // padding: 5px;
+  height: var(--space-6);
+  padding-left: var(--space-3);
+  // padding-right: var(--space-3);
   background-color: #fff;
 }
 
@@ -20,8 +23,10 @@
   flex-grow: 1;
   border: none;
   outline: none;
-  padding: 5px;
-  font-size: 16px;
+  gap: calc(var(--space-1) * 1.5);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+  letter-spacing: var(--letter-spacing-2);
   background-color: transparent;
 }
 
@@ -30,17 +35,27 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 5px;
+  padding: 7px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #666;
+  opacity: 0.9;
+  outline: none;
 
   &:hover {
     color: #000;
   }
+  &:focus,
+  &:active,
+  &:focus-visible {
+    outline: none;
+  }
 }
-
+.comboboxClearButtonIcon,
+.comboboxButtonIcon {
+  flex-shrink: 0;
+}
 .comboboxList {
   display: none;
   border: 1px solid #ccc;
