@@ -14,12 +14,6 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 export default defineConfig({
   plugins: [react()],
-  test: {
-    globals: true,
-    environment: "jsdom",
-    setupFiles: "./src/setupTests.ts",
-    // exclude: [...configDefaults.exclude, "e2e/*"],
-  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

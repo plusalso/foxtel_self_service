@@ -38,6 +38,7 @@ functions:
       - http:
           method: ANY
           path: /download-upload-assets
+          cors:true
   main:
     name: ${self:service}-${self:provider.stage}-main
     handler: dist/sls_handlers/main.handler
@@ -48,6 +49,7 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
+          cors:true
 
 package:
   excludeDevDependencies: true
