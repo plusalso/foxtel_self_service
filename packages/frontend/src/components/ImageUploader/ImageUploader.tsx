@@ -9,7 +9,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUpload = ({ label }: ImageUploaderProps) => {
-  const { setCustomImage, customImage, templateConfig } = useTemplate();
+  const { setCustomImage, customImage } = useTemplate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
