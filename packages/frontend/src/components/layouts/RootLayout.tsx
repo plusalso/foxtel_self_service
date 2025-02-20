@@ -3,7 +3,7 @@ import { Sidebar } from "@/components/layouts/Sidebar";
 
 import styles from "./RootLayout.module.css";
 import { Workspace } from "@/components/layouts/Workspace";
-import { TemplateGenerator } from "@/components/TemplateGenerator/TemplateGenerator";
+import { SidebarForm } from "@/components/SidebarForm/SidebarForm";
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,7 +11,7 @@ export function RootLayout({ children }: { children: React.ReactNode }) {
       <Header />
       <div className={styles.mainContent}>
         <Sidebar>
-          <TemplateGenerator />
+          <SidebarForm />
         </Sidebar>
         <div className={styles.workspace}>
           <Workspace>{children}</Workspace>

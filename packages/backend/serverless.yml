@@ -20,11 +20,8 @@ provider:
     REGION: ${self:provider.region}
     STORAGE_BUCKET: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.storage.bucket}
     FIGMA_ACCESS_TOKEN: ${self:custom.SELF_SERVICE_SECRETS_MANAGER.figma.accessToken}
-    AWS_PROFILE: foxtel_self_service
     DOWNLOAD_UPLOAD_ASSETS_FUNCTION_NAME: ${self:service}-${self:provider.stage}-downloadUploadAssets
-
-    # GS4JS_HOME: /opt/lib
-    # GHOSTSCRIPT_BIN: /opt/bin/gs
+    CLOUDFRONT_DISTRIBUTION_ID: !Ref CloudFrontDistribution
   iam:
     role:
       name: foxtel_self_service_lambda_execution_iam
@@ -38,7 +35,6 @@ functions:
       - http:
           method: ANY
           path: /download-upload-assets
-          cors: true
   main:
     name: ${self:service}-${self:provider.stage}-main
     handler: dist/sls_handlers/main.handler
@@ -118,7 +114,7 @@ resources:
           CorsRules:
             - AllowedHeaders: ['*']
               AllowedMethods: [GET]
-              AllowedOrigins: ['*'] #todo update this
+              AllowedOrigins: ['*']
               MaxAge: 3000
 
     AssetsBucketPolicy:
@@ -132,3 +128,61 @@ resources:
               Principal: '*'
               Action: s3:GetObject
               Resource: !Join ['', [!GetAtt AssetsBucket.Arn, '/*']]
+
+    ResponseHeadersPolicy:
+      Type: AWS::CloudFront::ResponseHeadersPolicy
+      Properties:
+        ResponseHeadersPolicyConfig:
+          Name: ${self:service}-cors-policy
+          CorsConfig:
+            AccessControlAllowCredentials: false
+            AccessControlAllowHeaders:
+              Items: ['*']
+            AccessControlAllowMethods:
+              Items: ['GET', 'HEAD']
+            AccessControlAllowOrigins:
+              Items:
+                - 'http://localhost:5173'
+                - 'https://foxtel-self-service.pages.dev'
+            AccessControlExposeHeaders:
+              Items: ['*']
+            OriginOverride: false
+
+    CloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Comment: 'Foxtel Self Service CDN for Assets'
+          Enabled: true
+          Origins:
+            - Id: S3AssetsOrigin
+              DomainName: ${self:custom.storage.bucket}.s3.amazonaws.com
+              S3OriginConfig: {}
+          DefaultCacheBehavior:
+            ResponseHeadersPolicyId: !Ref ResponseHeadersPolicy
+            TargetOriginId: S3AssetsOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+            CachedMethods:
+              - GET
+              - HEAD
+            ForwardedValues:
+              QueryString: false
+            Compress: true
+            DefaultTTL: 604800 # 1 week
+            MinTTL: 3600 # 1 hour
+            MaxTTL: 2592000 # 30 days
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: true
+      CreationPolicy:
+        ResourceSignal:
+          Timeout: PT45M
+      UpdateReplacePolicy: Retain
+
+  Outputs:
+    CloudFrontDomainName:
+      Value: !GetAtt CloudFrontDistribution.DomainName
+      Export:
+        Name: CloudFrontDomainName

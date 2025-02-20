@@ -16,6 +16,10 @@ Features
 
 - Cognito to be added later
 
+# Running
+
+- Set up your AWS credentials under the name "foxtel_self_service"
+
 # FAQ:
 
 - Error: TypeError: Cannot redefine property: \_serverlessExternalPluginName

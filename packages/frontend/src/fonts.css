@@ -15,6 +15,22 @@
 /* /fonts/Knockout_Slant/Knockout_No-68_Full-Featherweight-7deg.ttf */
 /* /fonts/Knockout_Slant/Knockout_No-92_Ultimate-Cruiserweight-7deg.ttf */
 
+/* Import the Google font Plus Jakarta Sans */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
+
+/* Set the default font family for your UI */
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Optionally, if you want to force it even over inline styles,
+   you could use a global rule (use !important with caution):
+   
+   * {
+     font-family: 'Plus Jakarta Sans', sans-serif !important;
+   }
+*/
+
 @font-face {
   font-family: "Gibson";
   src: url("/fonts/Gibson 1/Canada Type - Gibson-Bold.otf") format("opentype");
@@ -73,8 +89,7 @@
 
 @font-face {
   font-family: "KayoGravityExpandedItalic";
-  src:
-    url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.woff2") format("woff2"),
+  src: url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.woff2") format("woff2"),
     url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.woff") format("woff"),
     url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.ttf") format("truetype"),
     url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.otf") format("opentype");

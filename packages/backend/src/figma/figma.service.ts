@@ -5,6 +5,10 @@ import { createHash } from 'crypto';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import { Readable } from 'stream';
+import {
+  CloudFrontClient,
+  CreateInvalidationCommand,
+} from '@aws-sdk/client-cloudfront';
 
 interface GetFileOptions {
   nodeIds?: string[];
@@ -30,6 +34,12 @@ export interface FigmaAssetResponse {
   id: string;
   name: string;
   pageName: string;
+}
+
+export interface FigmaAssetsResponse {
+  assets: Record<string, FigmaAssetResponse[]>;
+  version: string;
+  lastModified: string;
 }
 
 @Injectable()
@@ -377,6 +387,8 @@ export class FigmaService {
     return {
       jobId,
       assetsToUpdate,
+      lastModified: file.lastModified,
+      version: file.version,
     };
   }
 
@@ -403,7 +415,7 @@ export class FigmaService {
         );
         const figmaImages = await this.getImages(fileId, assetIds);
         console.log('figmaImages', figmaImages);
-        //log elapsed time
+        // Log elapsed time
         const elapsedTime = Date.now() - startTime;
         console.log(`Elapsed time: ${elapsedTime / 1000} seconds`);
         for (const asset of batch) {
@@ -451,6 +463,40 @@ export class FigmaService {
         );
         console.log(`Marker file ${markerKey} updated to completed`);
       }
+
+      // Trigger CloudFront invalidation
+      console.log(
+        'attmepting to trigger CloudFront invalidation for distribution id',
+        process.env.CLOUDFRONT_DISTRIBUTION_ID,
+      );
+      if (process.env.CLOUDFRONT_DISTRIBUTION_ID) {
+        try {
+          const cloudfrontClient = new CloudFrontClient({
+            region: process.env.AWS_REGION || 'ap-southeast-2',
+          });
+          const invalidationCommand = new CreateInvalidationCommand({
+            DistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
+            InvalidationBatch: {
+              CallerReference: `${jobId}-${Date.now()}`,
+              Paths: {
+                Quantity: 1,
+                Items: ['/*'],
+              },
+            },
+          });
+          await cloudfrontClient.send(invalidationCommand);
+          console.log('CloudFront invalidation triggered.');
+        } catch (invalidationError) {
+          console.error(
+            'Error triggering CloudFront invalidation:',
+            invalidationError,
+          );
+        }
+      } else {
+        console.warn(
+          'CLOUDFRONT_DISTRIBUTION_ID env variable is not set. Skipping CloudFront invalidation.',
+        );
+      }
     } catch (error) {
       console.error('Error downloading and uploading assets', error);
       // Update marker to failed on error
@@ -477,7 +523,7 @@ export class FigmaService {
   async getAssets(
     fileId: string,
     pages: string[],
-  ): Promise<Record<string, FigmaAssetResponse[]>> {
+  ): Promise<FigmaAssetsResponse> {
     // First get just the pages to find the IDs we need
     const allPages = await this.getPages(fileId);
     const targetPageIds = allPages
@@ -487,14 +533,22 @@ export class FigmaService {
     console.log('targetPageIds', targetPageIds);
     console.log('pages', pages);
     if (targetPageIds.length === 0) {
-      return {};
+      return {
+        assets: {},
+        version: '',
+        lastModified: '',
+      };
     }
 
     // Fetch only the needed pages with their frames
     const nodesResponse = await this.getFileNodes(fileId, targetPageIds, {
       depth: 1,
     });
-    const response: Record<string, FigmaAssetResponse[]> = {};
+    const response: FigmaAssetsResponse = {
+      assets: {},
+      version: nodesResponse.version,
+      lastModified: nodesResponse.lastModified,
+    };
     console.log('nodesResponse', nodesResponse);
     // Process each page's frames
     Object.values(nodesResponse.nodes).forEach((pageData) => {
@@ -503,7 +557,7 @@ export class FigmaService {
       const pageId = page.document.id;
 
       if (page.document.children) {
-        response[pageName] = page.document.children.map((frame) => ({
+        response.assets[pageName] = page.document.children.map((frame) => ({
           id: frame.id,
           name: frame.name,
           pageName,

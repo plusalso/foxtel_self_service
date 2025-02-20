@@ -11,9 +11,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "dev": "nest start --watch",
-    "start:dev": "nest start --watch",
+    "start": "STAGE=local nest start",
+    "dev": "STAGE=local nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:serverless-offline": "nest build && npx serverless offline --stage local --verbose --noTimeout",
@@ -26,8 +25,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.609.0",
-    "@aws-sdk/client-secrets-manager": "^3.609.0",
+    "@aws-sdk/client-cloudfront": "^3.750.0",
+    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/client-secrets-manager": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.609.0",
     "@codegenie/serverless-express": "^4.14.1",
     "@nestjs/common": "^10.0.0",

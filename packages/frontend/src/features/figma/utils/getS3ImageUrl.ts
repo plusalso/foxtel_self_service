@@ -5,5 +5,6 @@ export const getS3ImageUrl = (fileId: string, pageName: string, assetId: string)
   const encodedAssetId = assetId.replace(":", "%3A");
   console.log("fileId", fileId);
 
-  return `https://foxtel-figma-self-service-assets.s3.ap-southeast-2.amazonaws.com/figma-cache/${encodedPage}/${encodedAssetId}`;
+  // return `https://foxtel-figma-self-service-assets.s3.ap-southeast-2.amazonaws.com/figma-cache/${encodedPage}/${encodedAssetId}`;
+  return `https://d3rjy3jq4dylp.cloudfront.net/figma-cache/${encodedPage}/${encodedAssetId}`;
 };

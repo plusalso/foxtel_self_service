@@ -9,7 +9,9 @@ export interface FigmaAsset {
 }
 
 export interface FigmaAssetsResponse {
-  [pagePath: string]: FigmaAsset[];
+  assets: { [pagePath: string]: FigmaAsset[] };
+  version: string;
+  lastUpdated: string;
 }
 
 export const getFigmaAssets = async (fileId: string, pages: string[]): Promise<FigmaAssetsResponse> => {

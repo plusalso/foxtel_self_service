@@ -1,4 +1,4 @@
-import { getS3ImageUrl } from "../utils/getS3ImageUrl";
+import { getS3ImageUrl } from "../../utils/getS3ImageUrl";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import {
   DefaultTextRenderer,
@@ -6,10 +6,10 @@ import {
   ResizableImageRenderer,
 } from "@/components/CustomFieldRenderers/CustomFieldRenderers";
 import { Rnd } from "react-rnd";
-import styles from "./ImageOverlay.module.scss";
+import styles from "./AssetRenderer.module.scss";
 import { useState, useEffect, useRef } from "react";
 
-interface ImageOverlayProps {
+interface AssetRendererProps {
   selectedAssets: Array<{
     fileId: string;
     pageName: string;
@@ -24,7 +24,7 @@ export const renderers = {
   ResizableImageRenderer: ResizableImageRenderer,
   // add other renderers here as needed
 };
-export const ImageOverlay = ({ selectedAssets, templateConfig, textInputs }: ImageOverlayProps) => {
+export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: AssetRendererProps) => {
   const { customImage } = useTemplate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);

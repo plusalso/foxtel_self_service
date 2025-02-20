@@ -1,5 +1,5 @@
 import { Form } from "@radix-ui/react-form";
-import { Select, Flex, Text, TextField } from "@radix-ui/themes";
+import { Select, Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useTemplate } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
@@ -8,8 +8,9 @@ import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
 import { useFigmaAssets } from "@/features/figma/api/get-figma-assets";
-import { TemplateHeader } from "@/features/figma/components/TemplateHeader";
+import { SyncFigmaButton } from "@/features/figma/components/SyncFigmaButton/TemplateHeader";
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
+import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
 
 const templateConfigs = {
   "File 1 - Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
@@ -21,7 +22,7 @@ interface GroupedAssetState {
   assetId: string | null;
 }
 
-export function TemplateGenerator() {
+export function SidebarForm() {
   const [selectedSource, setSelectedSource] = useState<string>(Object.keys(templateConfigs)[0]);
   const [selectedPreset, setSelectedPreset] = useState<string>("");
   const [selectedAssets, setSelectedAssets] = useState<Record<string, { pageName: string; assetId: string }>>({});
@@ -51,16 +52,16 @@ export function TemplateGenerator() {
     .filter((page): page is string => !!page);
 
   // Fetch assets for all pages
-  const { data: assets } = useFigmaAssets({
+  const { data: assetsData } = useFigmaAssets({
     fileId: templateConfig.fileId,
     pages: assetPages,
   });
 
   const pageNodeIds = useMemo(() => {
-    if (!assets) return [];
+    if (!assetsData) return [];
     const uniquePageIds = new Set<string>();
-    console.log("assets", assets);
-    Object.values(assets).forEach((pageAssets) => {
+    console.log("assets", assetsData);
+    Object.values(assetsData?.assets || {}).forEach((pageAssets) => {
       if (pageAssets.length > 0) {
         const firstAsset = pageAssets[0];
         if (firstAsset.pageId) {
@@ -70,7 +71,7 @@ export function TemplateGenerator() {
     });
 
     return Array.from(uniquePageIds);
-  }, [assets]);
+  }, [assetsData]);
 
   console.log("pageNodeIds", pageNodeIds);
 
@@ -105,28 +106,30 @@ export function TemplateGenerator() {
 
   // Create grouped fields when assets or config changes
   useEffect(() => {
-    if (!assets || !selectedPresetConfig) return;
+    if (!assetsData || !selectedPresetConfig) return;
 
     const newGroupedFields: Record<string, { name: string; id: string; assets: any[]; defaultValue: any }> = {};
-
+    console.log("selected preset config", selectedPresetConfig);
     selectedPresetConfig.fields.forEach((field) => {
       const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
       if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
+        console.log("fullField", fullField);
+        console.log("assetsData", assetsData);
         newGroupedFields[field.fieldId] = {
           name: fullField.label || "unknown",
           id: field.fieldId,
-          assets: assets[fullField.assetSourcePage] || [],
+          assets: assetsData?.assets[fullField.assetSourcePage] || [],
           defaultValue: field.value,
         };
       }
     });
 
     setGroupedFields(newGroupedFields);
-  }, [assets, selectedPresetConfig, templateConfig.fields]);
+  }, [assetsData, selectedPresetConfig, templateConfig.fields]);
 
   // Update grouped asset selections and selected assets when preset changes
   useEffect(() => {
-    if (!selectedPresetConfig || !assets) return;
+    if (!selectedPresetConfig || !assetsData) return;
 
     const newSelections: Record<string, GroupedAssetState> = {};
     const newSelectedAssets: Record<string, { pageName: string; assetId: string }> = {};
@@ -134,7 +137,7 @@ export function TemplateGenerator() {
     selectedPresetConfig.fields.forEach((field) => {
       const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
       if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
-        const fieldAssets = assets[fullField.assetSourcePage] || [];
+        const fieldAssets = assetsData.assets[fullField.assetSourcePage] || [];
         const selectedAsset = fieldAssets.find((asset) => asset.name === field.value) || fieldAssets[0];
 
         if (selectedAsset) {
@@ -153,7 +156,7 @@ export function TemplateGenerator() {
 
     setGroupedAssetSelections(newSelections);
     setSelectedAssets(newSelectedAssets);
-  }, [selectedPresetConfig, assets, templateConfig.fields]);
+  }, [selectedPresetConfig, assetsData, templateConfig.fields]);
 
   const handleAssetSelection = useCallback(
     (group: FigmaTemplateGroup, pageName: string, assetId: string) => {
@@ -182,12 +185,12 @@ export function TemplateGenerator() {
   );
 
   console.log("allAssetPages", pageNodeIds);
-  console.log("assets", assets);
+  console.log("assets", assetsData);
   return (
     <div style={{ height: "100%" }}>
       <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>
         <Flex direction="column" gap="4">
-          <TemplateHeader fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
+          <SyncFigmaButton fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
 
           <Flex direction="column" gap="2">
             <Text as="label" size="2">
@@ -243,17 +246,13 @@ export function TemplateGenerator() {
                     ) : null;
                   case "text":
                     return (
-                      <Flex direction="column" gap="2" key={field.fieldId}>
-                        <Text as="label" size="2">
-                          {fullField?.label}
-                        </Text>
-                        <TextField.Root
-                          type="text"
-                          value={textInputs[field.fieldId] || ""}
-                          onChange={(e) => setTextInputs({ ...textInputs, [field.fieldId]: e.target.value })}
-                          placeholder={`Enter ${fullField?.label}`}
-                        />
-                      </Flex>
+                      <ToggleableTextField
+                        key={field.fieldId}
+                        fieldId={field.fieldId}
+                        label={fullField?.label || "Text Field"}
+                        value={textInputs[field.fieldId] || ""}
+                        onChange={(val) => setTextInputs({ ...textInputs, [field.fieldId]: val })}
+                      />
                     );
                 }
               })}
