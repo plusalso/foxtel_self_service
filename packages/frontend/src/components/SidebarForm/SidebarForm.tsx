@@ -248,7 +248,6 @@ export function SidebarForm() {
                     return (
                       <ToggleableTextField
                         key={field.fieldId}
-                        fieldId={field.fieldId}
                         label={fullField?.label || "Text Field"}
                         value={textInputs[field.fieldId] || ""}
                         onChange={(val) => setTextInputs({ ...textInputs, [field.fieldId]: val })}

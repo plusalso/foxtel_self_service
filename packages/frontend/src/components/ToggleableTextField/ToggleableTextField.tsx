@@ -3,13 +3,12 @@ import { Flex, Text, TextField } from "@radix-ui/themes";
 import { Switch } from "@radix-ui/themes";
 
 interface ToggleableTextFieldProps {
-  fieldId: string;
   label: string;
   value: string;
   onChange: (newValue: string) => void;
 }
 
-export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ fieldId, label, value, onChange }) => {
+export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ label, value, onChange }) => {
   // Assume the field starts enabled.
   const [enabled, setEnabled] = useState(true);
   // Cache the value so we can restore it if the field is toggled back on.

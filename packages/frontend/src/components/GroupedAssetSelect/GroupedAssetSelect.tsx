@@ -42,6 +42,7 @@ export function GroupedAssetSelect({
 
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
   console.log("pagename is ", pageName);
+  console.log("groupedAssets", group);
   const comboboxAssets = useMemo(
     () =>
       selection.mainGroup
