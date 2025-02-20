@@ -46,21 +46,21 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
           // Expecting API to return an object with a "jobId". If no new assets were found, jobId can be null.
           const response = data as { jobId: string | null; lastModified: string; version: string };
           //convert iso lastModified into "minutes/hours/days ago"
-          const lastModified = new Date(response.lastModified);
-          const diffTime = Math.abs(Date.now() - lastModified.getTime());
+          // const lastModified = new Date(response.lastModified);
+          // const diffTime = Math.abs(Date.now() - lastModified.getTime());
 
-          let diffTimeString = "";
+          // let diffTimeString = "";
 
-          if (diffTime >= 1000 * 60 * 60 * 24) {
-            // More than a day
-            diffTimeString = `${Math.floor(diffTime / (1000 * 60 * 60 * 24))}d`;
-          } else if (diffTime >= 1000 * 60 * 60) {
-            // More than an hour
-            diffTimeString = `${Math.floor(diffTime / (1000 * 60 * 60))}h`;
-          } else {
-            // Less than an hour
-            diffTimeString = `${Math.floor(diffTime / (1000 * 60))}m`;
-          }
+          // if (diffTime >= 1000 * 60 * 60 * 24) {
+          //   // More than a day
+          //   diffTimeString = `${Math.floor(diffTime / (1000 * 60 * 60 * 24))}d`;
+          // } else if (diffTime >= 1000 * 60 * 60) {
+          //   // More than an hour
+          //   diffTimeString = `${Math.floor(diffTime / (1000 * 60 * 60))}h`;
+          // } else {
+          //   // Less than an hour
+          //   diffTimeString = `${Math.floor(diffTime / (1000 * 60))}m`;
+          // }
 
           // const lastModifiedString = `Last modified: ${diffTimeString} ago`;
           if (response.jobId) {

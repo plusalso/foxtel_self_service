@@ -17,9 +17,25 @@ Features
 
 - Cognito to be added later
 
+# Installation
+
+- `npm install` both the frontend package, and the backend package.
+
 # Running
 
 - Set up your AWS credentials under the name "foxtel_self_service"
+
+# Infra
+
+- Hosted on cloudflare pages.
+- API on lambda
+- Assets synced to s3.
+
+# Deploying
+
+- Since this is PoC we don't have different environments.
+- To deploy the frontend, push your changes to main. This will trigger CF pages to deploy to https://foxtel-self-service.pages.dev/
+- To deploy the backend, `npm run deploy:dev`
 
 # FAQ:
 
