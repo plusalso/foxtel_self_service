@@ -80,7 +80,7 @@ export function SidebarForm() {
   useEffect(() => {
     console.log("setting template config");
     setTemplateConfig(templateConfig);
-  }, [selectedSource, setTemplateConfig]);
+  }, [selectedSource]);
 
   // Set the overlay assets when the preset changes
   useEffect(() => {
@@ -102,7 +102,10 @@ export function SidebarForm() {
         .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)) || [];
     console.log("assets", assets);
     setOverlayAssets(assets);
-  }, [selectedPresetConfig, selectedAssets, setOverlayAssets, templateConfig.fields]);
+
+    //clear the text inputs
+    setTextInputs({});
+  }, [selectedPresetConfig, selectedAssets, templateConfig.fields]);
 
   // Create grouped fields when assets or config changes
   useEffect(() => {
@@ -232,7 +235,7 @@ export function SidebarForm() {
                     const groupData = groupedFields[field.fieldId];
                     return groupData ? (
                       <GroupedAssetSelect
-                        key={field.fieldId}
+                        key={`${selectedPreset}-${field.fieldId}`}
                         group={{
                           ...groupData,
                           value: field.value,
@@ -246,7 +249,7 @@ export function SidebarForm() {
                   case "text":
                     return (
                       <ToggleableTextField
-                        key={field.fieldId}
+                        key={`${selectedPreset}-${field.fieldId}`}
                         label={fullField?.label || "Text Field"}
                         value={textInputs[field.fieldId] || ""}
                         onChange={(val) => setTextInputs({ ...textInputs, [field.fieldId]: val })}

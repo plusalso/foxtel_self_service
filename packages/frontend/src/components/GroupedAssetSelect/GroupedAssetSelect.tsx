@@ -5,6 +5,7 @@ import { LuCornerDownRight } from "react-icons/lu";
 import Combobox from "../ComboBox/ComboBox";
 import { getS3ImageUrl } from "@/features/figma/utils/getS3ImageUrl";
 import styles from "./GroupedAssetSelect.module.scss";
+import { useTemplate } from "@/features/figma/context/TemplateContext";
 interface GroupedAssetSelectProps {
   fileId: string;
   pageName: string;
@@ -39,7 +40,7 @@ export function GroupedAssetSelect({
       return acc;
     }, {} as Record<string, Array<{ id: string; name: string }>>);
   }, [group.assets]);
-
+  const { imageVersion } = useTemplate();
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
   console.log("pagename is ", pageName);
   console.log("groupedAssets", group);
@@ -49,7 +50,7 @@ export function GroupedAssetSelect({
         ? groupedAssets[selection.mainGroup]?.map((asset) => ({
             id: asset.id,
             name: asset.name,
-            imageUrl: getS3ImageUrl(fileId, pageName, asset.id),
+            imageUrl: getS3ImageUrl(fileId, pageName, asset.id, imageVersion),
           })) || []
         : [],
     [selection.mainGroup, groupedAssets, fileId, pageName]
@@ -95,10 +96,12 @@ export function GroupedAssetSelect({
                 inputValue={inputValue}
                 onInputValueChange={(value) => setInputValue(value)}
                 onValueChange={(assetId) => {
-                  onSelect(group, pageName, assetId);
                   // Reset input value when an item is selected
                   const selectedAsset = comboboxAssets.find((asset) => asset.id === assetId);
                   setInputValue(selectedAsset?.name || "");
+                  if (selectedAsset) {
+                    onSelect(group, pageName, assetId);
+                  }
                 }}
               />
             </Flex>

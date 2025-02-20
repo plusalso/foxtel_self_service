@@ -41,9 +41,10 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, []);
+  console.log("textinputs", textInputs);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto" }}>
+    <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
       <div
         id="image-overlay"
         style={{
@@ -98,7 +99,7 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
             />
           </div>
         ))}
-        {/* Render text fields with styles */}
+        {/* Render text fields for the current preset with styles */}
         {Object.entries(textInputs).map(([fieldId, value]) => {
           //find the field in the template config
           const field = templateConfig?.fields?.find((field: any) => field.id === fieldId);
@@ -124,7 +125,8 @@ interface OverlayImageProps {
 }
 
 const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) => {
-  const imageUrl = getS3ImageUrl(fileId, pageName, assetId);
+  const { imageVersion } = useTemplate();
+  const imageUrl = getS3ImageUrl(fileId, pageName, assetId, imageVersion);
 
   return (
     <img

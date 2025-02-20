@@ -7,6 +7,7 @@
     {
       "id": "foxEvent",
       "label": "Editorial Clippages",
+      "supportsUploadedImages": true,
       "fields": [
         {
           "fieldId": "overlay",
@@ -29,6 +30,7 @@
     {
       "id": "bestpokeMinis",
       "label": "Bespoke Minis + Bites",
+      "supportsUploadedImages": true,
       "fields": [
         {
           "fieldId": "bestpokeMinis",

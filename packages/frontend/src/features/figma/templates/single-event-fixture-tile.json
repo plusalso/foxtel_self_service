@@ -9,15 +9,19 @@
       "label": "Fox Event",
       "fields": [
         {
-          "fieldId": "overlay",
-          "value": "Fox Mini"
-        },
-        {
           "fieldId": "textTeaser"
         },
         {
           "fieldId": "background",
-          "value": "F1"
+          "value": "F1 Logo"
+        },
+        {
+          "fieldId": "CenterTextTop",
+          "value": "CenterTextTop"
+        },
+        {
+          "fieldId": "CenterTextBottom",
+          "value": "CenterTextBottom"
         }
       ]
     },
@@ -192,6 +196,54 @@
         "transform": "skewX(-21deg)"
       },
       "renderer": "CornerTextRenderer"
+    },
+    {
+      "id": "CenterTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "332px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "CenterTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "226px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "renderer": "DefaultTextRenderer"
     }
   ]
 }

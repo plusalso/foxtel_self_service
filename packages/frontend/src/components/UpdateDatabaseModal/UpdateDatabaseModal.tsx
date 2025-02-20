@@ -35,7 +35,7 @@ export function UpdateDatabaseModal({ onUpdate, onCancel, isDisabled, isLoading 
             [styles.animateSpin]: isLoading,
           })}
         />
-        {isLoading ? "Updating..." : "Update Database"}
+        {isLoading ? "Updating..." : "Sync Assets"}
       </Button>
     );
   }
@@ -63,11 +63,11 @@ export function UpdateDatabaseModal({ onUpdate, onCancel, isDisabled, isLoading 
               [styles.animateSpin]: isLoading,
             })}
           />
-          Update Database
+          Sync Assets
         </Button>
       </AlertDialog.Trigger>
       <AlertDialog.Content maxWidth="450px">
-        <AlertDialog.Title>Update Database</AlertDialog.Title>
+        <AlertDialog.Title>Sync Assets</AlertDialog.Title>
         <AlertDialog.Description size="2">
           This will update the assets from your selected file. This could take several minutes depending on the size of
           your file.
@@ -88,7 +88,7 @@ export function UpdateDatabaseModal({ onUpdate, onCancel, isDisabled, isLoading 
           </AlertDialog.Cancel>
           <AlertDialog.Action>
             <Button variant="solid" onClick={handleUpdate}>
-              Update Database
+              Sync Assets
             </Button>
           </AlertDialog.Action>
         </Flex>

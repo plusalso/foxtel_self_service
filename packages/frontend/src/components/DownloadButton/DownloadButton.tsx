@@ -2,14 +2,15 @@ import { useState } from "react";
 import { toPng, toJpeg } from "html-to-image";
 import { Button, Flex, Select, Text, TextField } from "@radix-ui/themes";
 import { Options } from "html-to-image/lib/types";
-
+import { LuDownload, LuLoader } from "react-icons/lu";
+import styles from "./DownloadButton.module.scss";
 const DownloadButton = () => {
   const [filename, setFilename] = useState("composited-image");
   const [format, setFormat] = useState("png");
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleDownload = async () => {
-    //first load the font
-
+    setIsDownloading(true);
     await document.fonts.ready;
 
     const node = document.getElementById("image-overlay");
@@ -39,7 +40,11 @@ const DownloadButton = () => {
         link.click();
       } catch (error) {
         console.error("Failed to generate image. Check if you have broken image URLs", error);
+      } finally {
+        setIsDownloading(false);
       }
+    } else {
+      setIsDownloading(false);
     }
   };
 
@@ -71,7 +76,8 @@ const DownloadButton = () => {
           </Select.Root>
         </Flex>
       </div>
-      <Button onClick={handleDownload} style={{ width: "100%" }}>
+      <Button onClick={handleDownload} style={{ width: "100%" }} disabled={isDownloading}>
+        {isDownloading ? <LuLoader className={styles.animateSpin} /> : <LuDownload />}
         Download
       </Button>
     </div>

@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 300px;
+  // max-width: 300px;
+  max-width: calc(100% - 22px);
   margin: 0 auto;
   position: relative;
 }
@@ -27,6 +28,8 @@
   font-size: var(--font-size-2);
   line-height: var(--line-height-2);
   letter-spacing: var(--letter-spacing-2);
+  font-family: var(--font-family-sans);
+  color: var(--gray-12);
   background-color: transparent;
 }
 
@@ -69,6 +72,9 @@
   // position: absolute;
   width: 100%;
   z-index: 1000;
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+  letter-spacing: var(--letter-spacing-2);
 }
 
 .comboboxList.comboboxListOpen {
@@ -81,6 +87,8 @@
   padding: 5px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-family: var(--font-family-sans);
+  color: var(--gray-12);
 }
 
 .comboboxItem:hover,
