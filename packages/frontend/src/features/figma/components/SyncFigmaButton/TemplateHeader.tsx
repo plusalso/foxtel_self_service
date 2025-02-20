@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { LuRefreshCw } from "react-icons/lu";
 import { ImperativeToast, ImperativeToastRef } from "@/components/ImperativeToast/ImperativeToast";
 import { useFigmaJobStatus } from "../../hooks/use-figma-job-status";
+import { useTemplate } from "../../context/TemplateContext";
 
 interface SyncFigmaButton {
   fileId: string;
@@ -15,10 +16,12 @@ interface SyncFigmaButton {
 export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
   const { mutate: cacheAssets, isPending: isCaching } = useCacheAssets();
   const toastRef = useRef<ImperativeToastRef>(null);
+  const { refreshImages } = useTemplate();
   const { startPolling, stopPolling } = useFigmaJobStatus({
     pollInterval: 5000,
     onComplete: () => {
       console.log("onComplete!");
+      refreshImages();
       toastRef.current?.publish("Asset upload completed successfully.");
       stopPolling();
     },

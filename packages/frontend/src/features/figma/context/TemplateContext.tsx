@@ -18,6 +18,8 @@ interface TemplateContextType {
   setTemplateConfig: (config: any) => void;
   setTextInputs: (inputs: Record<string, string>) => void;
   setCustomImage: (image: string) => void;
+  imageVersion: number;
+  refreshImages: () => void;
 }
 
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
@@ -28,6 +30,10 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
   const [templateConfig, setTemplateConfig] = useState<any>(null);
   const [textInputs, setTextInputs] = useState<Record<string, string>>({});
   const [customImage, setCustomImage] = useState<string>("");
+  const [imageVersion, setImageVersion] = useState<number>(Date.now());
+  const refreshImages = () => {
+    setImageVersion(Date.now());
+  };
   return (
     <TemplateContext.Provider
       value={{
@@ -41,6 +47,8 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
         setTextInputs,
         customImage,
         setCustomImage,
+        imageVersion,
+        refreshImages,
       }}
     >
       {children}
