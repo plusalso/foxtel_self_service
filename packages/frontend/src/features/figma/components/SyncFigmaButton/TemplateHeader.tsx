@@ -64,7 +64,7 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
             toastRef.current?.publish(`Found new assets. ${lastModifiedString}. Syncing...`);
             startPolling(response.jobId);
           } else {
-            toastRef.current?.publish(`Complete. No new assets found. ${lastModifiedString}.`);
+            toastRef.current?.publish(`Complete. No new assets found.`);
           }
         },
         onError: (error) => {
