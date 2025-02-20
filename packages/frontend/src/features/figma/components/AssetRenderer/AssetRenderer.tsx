@@ -41,7 +41,6 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, []);
-  console.log("textinputs", textInputs);
 
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
