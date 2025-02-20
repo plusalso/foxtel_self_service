@@ -2,6 +2,7 @@ import { useState, forwardRef, useImperativeHandle } from "react";
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import styles from "./ImperativeToast.module.scss";
 import { Button } from "@radix-ui/themes";
+
 export interface ImperativeToastRef {
   publish: (message: string) => void;
 }
@@ -22,7 +23,7 @@ export const ImperativeToast = forwardRef<ImperativeToastRef>((_, forwardedRef) 
   }));
 
   return (
-    <ToastPrimitive.Provider swipeDirection="right">
+    <ToastPrimitive.Provider swipeDirection="up">
       {toasts.map((message, index) => (
         <ToastPrimitive.Root className={styles.ToastRoot} key={index} open>
           <ToastPrimitive.Title className={styles.ToastTitle}>Upload Status</ToastPrimitive.Title>
