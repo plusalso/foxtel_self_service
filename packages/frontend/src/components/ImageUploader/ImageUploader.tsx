@@ -1,6 +1,6 @@
 // ImageUpload.tsx
 import { useRef, useState } from "react";
-import { useTemplate } from "@/features/figma/context/TemplateContext";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import { Button, Text, Flex } from "@radix-ui/themes";
 import { DeleteImageModalTrigger } from "../DeleteImageModalTrigger/DeleteImageModalTrigger";
 import styles from "./ImageUploader.module.scss";
@@ -9,7 +9,7 @@ interface ImageUploaderProps {
 }
 
 const ImageUpload = ({ label }: ImageUploaderProps) => {
-  const { setCustomImage, customImage } = useTemplate();
+  const { setCustomImage, customImage } = useTemplateState();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState<string>("");
 

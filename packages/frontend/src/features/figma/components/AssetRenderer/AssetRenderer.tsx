@@ -1,5 +1,5 @@
 import { getS3ImageUrl } from "../../utils/getS3ImageUrl";
-import { useTemplate } from "@/features/figma/context/TemplateContext";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import {
   DefaultTextRenderer,
   CornerTextRenderer,
@@ -25,9 +25,22 @@ export const renderers = {
   // add other renderers here as needed
 };
 export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: AssetRendererProps) => {
-  const { customImage } = useTemplate();
+  const { customImage } = useTemplateState();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+
+  // Filter assets based on whether their corresponding text fields have content
+  const filteredAssets = selectedAssets.filter((asset) => {
+    // Find the field in template config that corresponds to this asset
+    const field = templateConfig.fields.find((f: any) => f.type === "text" && f.assetSourcePage === asset.pageName);
+
+    // If this isn't a text-based asset, keep it
+    if (!field) return true;
+
+    // If it is a text-based asset, only keep it if there's text content
+    return Boolean(textInputs[field.id]);
+  });
+
   console.log("selected assets", selectedAssets);
   useEffect(() => {
     const updateScale = () => {
@@ -87,14 +100,14 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
             />
           </Rnd>
         )}
-        {selectedAssets.map((asset, index) => (
+        {filteredAssets.map((asset, index) => (
           <div key={asset.assetId} style={{ pointerEvents: "none" }}>
             <OverlayImage
               key={asset.assetId}
               fileId={asset.fileId}
               pageName={asset.pageName}
               assetId={asset.assetId}
-              zIndex={selectedAssets.length - index + 1}
+              zIndex={filteredAssets.length - index + 1}
             />
           </div>
         ))}
@@ -109,7 +122,7 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
             return null;
           }
 
-          return <RendererComponent key={field.name} field={field} value={value} />;
+          return <RendererComponent key={`${field.name}-${field.id}-${value}`} field={field} value={value} />;
         })}
       </div>
     </div>
@@ -124,7 +137,7 @@ interface OverlayImageProps {
 }
 
 const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) => {
-  const { imageVersion } = useTemplate();
+  const { imageVersion } = useTemplateState();
   const imageUrl = getS3ImageUrl(fileId, pageName, assetId, imageVersion);
 
   return (

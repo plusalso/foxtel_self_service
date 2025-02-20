@@ -9,11 +9,34 @@
       "label": "Fox Event",
       "fields": [
         {
-          "fieldId": "textTeaser"
+          "fieldId": "textTeaser",
+          "value": "Text Teaser"
         },
         {
           "fieldId": "background",
           "value": "F1 Logo"
+        },
+        {
+          "fieldId": "CenterTextTop",
+          "value": "CenterTextTop"
+        },
+        {
+          "fieldId": "CenterTextBottom",
+          "value": "CenterTextBottom"
+        }
+      ]
+    },
+    {
+      "id": "kayoEvent",
+      "label": "Kayo Event",
+      "fields": [
+        {
+          "fieldId": "textTeaser",
+          "value": "Text Teaser"
+        },
+        {
+          "fieldId": "background",
+          "value": "Kayo Event"
         },
         {
           "fieldId": "CenterTextTop",
@@ -32,6 +55,58 @@
         {
           "fieldId": "overlay",
           "value": "Fox Mini"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "kayoMini",
+      "label": "Kayo Mini",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Kayo Mini"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "kayoBite",
+      "label": "Kayo Bite",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Kayo Bite"
         },
         {
           "fieldId": "bottomRightTextTop",
@@ -87,9 +162,21 @@
     },
     {
       "id": "textTeaser",
-      "type": "figmaAssetDropdownSelect",
+      "type": "text",
       "label": "Text Teaser",
-      "assetSourcePage": "Single Event Fixture Tile/Text Teaser"
+      "assetSourcePage": "Single Event Fixture Tile/Text Teaser",
+      "containerStyle": {
+        "position": "absolute",
+        "top": "40px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "72px",
+        "fontWeight": "700",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "zIndex": 100
+      },
+      "renderer": "DefaultTextRenderer"
     },
     {
       "id": "wedge1",
@@ -109,7 +196,6 @@
       "label": "Background",
       "assetSourcePage": "Single Event Fixture Tile/Background"
     },
-
     {
       "id": "title",
       "type": "text",

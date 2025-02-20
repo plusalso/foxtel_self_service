@@ -1,14 +1,14 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useTemplate } from "@/features/figma/context/TemplateContext";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
 import { FigmaTemplateGroup, TemplateConfig } from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
-import { useFigmaAssets } from "@/features/figma/api/get-figma-assets";
-import { SyncFigmaButton } from "@/features/figma/components/SyncFigmaButton/TemplateHeader";
+import { useFigmaAssets } from "@/features/figma/hooks/use-figma-assets";
+import { SyncFigmaButton } from "@/features/figma/components/SyncFigmaButton/SyncFigmaButton";
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
 import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
 
@@ -30,7 +30,7 @@ export function SidebarForm() {
   const [groupedFields, setGroupedFields] = useState<
     Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
   >({});
-  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs } = useTemplate();
+  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs } = useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
   console.log("templateConfig", templateConfig);
@@ -47,7 +47,7 @@ export function SidebarForm() {
 
   // Get all unique assetSourcePages from the template config
   const assetPages = templateConfig.fields
-    .filter((field) => field.type === "figmaAssetDropdownSelect")
+    .filter((field) => (field.type === "figmaAssetDropdownSelect" || field.type === "text") && field.assetSourcePage)
     .map((field) => field.assetSourcePage)
     .filter((page): page is string => !!page);
 
@@ -89,17 +89,39 @@ export function SidebarForm() {
       selectedPresetConfig?.fields
         .map((field) => {
           const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
-          const selected = selectedAssets[field.fieldId];
-          if (!selected || !fullField?.assetSourcePage) return null;
 
-          return {
-            templateName: selectedSource,
-            pageName: selected.pageName,
-            assetId: selected.assetId,
-            fileId: templateConfig.fileId,
-          };
+          // Handle figmaAssetDropdownSelect fields
+          if (fullField?.type === "figmaAssetDropdownSelect") {
+            const selected = selectedAssets[field.fieldId];
+            if (!selected || !fullField?.assetSourcePage) return null;
+
+            return {
+              templateName: selectedSource,
+              pageName: selected.pageName,
+              assetId: selected.assetId,
+              fileId: templateConfig.fileId,
+            };
+          }
+
+          if (fullField?.type === "text" && fullField.assetSourcePage) {
+            // Find the matching asset in assetsData
+            const pageAssets = assetsData?.assets[fullField.assetSourcePage] || [];
+            const matchingAsset = pageAssets.find((asset) => asset.name === field.value);
+
+            if (!matchingAsset) return null;
+
+            return {
+              templateName: selectedSource,
+              pageName: fullField.assetSourcePage,
+              assetId: matchingAsset.id, // Use the actual Figma asset ID
+              fileId: templateConfig.fileId,
+            };
+          }
+
+          return null;
         })
         .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)) || [];
+
     console.log("assets", assets);
     setOverlayAssets(assets);
 
@@ -187,8 +209,6 @@ export function SidebarForm() {
     [templateConfig.fileId]
   );
 
-  console.log("allAssetPages", pageNodeIds);
-  console.log("assets", assetsData);
   return (
     <div style={{ height: "100%" }}>
       <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>
@@ -252,7 +272,10 @@ export function SidebarForm() {
                         key={`${selectedPreset}-${field.fieldId}`}
                         label={fullField?.label || "Text Field"}
                         value={textInputs[field.fieldId] || ""}
-                        onChange={(val) => setTextInputs({ ...textInputs, [field.fieldId]: val })}
+                        onChange={(val) => {
+                          setTextInputs({ ...textInputs, [field.fieldId]: val });
+                          console.log("textInputs", textInputs);
+                        }}
                       />
                     );
                 }

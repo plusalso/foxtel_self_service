@@ -5,7 +5,7 @@ import { LuCornerDownRight } from "react-icons/lu";
 import Combobox from "../ComboBox/ComboBox";
 import { getS3ImageUrl } from "@/features/figma/utils/getS3ImageUrl";
 import styles from "./GroupedAssetSelect.module.scss";
-import { useTemplate } from "@/features/figma/context/TemplateContext";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
 interface GroupedAssetSelectProps {
   fileId: string;
   pageName: string;
@@ -40,7 +40,7 @@ export function GroupedAssetSelect({
       return acc;
     }, {} as Record<string, Array<{ id: string; name: string }>>);
   }, [group.assets]);
-  const { imageVersion } = useTemplate();
+  const { imageVersion } = useTemplateState();
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
   console.log("pagename is ", pageName);
   console.log("groupedAssets", group);

@@ -4,8 +4,9 @@ import { useRef } from "react";
 //refresh icon
 import { ImperativeToast, ImperativeToastRef } from "@/components/ImperativeToast/ImperativeToast";
 import { useFigmaJobStatus } from "../../hooks/use-figma-job-status";
-import { useTemplate } from "../../context/TemplateContext";
+import { useTemplateState } from "../../context/TemplateContext";
 import { UpdateDatabaseModal } from "@/components/UpdateDatabaseModal/UpdateDatabaseModal";
+import { useQueryClient } from "@tanstack/react-query";
 interface SyncFigmaButton {
   fileId: string;
   nodeIds: string[];
@@ -13,13 +14,17 @@ interface SyncFigmaButton {
 
 export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
   const { mutate: cacheAssets, isPending: isCaching } = useCacheAssets();
+  const queryClient = useQueryClient();
+
   const toastRef = useRef<ImperativeToastRef>(null);
-  const { refreshImages } = useTemplate();
+  const { refreshImages } = useTemplateState();
   const { startPolling, stopPolling } = useFigmaJobStatus({
     pollInterval: 5000,
     onComplete: () => {
       console.log("onComplete!");
       refreshImages();
+      queryClient.invalidateQueries({ queryKey: ["figma", "assets", fileId] });
+
       toastRef.current?.publish("Asset upload completed successfully.");
       stopPolling();
     },
@@ -57,9 +62,9 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
             diffTimeString = `${Math.floor(diffTime / (1000 * 60))}m`;
           }
 
-          const lastModifiedString = `Last modified: ${diffTimeString} ago`;
+          // const lastModifiedString = `Last modified: ${diffTimeString} ago`;
           if (response.jobId) {
-            toastRef.current?.publish(`Found new assets. ${lastModifiedString}. Syncing...`);
+            // toastRef.current?.publish(`Found new assets. ${lastModifiedString}. Syncing...`);
             startPolling(response.jobId);
           } else {
             toastRef.current?.publish(`Complete. No new assets found.`);
