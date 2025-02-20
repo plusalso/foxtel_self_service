@@ -80,7 +80,7 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
     <>
       <Button onClick={handleSync} disabled={isCaching} variant="outline">
         <LuRefreshCw className="w-4 h-4" />
-        {isCaching ? "Syncing..." : "Update Database from File"}
+        {isCaching ? "Syncing..." : "Resync Assets"}
       </Button>
 
       <ImperativeToast ref={toastRef} />

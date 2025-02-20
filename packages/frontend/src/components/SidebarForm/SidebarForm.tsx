@@ -190,8 +190,6 @@ export function SidebarForm() {
     <div style={{ height: "100%" }}>
       <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>
         <Flex direction="column" gap="4">
-          <SyncFigmaButton fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
-
           <Flex direction="column" gap="2">
             <Text as="label" size="2">
               Source
@@ -208,6 +206,7 @@ export function SidebarForm() {
             </Select.Root>
           </Flex>
 
+          <SyncFigmaButton fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
           <Flex direction="column" gap="2">
             <Text as="label" size="2">
               Preset
