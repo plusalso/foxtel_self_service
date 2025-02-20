@@ -10,7 +10,7 @@ interface ToggleableTextFieldProps {
 
 export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ label, value, onChange }) => {
   // Assume the field starts enabled.
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   // Cache the value so we can restore it if the field is toggled back on.
   const [cachedValue, setCachedValue] = useState(value);
 

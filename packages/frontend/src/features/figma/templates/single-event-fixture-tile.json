@@ -30,12 +30,12 @@
           "value": "Fox Mini"
         },
         {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
-        },
-        {
           "fieldId": "bottomRightTextTop",
           "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
         },
         {
           "fieldId": "wedge1",
@@ -56,12 +56,12 @@
           "value": "Fox Bite"
         },
         {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
-        },
-        {
           "fieldId": "bottomRightTextTop",
           "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
         },
         {
           "fieldId": "wedge1",
