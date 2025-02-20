@@ -2,7 +2,6 @@
   "id": "SingleEventFixtureTile",
   "label": "Single Event Fixture Tile",
   "fileId": "51R2nLVvwmccZxjiIgo29P",
-  "supportsUploadedImages": false,
   "presets": [
     {
       "id": "foxEvent",
