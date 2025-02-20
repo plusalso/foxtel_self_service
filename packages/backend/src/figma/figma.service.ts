@@ -5,10 +5,6 @@ import { createHash } from 'crypto';
 import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import { Readable } from 'stream';
-import {
-  CloudFrontClient,
-  CreateInvalidationCommand,
-} from '@aws-sdk/client-cloudfront';
 
 interface GetFileOptions {
   nodeIds?: string[];
@@ -415,7 +411,7 @@ export class FigmaService {
         );
         const figmaImages = await this.getImages(fileId, assetIds);
         console.log('figmaImages', figmaImages);
-        // Log elapsed time
+        //log elapsed time
         const elapsedTime = Date.now() - startTime;
         console.log(`Elapsed time: ${elapsedTime / 1000} seconds`);
         for (const asset of batch) {
@@ -462,40 +458,6 @@ export class FigmaService {
           { contentType: 'application/json' },
         );
         console.log(`Marker file ${markerKey} updated to completed`);
-      }
-
-      // Trigger CloudFront invalidation
-      console.log(
-        'attmepting to trigger CloudFront invalidation for distribution id',
-        process.env.CLOUDFRONT_DISTRIBUTION_ID,
-      );
-      if (process.env.CLOUDFRONT_DISTRIBUTION_ID) {
-        try {
-          const cloudfrontClient = new CloudFrontClient({
-            region: process.env.AWS_REGION || 'ap-southeast-2',
-          });
-          const invalidationCommand = new CreateInvalidationCommand({
-            DistributionId: process.env.CLOUDFRONT_DISTRIBUTION_ID,
-            InvalidationBatch: {
-              CallerReference: `${jobId}-${Date.now()}`,
-              Paths: {
-                Quantity: 1,
-                Items: ['/*'],
-              },
-            },
-          });
-          await cloudfrontClient.send(invalidationCommand);
-          console.log('CloudFront invalidation triggered.');
-        } catch (invalidationError) {
-          console.error(
-            'Error triggering CloudFront invalidation:',
-            invalidationError,
-          );
-        }
-      } else {
-        console.warn(
-          'CLOUDFRONT_DISTRIBUTION_ID env variable is not set. Skipping CloudFront invalidation.',
-        );
       }
     } catch (error) {
       console.error('Error downloading and uploading assets', error);

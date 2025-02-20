@@ -129,6 +129,7 @@ export class StorageService {
     options?: {
       contentType?: string;
       metadata?: Record<string, string>;
+      cacheControl?: string;
     },
   ) {
     const command = new PutObjectCommand({
@@ -137,6 +138,7 @@ export class StorageService {
       Body: data,
       ContentType: options?.contentType,
       Metadata: options?.metadata,
+      CacheControl: options?.cacheControl,
     });
 
     await this.s3Client.send(command);
