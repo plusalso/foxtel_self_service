@@ -35,7 +35,6 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
   });
 
   const handleSync = () => {
-    console.log("nodeIds", nodeIds);
     // toastRef.current?.publish(`Syncing assets...`);
     if (!nodeIds || nodeIds.length === 0) return;
     cacheAssets(
@@ -78,7 +77,6 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
     );
   };
 
-  console.log("rerender template header");
   return (
     <>
       <UpdateDatabaseModal onUpdate={handleSync} onCancel={() => {}} isDisabled={isCaching} isLoading={isCaching} />

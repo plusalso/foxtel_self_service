@@ -42,8 +42,7 @@ export function GroupedAssetSelect({
   }, [group.assets]);
   const { imageVersion } = useTemplateState();
   const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
-  console.log("pagename is ", pageName);
-  console.log("groupedAssets", group);
+
   const comboboxAssets = useMemo(
     () =>
       selection.mainGroup

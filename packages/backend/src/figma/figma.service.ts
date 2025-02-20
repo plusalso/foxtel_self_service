@@ -80,7 +80,6 @@ export class FigmaService {
     if (options.pluginData) params.append('plugin_data', options.pluginData);
 
     const url = `${this.FIGMA_API_BASE}/files/${fileId}/nodes?${params.toString()}`;
-    console.log('getting file nodes', url);
     const response = await fetch(url, {
       headers: {
         'X-Figma-Token': this.figmaToken,
@@ -109,7 +108,6 @@ export class FigmaService {
     fileId: string,
     nodeIds: string[],
   ): Promise<{ images: Record<string, string> }> {
-    console.log('getting images', fileId, nodeIds);
     const response = await fetch(
       `${this.FIGMA_API_BASE}/images/${fileId}?ids=${nodeIds.join(',')}&format=png&scale=1`,
       {
