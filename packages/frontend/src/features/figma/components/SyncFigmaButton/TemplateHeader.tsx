@@ -1,13 +1,11 @@
 import { useCacheAssets } from "../../hooks/use-sync-template";
-import { Button } from "@radix-ui/themes";
 import { useRef } from "react";
 
 //refresh icon
-import { LuRefreshCw } from "react-icons/lu";
 import { ImperativeToast, ImperativeToastRef } from "@/components/ImperativeToast/ImperativeToast";
 import { useFigmaJobStatus } from "../../hooks/use-figma-job-status";
 import { useTemplate } from "../../context/TemplateContext";
-
+import { UpdateDatabaseModal } from "@/components/UpdateDatabaseModal/UpdateDatabaseModal";
 interface SyncFigmaButton {
   fileId: string;
   nodeIds: string[];
@@ -33,7 +31,7 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
 
   const handleSync = () => {
     console.log("nodeIds", nodeIds);
-    toastRef.current?.publish(`Syncing assets...`);
+    // toastRef.current?.publish(`Syncing assets...`);
     if (!nodeIds || nodeIds.length === 0) return;
     cacheAssets(
       { fileId, nodeIds },
@@ -78,10 +76,7 @@ export const SyncFigmaButton = ({ fileId, nodeIds }: SyncFigmaButton) => {
   console.log("rerender template header");
   return (
     <>
-      <Button onClick={handleSync} disabled={isCaching} variant="outline">
-        <LuRefreshCw className="w-4 h-4" />
-        {isCaching ? "Syncing..." : "Resync Assets"}
-      </Button>
+      <UpdateDatabaseModal onUpdate={handleSync} onCancel={() => {}} isDisabled={isCaching} isLoading={isCaching} />
 
       <ImperativeToast ref={toastRef} />
     </>
