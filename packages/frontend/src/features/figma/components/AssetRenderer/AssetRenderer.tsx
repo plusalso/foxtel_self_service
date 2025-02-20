@@ -17,6 +17,13 @@ interface AssetRendererProps {
   }>;
   templateConfig: any;
   textInputs: Record<string, string>;
+  customImage: string;
+  customImageDefaults?: {
+    x: number;
+    y: number;
+    width?: string | number;
+    height?: string | number;
+  };
 }
 export const renderers = {
   DefaultTextRenderer: DefaultTextRenderer,
@@ -24,8 +31,13 @@ export const renderers = {
   ResizableImageRenderer: ResizableImageRenderer,
   // add other renderers here as needed
 };
-export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: AssetRendererProps) => {
-  const { customImage } = useTemplateState();
+export const AssetRenderer = ({
+  customImage,
+  customImageDefaults,
+  selectedAssets,
+  templateConfig,
+  textInputs,
+}: AssetRendererProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
@@ -41,7 +53,6 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
     return Boolean(textInputs[field.id]);
   });
 
-  console.log("selected assets", selectedAssets);
   useEffect(() => {
     const updateScale = () => {
       if (containerRef.current) {
@@ -54,7 +65,7 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, []);
-
+  console.log("cust defa", customImageDefaults);
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
       <div
@@ -76,11 +87,11 @@ export const AssetRenderer = ({ selectedAssets, templateConfig, textInputs }: As
           <Rnd
             className={styles.draggableImageContainer}
             default={
-              templateConfig?.uploadedImageDefaults ?? {
-                x: 0,
-                y: 0,
-                // width: 300,
-                // height: 600,
+              customImageDefaults && {
+                x: customImageDefaults.x,
+                y: customImageDefaults.y,
+                width: customImageDefaults.width || "auto",
+                height: customImageDefaults.height || "auto",
               }
             }
             lockAspectRatio={true}

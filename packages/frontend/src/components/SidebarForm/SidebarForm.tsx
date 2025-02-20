@@ -1,7 +1,7 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useTemplateState } from "@/features/figma/context/TemplateContext";
+import { CustomImageDefaults, useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
 import { FigmaTemplateGroup, TemplateConfig } from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
@@ -30,10 +30,10 @@ export function SidebarForm() {
   const [groupedFields, setGroupedFields] = useState<
     Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
   >({});
-  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs } = useTemplateState();
+  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs, setCustomImageDefaults } = useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
-  console.log("templateConfig", templateConfig);
+
   const presets = templateConfig.presets || [];
 
   // Set the first preset as default when component mounts or when presets change
@@ -60,7 +60,7 @@ export function SidebarForm() {
   const pageNodeIds = useMemo(() => {
     if (!assetsData) return [];
     const uniquePageIds = new Set<string>();
-    console.log("assets", assetsData);
+
     Object.values(assetsData?.assets || {}).forEach((pageAssets) => {
       if (pageAssets.length > 0) {
         const firstAsset = pageAssets[0];
@@ -73,18 +73,12 @@ export function SidebarForm() {
     return Array.from(uniquePageIds);
   }, [assetsData]);
 
-  console.log("pageNodeIds", pageNodeIds);
-
-  console.log("Template Generator rerender");
-
   useEffect(() => {
-    console.log("setting template config");
     setTemplateConfig(templateConfig);
   }, [selectedSource]);
 
   // Set the overlay assets when the preset changes
   useEffect(() => {
-    console.log("setting overlay assets");
     const assets =
       selectedPresetConfig?.fields
         .map((field) => {
@@ -122,9 +116,15 @@ export function SidebarForm() {
         })
         .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)) || [];
 
-    console.log("assets", assets);
     setOverlayAssets(assets);
-
+    //set the custom image defaults
+    const customImageDefaults: CustomImageDefaults = {
+      x: parseFloat(selectedPresetConfig?.uploadedImageDefaults?.x || "50%"),
+      y: parseFloat(selectedPresetConfig?.uploadedImageDefaults?.y || "0"),
+      width: selectedPresetConfig?.uploadedImageDefaults?.width || "auto",
+      height: selectedPresetConfig?.uploadedImageDefaults?.height || "auto",
+    };
+    setCustomImageDefaults(customImageDefaults);
     //clear the text inputs
     setTextInputs({});
   }, [selectedPresetConfig, selectedAssets, templateConfig.fields]);
@@ -134,12 +134,10 @@ export function SidebarForm() {
     if (!assetsData || !selectedPresetConfig) return;
 
     const newGroupedFields: Record<string, { name: string; id: string; assets: any[]; defaultValue: any }> = {};
-    console.log("selected preset config", selectedPresetConfig);
+
     selectedPresetConfig.fields.forEach((field) => {
       const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
       if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
-        console.log("fullField", fullField);
-        console.log("assetsData", assetsData);
         newGroupedFields[field.fieldId] = {
           name: fullField.label || "unknown",
           id: field.fieldId,
@@ -274,7 +272,6 @@ export function SidebarForm() {
                         value={textInputs[field.fieldId] || ""}
                         onChange={(val) => {
                           setTextInputs({ ...textInputs, [field.fieldId]: val });
-                          console.log("textInputs", textInputs);
                         }}
                       />
                     );

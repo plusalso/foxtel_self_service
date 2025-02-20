@@ -58,6 +58,7 @@ export interface Preset {
   id: string;
   label: string;
   supportsUploadedImages?: boolean;
+  uploadedImageDefaults?: Record<string, string>;
   uploadedImageLabel?: string;
   fields: PresetField[];
 }

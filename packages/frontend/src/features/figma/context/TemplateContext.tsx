@@ -7,17 +7,25 @@ interface OverlayAsset {
   assetId: string;
 }
 
+export type CustomImageDefaults = {
+  x: number;
+  y: number;
+  width?: string | number;
+  height?: string | number;
+};
 interface TemplateContextType {
   overlayAssets: OverlayAsset[];
   fileVersion?: string;
   templateConfig: TemplateConfig;
   textInputs: Record<string, string>;
   customImage: string;
+  customImageDefaults?: CustomImageDefaults;
   setOverlayAssets: (assets: OverlayAsset[]) => void;
   setFileVersion: (version: string) => void;
   setTemplateConfig: (config: any) => void;
   setTextInputs: (inputs: Record<string, string>) => void;
   setCustomImage: (image: string) => void;
+  setCustomImageDefaults: (defaults: CustomImageDefaults) => void;
   imageVersion: number;
   refreshImages: () => void;
 }
@@ -30,6 +38,7 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
   const [templateConfig, setTemplateConfig] = useState<any>(null);
   const [textInputs, setTextInputs] = useState<Record<string, string>>({});
   const [customImage, setCustomImage] = useState<string>("");
+  const [customImageDefaults, setCustomImageDefaults] = useState<CustomImageDefaults | undefined>(undefined);
   const [imageVersion, setImageVersion] = useState<number>(Date.now());
   const refreshImages = () => {
     setImageVersion(Date.now());
@@ -47,6 +56,8 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
         setTextInputs,
         customImage,
         setCustomImage,
+        customImageDefaults,
+        setCustomImageDefaults,
         imageVersion,
         refreshImages,
       }}

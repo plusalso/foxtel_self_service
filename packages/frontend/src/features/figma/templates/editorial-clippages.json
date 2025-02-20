@@ -7,6 +7,10 @@
       "id": "foxEvent",
       "label": "Editorial Clippages",
       "supportsUploadedImages": true,
+      "uploadedImageDefaults": {
+        "x": "960",
+        "y": "0"
+      },
       "fields": [
         {
           "fieldId": "overlay",
@@ -17,8 +21,6 @@
     {
       "id": "singleEvent",
       "label": "Single Event + Show",
-      "supportsUploadedImages": true,
-      "uploadedImageLabel": "Background Image",
       "fields": [
         {
           "fieldId": "singleEventTextBackground",
@@ -30,6 +32,10 @@
       "id": "bestpokeMinis",
       "label": "Bespoke Minis + Bites",
       "supportsUploadedImages": true,
+      "uploadedImageDefaults": {
+        "x": "960",
+        "y": "0"
+      },
       "fields": [
         {
           "fieldId": "bestpokeMinis",
