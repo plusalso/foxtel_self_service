@@ -29,6 +29,11 @@ const DownloadButton = () => {
             height: "1080px",
             transform: "none",
           },
+          fetchRequestInit: {
+            mode: "cors",
+            credentials: "include",
+          },
+          cacheBust: true,
         };
 
         const dataUrl =
