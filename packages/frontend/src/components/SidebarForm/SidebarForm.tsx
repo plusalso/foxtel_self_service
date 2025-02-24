@@ -1,6 +1,6 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Flex, Text } from "@radix-ui/themes";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { CustomImageDefaults, useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
 import { FigmaTemplateGroup, TemplateConfig } from "@/features/figma/types/template";
@@ -56,22 +56,6 @@ export function SidebarForm() {
     fileId: templateConfig.fileId,
     pages: assetPages,
   });
-
-  const pageNodeIds = useMemo(() => {
-    if (!assetsData) return [];
-    const uniquePageIds = new Set<string>();
-
-    Object.values(assetsData?.assets || {}).forEach((pageAssets) => {
-      if (pageAssets.length > 0) {
-        const firstAsset = pageAssets[0];
-        if (firstAsset.pageId) {
-          uniquePageIds.add(firstAsset.pageId);
-        }
-      }
-    });
-
-    return Array.from(uniquePageIds);
-  }, [assetsData]);
 
   useEffect(() => {
     setTemplateConfig(templateConfig);
@@ -227,7 +211,7 @@ export function SidebarForm() {
             </Select.Root>
           </Flex>
 
-          <SyncFigmaButton fileId={templateConfig.fileId} nodeIds={pageNodeIds} />
+          <SyncFigmaButton fileId={templateConfig.fileId} pages={assetPages} />
           <Flex direction="column" gap="2">
             <Text as="label" size="2">
               Preset
