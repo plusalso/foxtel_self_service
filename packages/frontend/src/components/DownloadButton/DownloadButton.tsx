@@ -31,7 +31,6 @@ const DownloadButton = () => {
           },
           fetchRequestInit: {
             mode: "cors",
-            credentials: "include",
           },
           cacheBust: true,
         };
