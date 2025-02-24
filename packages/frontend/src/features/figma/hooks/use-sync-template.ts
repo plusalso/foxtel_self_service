@@ -3,7 +3,7 @@ import { fetchFromApi } from "@/lib/fetchFromApi";
 import { useFigmaAssets } from "./use-figma-assets";
 
 export const useCacheAssets = (fileId: string, pages: string[]) => {
-  const { data: assetsData } = useFigmaAssets({ fileId, pages });
+  const { data: assetsData, refetch: refetchAssets } = useFigmaAssets({ fileId, pages });
 
   // Get the page node IDs from the assets data
   const getPageNodeIds = () => {
@@ -24,8 +24,13 @@ export const useCacheAssets = (fileId: string, pages: string[]) => {
 
   return useMutation({
     mutationFn: async () => {
-      // Get fresh node IDs before making the request
+      // First, refetch the assets to get fresh data
+      console.log("refetching assets");
+      await refetchAssets();
+      console.log("assetsData", assetsData);
+      // Then get the nodeIds from the fresh data
       const nodeIds = getPageNodeIds();
+      console.log("nodeIds", nodeIds);
 
       return fetchFromApi("/figma/cache-assets", {
         method: "POST",
