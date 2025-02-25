@@ -17,8 +17,6 @@ const DownloadButton = () => {
     if (node) {
       try {
         const options: Options = {
-          fontEmbedCSS:
-            '@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");',
           skipFonts: false,
           imagePlaceholder: "https://placehold.co/1920x1080?text=Error+loading+image",
           width: 1920,
