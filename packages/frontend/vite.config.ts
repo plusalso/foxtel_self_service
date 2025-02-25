@@ -22,7 +22,7 @@ export default defineConfig({
 
   server: {
     cors: true,
-
+    allowedHosts: ["9774-175-36-22-61.ngrok-free.app"],
     proxy: {
       "/api": {
         target: "http://localhost:3000",

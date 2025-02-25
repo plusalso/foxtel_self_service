@@ -23,7 +23,9 @@ Features
 
 # Running
 
-- Set up your AWS credentials under the name "foxtel_self_service"
+- Set up your AWS credentials `~/.aws/credentials` under the name "foxtel_self_service"
+- `cd packages/frontend && npm run dev`
+- `cd ../backend && npm run start:serverless-offline`
 
 # Infra
 
