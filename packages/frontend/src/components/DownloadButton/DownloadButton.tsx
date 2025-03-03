@@ -72,8 +72,9 @@ const DownloadButton = () => {
               {format.toUpperCase()}
             </Select.Trigger>
             <Select.Content>
-              <Select.Item value="png">PNG</Select.Item>
-              <Select.Item value="jpg">JPG</Select.Item>
+              {/* todo make size changeable */}
+              <Select.Item value="png">PNG • (1920x1080)</Select.Item>
+              <Select.Item value="jpg">JPG • (1920x1080)</Select.Item>
             </Select.Content>
           </Select.Root>
         </Flex>
