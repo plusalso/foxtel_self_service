@@ -161,15 +161,15 @@
         },
         {
           "fieldId": "background",
-          "value": "F1"
+          "value": "F1 Logo"
         },
         {
-          "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
+          "fieldId": "CenterTextTop",
+          "value": "Center Text Top"
         },
         {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
+          "fieldId": "CenterTextBottom",
+          "value": "Center Text Bottom"
         }
       ]
     },
@@ -183,15 +183,15 @@
         },
         {
           "fieldId": "background",
-          "value": "F1"
+          "value": "F1 Logo"
         },
         {
-          "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
+          "fieldId": "CenterTextTop",
+          "value": "Center Text Top"
         },
         {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
+          "fieldId": "CenterTextBottom",
+          "value": "Center Text Bottom"
         }
       ]
     }
@@ -289,7 +289,7 @@
         "height": "145px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Foxtel Title",
         "alignItems": "center",
         "fontWeight": "300",
         "letterSpacing": "0.659px",
@@ -317,7 +317,7 @@
         "height": "145px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Foxtel Title",
         "fontWeight": "500",
         "alignItems": "center",
         "letterSpacing": "0.659px",
@@ -333,17 +333,18 @@
       "defaultValue": "Top Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "332px",
+        "bottom": "317px",
         "left": "0px",
         "right": "0px",
         "color": "white",
         "textTransform": "uppercase",
         "fontSize": "84px",
         "textAlign": "center",
-        "height": "145px",
+        "height": "57px",
+        "lineHeight": "57px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Foxtel Title",
         "fontWeight": "700",
         "alignItems": "center",
         "justifyContent": "center"
@@ -357,17 +358,18 @@
       "defaultValue": "Bottom Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "226px",
+        "bottom": "230px",
         "left": "0px",
         "right": "0px",
         "color": "white",
         "textTransform": "uppercase",
         "fontSize": "84px",
         "textAlign": "center",
-        "height": "145px",
+        "height": "57px",
+        "lineHeight": "57px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Foxtel Title",
         "fontWeight": "700",
         "alignItems": "center",
         "justifyContent": "center"

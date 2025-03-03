@@ -193,6 +193,8 @@ export function SidebarForm() {
     [templateConfig.fileId]
   );
 
+  // If assets are loading, show a centered spinner
+
   return (
     <div style={{ height: "100%" }}>
       <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>

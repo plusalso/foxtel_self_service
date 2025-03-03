@@ -77,7 +77,6 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
           onClick={() => {
             reset();
             onInputValueChange("");
-            onValueChange("");
             ref.current?.focus();
           }}
           className={styles.comboboxClearButton}

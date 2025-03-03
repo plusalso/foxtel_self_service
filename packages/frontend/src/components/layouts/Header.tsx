@@ -75,7 +75,7 @@ export function Header() {
             </defs>
           </svg>
           <Flex direction={"column"} align="start">
-            <Text size="2">adam.hughes@foxtel.com.au</Text>
+            <Text size="2">test@foxtel.com.au</Text>
             {/* logout link */}
             <Button
               variant="ghost"
