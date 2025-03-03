@@ -65,7 +65,7 @@
       "id": "textTeaser",
       "type": "text",
       "label": "Text Teaser",
-      "assetSourcePage": "Single Event Fixture Tile/Text Teaser",
+      "assetSourcePage": "Single Event + Show/Text Teaser",
       "containerStyle": {
         "position": "absolute",
         "top": "40px",
