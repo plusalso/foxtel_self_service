@@ -4,8 +4,8 @@
   "fileId": "nj0cfZj9WsfxoVJUIMcE6U",
   "presets": [
     {
-      "id": "editorialClippages1",
-      "label": "Editorial Clippages",
+      "id": "bestpokeMinis",
+      "label": "Bespoke Minis + Bites",
       "supportsUploadedImages": true,
       "uploadedImageDefaults": {
         "x": "960",
@@ -13,16 +13,12 @@
       },
       "fields": [
         {
-          "fieldId": "overlay",
-          "value": "Fox Mini"
+          "fieldId": "bestpokeMinis",
+          "value": "Bespoke Minis + Bites/Overlay"
         },
         {
-          "fieldId": "bottomRightTextTop",
-          "value": "Bottom Right Text Top"
-        },
-        {
-          "fieldId": "bottomRightTextBottom",
-          "value": "Bottom Right Text Bottom"
+          "fieldId": "bestpokeBites",
+          "value": "Bespoke Minis + Bites/Event"
         }
       ]
     }
@@ -47,20 +43,37 @@
       "renderer": "DefaultTextRenderer"
     },
     {
+      "id": "bestpokeMinis",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Overlay",
+      "assetSourcePage": "Bespoke Minis + Bites - Feature Image/Overlay"
+    },
+    {
+      "id": "bestpokeBites",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Event",
+      "assetSourcePage": "Bespoke Minis + Bites - Feature Image/Event"
+    },
+    {
       "id": "overlay",
       "type": "figmaAssetDropdownSelect",
       "label": "Overlay",
       "assetSourcePage": "Editorial Clippages/Overlay"
     },
     {
+      "id": "singleEventTextBackground",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Background",
+      "assetSourcePage": "Single Event + Show/Background"
+    },
+    {
       "id": "bottomRightTextTop",
       "type": "text",
       "label": "Top Text",
-      "renderer": "CornerTextRenderer",
       "defaultValue": "Top Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "143px",
+        "bottom": "145px",
         "right": "66.62px",
         "color": "#B1B1BB",
         "fontSize": "87.872px",
@@ -77,10 +90,9 @@
         "fontWeight": "300",
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
-        "transform": "skewX(-21deg)",
-        "whiteSpace": "pre-wrap",
-        "overflow": "hidden"
-      }
+        "transform": "skewX(-21deg)"
+      },
+      "renderer": "CornerTextRenderer"
     },
     {
       "id": "bottomRightTextBottom",
@@ -106,11 +118,57 @@
         "alignItems": "center",
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
-        "transform": "skewX(-21deg)",
-        "whiteSpace": "pre-wrap",
-        "overflow": "hidden"
+        "transform": "skewX(-21deg)"
       },
       "renderer": "CornerTextRenderer"
+    },
+    {
+      "id": "CenterTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "332px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "CenterTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "226px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "renderer": "DefaultTextRenderer"
     }
   ]
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useCombobox } from "downshift";
 import fuzzysort from "fuzzysort";
 import styles from "./ComboBox.module.scss";
@@ -21,6 +21,7 @@ interface ComboboxProps {
 const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputValueChange, onValueChange }) => {
   const [inputItems, setInputItems] = useState(assets);
   const [isFiltering, setIsFiltering] = useState(false);
+  const ref = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isFiltering && inputValue) {
@@ -70,13 +71,14 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
     <div className={styles.comboboxContainer}>
       {/* <label {...getLabelProps()}>Select Asset:</label> */}
       <div className={styles.comboboxInputContainer}>
-        <input {...getInputProps()} className={styles.comboboxInput} placeholder="Search assets..." />
+        <input {...getInputProps()} className={styles.comboboxInput} placeholder="Search assets..." ref={ref} />
         <button
           type="button"
           onClick={() => {
             reset();
             onInputValueChange("");
             onValueChange("");
+            ref.current?.focus();
           }}
           className={styles.comboboxClearButton}
           aria-label="clear selection"

@@ -45,10 +45,15 @@ export interface TextField extends BaseField {
   renderer?: TextRenderer;
 }
 
+export interface TextAreaField extends BaseField {
+  type: "textArea";
+  renderer?: TextRenderer;
+}
+
 export interface FigmaAssetDropdownSelectField extends BaseField {
   type: "figmaAssetDropdownSelect";
 }
-export type Field = TextField | FigmaAssetDropdownSelectField;
+export type Field = TextField | TextAreaField | FigmaAssetDropdownSelectField;
 export interface PresetField {
   fieldId: string;
   value: string;

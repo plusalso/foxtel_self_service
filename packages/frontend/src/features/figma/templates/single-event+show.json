@@ -1,0 +1,188 @@
+{
+  "id": "Foxtel-SelfService-SingleEvent+Show",
+  "label": "Single Event + Show",
+  "fileId": "Sto90CuaMjuH5GNKSfbR0U",
+  "presets": [
+    {
+      "id": "singleEvent",
+      "label": "Single Event + Show",
+      "fields": [
+        {
+          "fieldId": "singleEventTextBackground",
+          "value": "Single Event + Show/Background"
+        },
+        {
+          "fieldId": "textTeaser",
+          "value": "Teaser Text"
+        },
+        {
+          "fieldId": "CenterTextTop",
+          "value": "Center Text Top"
+        },
+        {
+          "fieldId": "CenterTextBottom",
+          "value": "Center Text Bottom"
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "id": "textTeaser",
+      "type": "text",
+      "label": "Teaser Text",
+      "assetSourcePage": "Single Event + Show/Teaser Text",
+      "containerStyle": {
+        "position": "absolute",
+        "top": "40px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "72px",
+        "fontWeight": "700",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "zIndex": 100
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "singleEventTextBackground",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Background",
+      "assetSourcePage": "Single Event + Show/Background"
+    },
+    {
+      "id": "bottomRightTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "145px",
+        "right": "66.62px",
+        "color": "#B1B1BB",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "alignItems": "center",
+        "fontWeight": "300",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)"
+      },
+      "renderer": "CornerTextRenderer"
+    },
+    {
+      "id": "bottomRightTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "0px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Plus Jakarta Sans",
+        "fontWeight": "500",
+        "alignItems": "center",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)"
+      },
+      "renderer": "CornerTextRenderer"
+    },
+
+    {
+      "id": "CenterTextarea",
+      "type": "textArea",
+      "label": "Center Text",
+      "defaultValue": "Center Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "332px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "128px",
+        "textAlign": "center",
+        "height": "159px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px",
+        "lineHeight": "159px"
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "CenterTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "530px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "148px",
+        "textAlign": "center",
+        "height": "146px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px",
+        "lineHeight": "159px"
+      },
+      "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "CenterTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "384px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "148px",
+        "textAlign": "center",
+        "height": "146px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center"
+      },
+      "renderer": "DefaultTextRenderer"
+    }
+  ]
+}

@@ -49,7 +49,6 @@ const DownloadButton = () => {
       setIsDownloading(false);
     }
   };
-
   return (
     <div>
       <div style={{ marginBottom: "10px" }}>

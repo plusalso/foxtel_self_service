@@ -10,11 +10,14 @@ import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAsset
 import { useFigmaAssets } from "@/features/figma/hooks/use-figma-assets";
 import { SyncFigmaButton } from "@/features/figma/components/SyncFigmaButton/SyncFigmaButton";
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
+import singleEventShowConfig from "@/features/figma/templates/single-event+show.json";
+import bespokeMinisBytesConfig from "@/features/figma/templates/bestpoke-minis+bytes.json";
 import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
-
 const templateConfigs = {
-  "File 1 - Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
-  "File 2 - Editorial Clippages etc": editorialClippagesConfig as TemplateConfig,
+  "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
+  "Editorial Clippages": editorialClippagesConfig as TemplateConfig,
+  "Single Event + Show": singleEventShowConfig as TemplateConfig,
+  "Bespoke Minis + Bites": bespokeMinisBytesConfig as TemplateConfig,
 };
 
 interface GroupedAssetState {
@@ -33,15 +36,14 @@ export function SidebarForm() {
   const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs, setCustomImageDefaults } = useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
-
   const presets = templateConfig.presets || [];
 
-  // Set the first preset as default when component mounts or when presets change
+  // Update selectedPreset when source changes or on initial mount
   useEffect(() => {
-    if (presets.length > 0 && !selectedPreset) {
+    if (presets.length > 0) {
       setSelectedPreset(presets[0].id);
     }
-  }, [presets]);
+  }, [selectedSource]);
 
   const selectedPresetConfig = presets.find((preset) => preset.id === selectedPreset);
 
@@ -63,44 +65,43 @@ export function SidebarForm() {
 
   // Set the overlay assets when the preset changes
   useEffect(() => {
-    const assets =
-      selectedPresetConfig?.fields
-        .map((field) => {
-          const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+    const backgroundAssets = selectedPresetConfig?.fields
+      .map((field) => {
+        const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+        if (fullField?.type !== "figmaAssetDropdownSelect") return null;
 
-          // Handle figmaAssetDropdownSelect fields
-          if (fullField?.type === "figmaAssetDropdownSelect") {
-            const selected = selectedAssets[field.fieldId];
-            if (!selected || !fullField?.assetSourcePage) return null;
+        const selected = selectedAssets[field.fieldId];
+        if (!selected || !fullField?.assetSourcePage) return null;
 
-            return {
-              templateName: selectedSource,
-              pageName: selected.pageName,
-              assetId: selected.assetId,
-              fileId: templateConfig.fileId,
-            };
-          }
+        return {
+          templateName: selectedSource,
+          pageName: selected.pageName,
+          assetId: selected.assetId,
+          fileId: templateConfig.fileId,
+        };
+      })
+      .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset));
 
-          if (fullField?.type === "text" && fullField.assetSourcePage) {
-            // Find the matching asset in assetsData
-            const pageAssets = assetsData?.assets[fullField.assetSourcePage] || [];
-            const matchingAsset = pageAssets.find((asset) => asset.name === field.value);
+    const textBackgroundAssets = selectedPresetConfig?.fields
+      .map((field) => {
+        const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+        if (fullField?.type !== "text" || !fullField.assetSourcePage) return null;
 
-            if (!matchingAsset) return null;
+        const pageAssets = assetsData?.assets[fullField.assetSourcePage] || [];
+        const matchingAsset = pageAssets.find((asset) => asset.name === field.value);
+        if (!matchingAsset) return null;
 
-            return {
-              templateName: selectedSource,
-              pageName: fullField.assetSourcePage,
-              assetId: matchingAsset.id, // Use the actual Figma asset ID
-              fileId: templateConfig.fileId,
-            };
-          }
+        return {
+          templateName: selectedSource,
+          pageName: fullField.assetSourcePage,
+          assetId: matchingAsset.id,
+          fileId: templateConfig.fileId,
+        };
+      })
+      .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset));
 
-          return null;
-        })
-        .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset)) || [];
+    setOverlayAssets([...(textBackgroundAssets || []), ...(backgroundAssets || [])]);
 
-    setOverlayAssets(assets);
     //set the custom image defaults
     const customImageDefaults: CustomImageDefaults = {
       x: parseFloat(selectedPresetConfig?.uploadedImageDefaults?.x || "50%"),
@@ -145,7 +146,8 @@ export function SidebarForm() {
       const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
       if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
         const fieldAssets = assetsData.assets[fullField.assetSourcePage] || [];
-        const selectedAsset = fieldAssets.find((asset) => asset.name === field.value) || fieldAssets[0];
+        const sortedAssets = [...fieldAssets].sort((a, b) => a.name.localeCompare(b.name));
+        const selectedAsset = fieldAssets.find((asset) => asset.name === field.value) || sortedAssets[0];
 
         if (selectedAsset) {
           const [mainGroup, itemName] = selectedAsset.name.split("/");
@@ -199,7 +201,12 @@ export function SidebarForm() {
             <Text as="label" size="2">
               Source
             </Text>
-            <Select.Root value={selectedSource} onValueChange={(value) => setSelectedSource(value)}>
+            <Select.Root
+              value={selectedSource}
+              onValueChange={(value) => {
+                setSelectedSource(value);
+              }}
+            >
               <Select.Trigger />
               <Select.Content>
                 {Object.keys(templateConfigs).map((source) => (
@@ -212,21 +219,25 @@ export function SidebarForm() {
           </Flex>
 
           <SyncFigmaButton fileId={templateConfig.fileId} pages={assetPages} />
-          <Flex direction="column" gap="2">
-            <Text as="label" size="2">
-              Preset
-            </Text>
-            <Select.Root value={selectedPreset} onValueChange={(value) => setSelectedPreset(value)}>
-              <Select.Trigger />
-              <Select.Content>
-                {presets.map((preset) => (
-                  <Select.Item key={preset.id} value={preset.id}>
-                    {preset.label}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          </Flex>
+
+          {/* Only show preset dropdown if there's more than one preset */}
+          {presets.length > 1 && (
+            <Flex direction="column" gap="2">
+              <Text as="label" size="2">
+                Preset
+              </Text>
+              <Select.Root value={selectedPreset} onValueChange={(value) => setSelectedPreset(value)}>
+                <Select.Trigger />
+                <Select.Content>
+                  {presets.map((preset) => (
+                    <Select.Item key={preset.id} value={preset.id}>
+                      {preset.label}
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+          )}
 
           <Form>
             <Flex direction="column" gap="4">
@@ -249,6 +260,7 @@ export function SidebarForm() {
                       />
                     ) : null;
                   case "text":
+                  case "textArea":
                     return (
                       <ToggleableTextField
                         key={`${selectedPreset}-${field.fieldId}`}
@@ -257,6 +269,7 @@ export function SidebarForm() {
                         onChange={(val) => {
                           setTextInputs({ ...textInputs, [field.fieldId]: val });
                         }}
+                        multiline={fullField.type === "textArea"}
                       />
                     );
                 }

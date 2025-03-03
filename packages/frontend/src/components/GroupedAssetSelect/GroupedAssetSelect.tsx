@@ -6,6 +6,7 @@ import Combobox from "../ComboBox/ComboBox";
 import { getS3ImageUrl } from "@/features/figma/utils/getS3ImageUrl";
 import styles from "./GroupedAssetSelect.module.scss";
 import { useTemplateState } from "@/features/figma/context/TemplateContext";
+
 interface GroupedAssetSelectProps {
   fileId: string;
   pageName: string;
@@ -41,16 +42,24 @@ export function GroupedAssetSelect({
     }, {} as Record<string, Array<{ id: string; name: string }>>);
   }, [group.assets]);
   const { imageVersion } = useTemplateState();
-  const mainGroupNames = useMemo(() => Object.keys(groupedAssets).filter((name) => name !== ""), [groupedAssets]);
+  const mainGroupNames = useMemo(
+    () =>
+      Object.keys(groupedAssets)
+        .filter((name) => name !== "")
+        .sort((a, b) => a.localeCompare(b)),
+    [groupedAssets]
+  );
 
   const comboboxAssets = useMemo(
     () =>
       selection.mainGroup
-        ? groupedAssets[selection.mainGroup]?.map((asset) => ({
-            id: asset.id,
-            name: asset.name,
-            imageUrl: getS3ImageUrl(fileId, pageName, asset.id, imageVersion),
-          })) || []
+        ? groupedAssets[selection.mainGroup]
+            ?.map((asset) => ({
+              id: asset.id,
+              name: asset.name,
+              imageUrl: getS3ImageUrl(fileId, pageName, asset.id, imageVersion),
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name)) || []
         : [],
     [selection.mainGroup, groupedAssets, fileId, pageName]
   );
@@ -95,10 +104,12 @@ export function GroupedAssetSelect({
                 inputValue={inputValue}
                 onInputValueChange={(value) => setInputValue(value)}
                 onValueChange={(assetId) => {
-                  // Reset input value when an item is selected
-                  const selectedAsset = comboboxAssets.find((asset) => asset.id === assetId);
-                  setInputValue(selectedAsset?.name || "");
-                  if (selectedAsset) {
+                  if (assetId === null) {
+                    setInputValue("");
+                    onSelect(group, pageName, "");
+                  } else {
+                    const selectedAsset = comboboxAssets.find((asset) => asset.id === assetId);
+                    setInputValue(selectedAsset?.name || "");
                     onSelect(group, pageName, assetId);
                   }
                 }}
@@ -110,11 +121,13 @@ export function GroupedAssetSelect({
         <Select.Root value={selection.assetId || ""} onValueChange={(value) => onSelect(group, pageName, value)}>
           <Select.Trigger />
           <Select.Content>
-            {group.assets.map((asset) => (
-              <Select.Item key={asset.id} value={asset.id}>
-                {asset.name}
-              </Select.Item>
-            ))}
+            {group.assets
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((asset) => (
+                <Select.Item key={asset.id} value={asset.id}>
+                  {asset.name}
+                </Select.Item>
+              ))}
           </Select.Content>
         </Select.Root>
       )}

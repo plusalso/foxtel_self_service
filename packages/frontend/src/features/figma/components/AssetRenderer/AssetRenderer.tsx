@@ -65,6 +65,7 @@ export const AssetRenderer = ({
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, []);
+
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
       <div

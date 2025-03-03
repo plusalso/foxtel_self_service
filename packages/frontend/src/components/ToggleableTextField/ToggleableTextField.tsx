@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Text, TextField } from "@radix-ui/themes";
-import { Switch } from "@radix-ui/themes";
+import { Flex, Text, TextField, TextArea, Switch } from "@radix-ui/themes";
 
 interface ToggleableTextFieldProps {
   label: string;
   value: string;
   onChange: (newValue: string) => void;
+  multiline?: boolean;
 }
 
-export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ label, value, onChange }) => {
+export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({
+  label,
+  value,
+  onChange,
+  multiline = false,
+}) => {
   // Assume the field starts enabled.
   const [enabled, setEnabled] = useState(true);
   // Cache the value so we can restore it if the field is toggled back on.
@@ -34,7 +39,7 @@ export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ label,
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     onChange(e.target.value);
     setCachedValue(e.target.value);
   };
@@ -49,7 +54,20 @@ export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({ label,
           <Switch size="1" checked={enabled} onCheckedChange={handleSwitchChange} style={{ outline: "none" }} />
         </Flex>
       </Flex>
-      {enabled && <TextField.Root type="text" value={value} onChange={handleChange} placeholder={`Enter ${label}`} />}
+      {enabled && (
+        <>
+          {multiline ? (
+            <TextArea
+              value={value}
+              onChange={handleChange}
+              placeholder={`Enter ${label}`}
+              style={{ minHeight: "100px" }}
+            />
+          ) : (
+            <TextField.Root type="text" value={value} onChange={handleChange} placeholder={`Enter ${label}`} />
+          )}
+        </>
+      )}
     </Flex>
   );
 };

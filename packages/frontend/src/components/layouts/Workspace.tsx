@@ -4,6 +4,7 @@ import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import styles from "./Workspace.module.scss";
 export function Workspace({ children }: { children?: React.ReactNode }) {
   const { overlayAssets, templateConfig, textInputs, customImage, customImageDefaults } = useTemplateState();
+  // console.log("overlayAssets", overlayAssets);
   return (
     <Box p="6" className={styles.workspace}>
       <AssetRenderer

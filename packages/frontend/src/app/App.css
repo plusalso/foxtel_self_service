@@ -1,7 +1,8 @@
 :root,
 #root,
 #root .radix-themes {
-  --default-font-family: "Plus Jakarta Sans", serif;
+  /* --default-font-family: "Plus Jakarta Sans", serif; */
+  --default-font-family: "Foxtel Text", serif;
 }
 #root {
   width: 100%;
@@ -13,4 +14,211 @@
 
 .radix-themes.radix-themes {
   font-family: var(--default-font-family);
+}
+/* Foxtel Text Regular */
+@font-face {
+  font-family: "Foxtel Text";
+  src: url("/fonts/FoxtelText/FoxtelText-Regular.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-Regular.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-Regular.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-Regular.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Foxtel Text Regular Italic */
+@font-face {
+  font-family: "Foxtel Text";
+  src: url("/fonts/FoxtelText/FoxtelText-RegularItalic.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalic.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalic.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalic.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Foxtel Text Bold */
+@font-face {
+  font-family: "Foxtel Text";
+  src: url("/fonts/FoxtelText/FoxtelText-Bold.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-Bold.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-Bold.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-Bold.eot") format("embedded-opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Foxtel Text Bold Italic */
+@font-face {
+  font-family: "Foxtel Text";
+  src: url("/fonts/FoxtelText/FoxtelText-BoldItalic.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalic.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalic.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalic.eot") format("embedded-opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Foxtel Text Regular Negative */
+@font-face {
+  font-family: "Foxtel Text Negative";
+  src: url("/fonts/FoxtelText/FoxtelText-RegularNegative.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-RegularNegative.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-RegularNegative.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-RegularNegative.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Foxtel Text Regular Italic Negative */
+@font-face {
+  font-family: "Foxtel Text Negative";
+  src: url("/fonts/FoxtelText/FoxtelText-RegularItalicNegative.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalicNegative.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalicNegative.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-RegularItalicNegative.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Foxtel Text Bold Negative */
+@font-face {
+  font-family: "Foxtel Text Negative";
+  src: url("/fonts/FoxtelText/FoxtelText-BoldNegative.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-BoldNegative.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-BoldNegative.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-BoldNegative.eot") format("embedded-opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Foxtel Text Bold Italic Negative */
+@font-face {
+  font-family: "Foxtel Text Negative";
+  src: url("/fonts/FoxtelText/FoxtelText-BoldItalicNegative.woff2") format("woff2"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalicNegative.woff") format("woff"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalicNegative.ttf") format("truetype"),
+    url("/fonts/FoxtelText/FoxtelText-BoldItalicNegative.eot") format("embedded-opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* Foxtel Title Regular */
+@font-face {
+  font-family: "Foxtel Title";
+  src: url("/fonts/FoxtelTitle/FoxtelTitle-Regular.woff2") format("woff2"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Regular.woff") format("woff"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Regular.ttf") format("truetype"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Regular.eot") format("embedded-opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Foxtel Title Bold */
+@font-face {
+  font-family: "Foxtel Title";
+  src: url("/fonts/FoxtelTitle/FoxtelTitle-Bold.woff2") format("woff2"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Bold.woff") format("woff"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Bold.ttf") format("truetype"),
+    url("/fonts/FoxtelTitle/FoxtelTitle-Bold.eot") format("embedded-opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-Bold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-BoldItalic.otf") format("opentype");
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-Italic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-LightIt.otf") format("opentype");
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Canada Type - Gibson-SemiboldIt.otf") format("opentype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KayoGravityExpandedItalic";
+  src: url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.woff2") format("woff2"),
+    url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.woff") format("woff"),
+    url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.ttf") format("truetype"),
+    url("/fonts/KayoGravity/KayoGravity-ExpandedItalic.otf") format("opentype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "KnockoutJuniorLightweight";
+  src: url("/fonts/Knockout_Slant/Knockout_No-29_Junior-Lightweight-7deg.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KnockoutFullFeatherweight";
+  src: url("/fonts/Knockout_Slant/Knockout_No-68_Full-Featherweight-7deg.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "KnockoutUltimateCruiserweight";
+  src: url("/fonts/Knockout_Slant/Knockout_No-92_Ultimate-Cruiserweight-7deg.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 200 300 400 500 600 700 800 900;
+  font-style: normal;
 }

@@ -17,33 +17,11 @@
         },
         {
           "fieldId": "CenterTextTop",
-          "value": "CenterTextTop"
+          "value": "Center Text Top"
         },
         {
           "fieldId": "CenterTextBottom",
-          "value": "CenterTextBottom"
-        }
-      ]
-    },
-    {
-      "id": "kayoEvent",
-      "label": "Kayo Event",
-      "fields": [
-        {
-          "fieldId": "textTeaser",
-          "value": "Text Teaser"
-        },
-        {
-          "fieldId": "background",
-          "value": "Kayo Event"
-        },
-        {
-          "fieldId": "CenterTextTop",
-          "value": "CenterTextTop"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "CenterTextBottom"
+          "value": "Center Text Bottom"
         }
       ]
     },
@@ -54,58 +32,6 @@
         {
           "fieldId": "overlay",
           "value": "Fox Mini"
-        },
-        {
-          "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
-        },
-        {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
-        },
-        {
-          "fieldId": "wedge1",
-          "value": "F1"
-        },
-        {
-          "fieldId": "wedge2",
-          "value": "Australia"
-        }
-      ]
-    },
-    {
-      "id": "kayoMini",
-      "label": "Kayo Mini",
-      "fields": [
-        {
-          "fieldId": "overlay",
-          "value": "Kayo Mini"
-        },
-        {
-          "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
-        },
-        {
-          "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
-        },
-        {
-          "fieldId": "wedge1",
-          "value": "F1"
-        },
-        {
-          "fieldId": "wedge2",
-          "value": "Australia"
-        }
-      ]
-    },
-    {
-      "id": "kayoBite",
-      "label": "Kayo Bite",
-      "fields": [
-        {
-          "fieldId": "overlay",
-          "value": "Kayo Bite"
         },
         {
           "fieldId": "bottomRightTextTop",
@@ -148,6 +74,124 @@
         {
           "fieldId": "wedge2",
           "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "kayoEvent",
+      "label": "Kayo Event",
+      "fields": [
+        {
+          "fieldId": "textTeaser",
+          "value": "Text Teaser"
+        },
+        {
+          "fieldId": "background",
+          "value": "Kayo Event"
+        },
+        {
+          "fieldId": "CenterTextTop",
+          "value": "CenterTextTop"
+        },
+        {
+          "fieldId": "CenterTextBottom",
+          "value": "CenterTextBottom"
+        }
+      ]
+    },
+    {
+      "id": "kayoMini",
+      "label": "Kayo Mini",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Kayo Mini"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "Bottom Right Text Top"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "Bottom Right Text Bottom"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "kayoBite",
+      "label": "Kayo Bite",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Kayo Bite"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        },
+        {
+          "fieldId": "wedge1",
+          "value": "F1"
+        },
+        {
+          "fieldId": "wedge2",
+          "value": "Australia"
+        }
+      ]
+    },
+    {
+      "id": "hubblMini",
+      "label": "Hubbl Mini",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Hubbl Mini"
+        },
+        {
+          "fieldId": "background",
+          "value": "F1"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
+        }
+      ]
+    },
+    {
+      "id": "hubblBite",
+      "label": "Hubbl Bite",
+      "fields": [
+        {
+          "fieldId": "overlay",
+          "value": "Hubbl Mini"
+        },
+        {
+          "fieldId": "background",
+          "value": "F1"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "bottomRightTextTop"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "This is my bottom Right text"
         }
       ]
     }
