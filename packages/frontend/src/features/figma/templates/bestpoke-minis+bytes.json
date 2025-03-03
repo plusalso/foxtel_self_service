@@ -19,6 +19,14 @@
         {
           "fieldId": "bestpokeBites",
           "value": "Bespoke Minis + Bites/Event"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "Bespoke Minis + Bites/Top Text"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "Bespoke Minis + Bites/Bottom Text"
         }
       ]
     }
@@ -73,7 +81,7 @@
       "defaultValue": "Top Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "145px",
+        "bottom": "143px",
         "right": "66.62px",
         "color": "#B1B1BB",
         "fontSize": "87.872px",
@@ -85,7 +93,7 @@
         "height": "145px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Gibson",
         "alignItems": "center",
         "fontWeight": "300",
         "letterSpacing": "0.659px",
@@ -113,7 +121,7 @@
         "height": "145px",
         "zIndex": 100,
         "display": "flex",
-        "fontFamily": "Plus Jakarta Sans",
+        "fontFamily": "Gibson",
         "fontWeight": "500",
         "alignItems": "center",
         "letterSpacing": "0.659px",
