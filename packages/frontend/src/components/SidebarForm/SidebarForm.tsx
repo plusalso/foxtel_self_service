@@ -1,5 +1,5 @@
 import { Form } from "@radix-ui/react-form";
-import { Select, Flex, Text } from "@radix-ui/themes";
+import { Select, Flex, Text, Spinner } from "@radix-ui/themes";
 import { useEffect, useState, useCallback } from "react";
 import { CustomImageDefaults, useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
@@ -54,7 +54,7 @@ export function SidebarForm() {
     .filter((page): page is string => !!page);
 
   // Fetch assets for all pages
-  const { data: assetsData } = useFigmaAssets({
+  const { data: assetsData, isLoading: isLoadingAssets } = useFigmaAssets({
     fileId: templateConfig.fileId,
     pages: assetPages,
   });
@@ -239,6 +239,11 @@ export function SidebarForm() {
             </Flex>
           )}
 
+          {isLoadingAssets && (
+            <Flex align="center" justify="center" style={{ height: "100%" }}>
+              <Spinner size="3" />
+            </Flex>
+          )}
           <Form>
             <Flex direction="column" gap="4">
               {selectedPresetConfig?.fields.map((field) => {
