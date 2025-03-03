@@ -69,12 +69,12 @@ const DownloadButton = () => {
           <Text size="2">Filetype</Text>
           <Select.Root value={format} onValueChange={setFormat}>
             <Select.Trigger id="filetype" style={{ marginRight: "10px", width: "100%" }}>
-              {format.toUpperCase()}
+              {/* todo make size changeable */}
+              {format.toUpperCase()} • (1920x1080)
             </Select.Trigger>
             <Select.Content>
-              {/* todo make size changeable */}
-              <Select.Item value="png">PNG • (1920x1080)</Select.Item>
-              <Select.Item value="jpg">JPG • (1920x1080)</Select.Item>
+              <Select.Item value="png">PNG</Select.Item>
+              <Select.Item value="jpg">JPG</Select.Item>
             </Select.Content>
           </Select.Root>
         </Flex>
