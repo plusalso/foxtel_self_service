@@ -4,7 +4,7 @@
   "fileId": "nj0cfZj9WsfxoVJUIMcE6U",
   "presets": [
     {
-      "id": "foxEvent",
+      "id": "editorialClippages1",
       "label": "Editorial Clippages",
       "supportsUploadedImages": true,
       "uploadedImageDefaults": {
@@ -15,6 +15,14 @@
         {
           "fieldId": "overlay",
           "value": "Fox Mini"
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "Bottom Right Text Top"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "Bottom Right Text Bottom"
         }
       ]
     },
