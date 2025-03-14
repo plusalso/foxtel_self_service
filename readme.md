@@ -44,6 +44,9 @@ Features
 - Error: TypeError: Cannot redefine property: \_serverlessExternalPluginName
 - Answer: use node v20.
 
+- How to change the API Base?
+- locally, you use your .env file. When deployed it is set in the cloudflare pages settings. (VITE_API_BASE_URL)
+
 # Syncing Assets
 
 - The figma API has rate limits, and it is slow to generate images from a node id. For this reason, we cache all the assets in s3.
