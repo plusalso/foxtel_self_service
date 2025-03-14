@@ -196,7 +196,7 @@ Presets define pre-configured combinations of field values. Each preset can over
 
 - All positions are relative to a 1920x1080 canvas
 - Asset paths must match exactly with Figma page/frame names
-- Field IDs must be unique within a template!!
+- Field IDs must be unique within a template!!!
 
 ```
 
