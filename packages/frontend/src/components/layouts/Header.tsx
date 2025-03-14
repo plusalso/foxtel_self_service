@@ -1,5 +1,14 @@
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Flex } from "@radix-ui/themes";
 import styles from "./Header.module.css";
+
+function clearAuthCookies() {
+  // Clear specific cookies if they exist with proper attributes
+  document.cookie = "CF_AppSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
+  document.cookie = "CF_Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
+
+  // Refresh the page
+  window.location.reload();
+}
 
 export function Header() {
   return (
@@ -75,14 +84,7 @@ export function Header() {
             </defs>
           </svg>
           <Flex direction={"column"} align="start">
-            <Text size="2">test@foxtel.com.au</Text>
-            {/* logout link */}
-            <Button
-              variant="ghost"
-              size="1"
-              onClick={() => (window.location.href = "/logout")}
-              style={{ textDecoration: "underline" }}
-            >
+            <Button variant="ghost" size="1" onClick={clearAuthCookies} style={{ textDecoration: "underline" }}>
               Logout
             </Button>
           </Flex>
