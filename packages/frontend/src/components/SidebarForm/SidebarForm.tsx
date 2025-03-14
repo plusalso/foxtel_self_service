@@ -110,9 +110,13 @@ export function SidebarForm() {
       height: selectedPresetConfig?.uploadedImageDefaults?.height || "auto",
     };
     setCustomImageDefaults(customImageDefaults);
-    //clear the text inputs
-    setTextInputs({});
+    // Only clear text inputs when preset changes
   }, [selectedPresetConfig, selectedAssets, templateConfig.fields]);
+
+  // Add a separate effect to handle clearing text inputs only when preset changes
+  useEffect(() => {
+    setTextInputs({});
+  }, [selectedPreset]);
 
   // Create grouped fields when assets or config changes
   useEffect(() => {

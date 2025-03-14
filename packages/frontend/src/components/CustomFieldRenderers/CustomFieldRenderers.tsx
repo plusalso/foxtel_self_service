@@ -24,6 +24,12 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
   );
 };
 
+export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => (
+  <div style={field.containerStyle}>
+    <span style={{ whiteSpace: "pre-line" }}>{value}</span>
+  </div>
+);
+
 export const ResizableImageRenderer = ({ field, value }: { field: any; value: string }) => (
   <Rnd
     default={{

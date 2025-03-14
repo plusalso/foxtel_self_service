@@ -4,6 +4,7 @@ import {
   DefaultTextRenderer,
   CornerTextRenderer,
   ResizableImageRenderer,
+  TextAreaRenderer,
 } from "@/components/CustomFieldRenderers/CustomFieldRenderers";
 import { Rnd } from "react-rnd";
 import styles from "./AssetRenderer.module.scss";
@@ -29,6 +30,7 @@ export const renderers = {
   DefaultTextRenderer: DefaultTextRenderer,
   CornerTextRenderer: CornerTextRenderer,
   ResizableImageRenderer: ResizableImageRenderer,
+  TextAreaRenderer: TextAreaRenderer,
   // add other renderers here as needed
 };
 export const AssetRenderer = ({
@@ -65,6 +67,9 @@ export const AssetRenderer = ({
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, []);
+
+  // Add this debug log to see what renderers are available
+  console.log("Available renderers:", Object.keys(renderers));
 
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
@@ -124,8 +129,13 @@ export const AssetRenderer = ({
         ))}
         {/* Render text fields for the current preset with styles */}
         {Object.entries(textInputs).map(([fieldId, value]) => {
-          //find the field in the template config
           const field = templateConfig?.fields?.find((field: any) => field.id === fieldId);
+
+          // Add these debug logs
+          console.log("Field:", field);
+          console.log("Field renderer:", field?.renderer);
+          console.log("Renderer exists:", renderers[field?.renderer as keyof typeof renderers] ? "yes" : "no");
+
           const RendererComponent = renderers[field.renderer as keyof typeof renderers];
 
           if (!RendererComponent) {

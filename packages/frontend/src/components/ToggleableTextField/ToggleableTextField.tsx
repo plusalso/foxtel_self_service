@@ -57,12 +57,14 @@ export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({
       {enabled && (
         <>
           {multiline ? (
-            <TextArea
-              value={value}
-              onChange={handleChange}
-              placeholder={`Enter ${label}`}
-              style={{ minHeight: "100px" }}
-            />
+            <>
+              <TextArea
+                value={value}
+                onChange={handleChange}
+                placeholder={`Enter ${label}`}
+                style={{ minHeight: "100px" }}
+              />
+            </>
           ) : (
             <TextField.Root type="text" value={value} onChange={handleChange} placeholder={`Enter ${label}`} />
           )}
