@@ -9,6 +9,7 @@ import {
 import { Rnd } from "react-rnd";
 import styles from "./AssetRenderer.module.scss";
 import { useState, useEffect, useRef } from "react";
+import { Field, TemplateConfig, TemplatePreset, TextAreaField, TextField } from "../../types/template";
 
 interface AssetRendererProps {
   selectedAssets: Array<{
@@ -16,7 +17,8 @@ interface AssetRendererProps {
     pageName: string;
     assetId: string;
   }>;
-  templateConfig: any;
+  templateConfig: TemplateConfig | null;
+  currentPreset: TemplatePreset | null;
   textInputs: Record<string, string>;
   customImage: string;
   customImageDefaults?: {
@@ -38,15 +40,19 @@ export const AssetRenderer = ({
   customImageDefaults,
   selectedAssets,
   templateConfig,
+  currentPreset,
   textInputs,
 }: AssetRendererProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
+  // Get dimensions from current preset
+  const { width, height } = currentPreset ?? { width: 1920, height: 1080 };
+
   // Filter assets based on whether their corresponding text fields have content
   const filteredAssets = selectedAssets.filter((asset) => {
     // Find the field in template config that corresponds to this asset
-    const field = templateConfig.fields.find((f: any) => f.type === "text" && f.assetSourcePage === asset.pageName);
+    const field = templateConfig?.fields.find((f: any) => f.type === "text" && f.assetSourcePage === asset.pageName);
 
     // If this isn't a text-based asset, keep it
     if (!field) return true;
@@ -59,26 +65,26 @@ export const AssetRenderer = ({
     const updateScale = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.clientWidth;
-        setScale(Math.min(1, containerWidth / 1920));
+        setScale(Math.min(1, containerWidth / (width ?? 1920)));
       }
     };
 
     updateScale();
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
-  }, []);
+  }, [width]);
 
   // Add this debug log to see what renderers are available
   console.log("Available renderers:", Object.keys(renderers));
 
   return (
-    <div ref={containerRef} style={{ width: "100%", maxWidth: "1920px", margin: "0 auto", position: "relative" }}>
+    <div ref={containerRef} style={{ width: "100%", maxWidth: `${width}px`, margin: "0 auto", position: "relative" }}>
       <div
         id="image-overlay"
         style={{
           position: "relative",
-          width: "1920px",
-          height: "1080px",
+          width: `${width}px`,
+          height: `${height}px`,
           transformOrigin: "top left",
           transform: `scale(${scale})`,
           backgroundImage:
@@ -129,7 +135,18 @@ export const AssetRenderer = ({
         ))}
         {/* Render text fields for the current preset with styles */}
         {Object.entries(textInputs).map(([fieldId, value]) => {
-          const field = templateConfig?.fields?.find((field: any) => field.id === fieldId);
+          const field = templateConfig?.fields?.find((field: Field) => {
+            if (field.id === fieldId) {
+              if (field.type !== "text" && field.type !== "textArea") {
+                return false;
+              }
+              return true;
+            }
+          }) as TextField | TextAreaField | undefined;
+
+          if (!field) {
+            return null;
+          }
 
           // Add these debug logs
           console.log("Field:", field);
@@ -143,7 +160,7 @@ export const AssetRenderer = ({
             return null;
           }
 
-          return <RendererComponent key={`${field.name}-${field.id}-${value}`} field={field} value={value} />;
+          return <RendererComponent key={`${currentPreset?.id}-${field.id}-${value}`} field={field} value={value} />;
         })}
       </div>
     </div>

@@ -59,17 +59,19 @@ export interface PresetField {
   value: string;
 }
 
-export interface Preset {
+export interface TemplatePreset {
   id: string;
   label: string;
   supportsUploadedImages?: boolean;
   uploadedImageDefaults?: Record<string, string>;
   uploadedImageLabel?: string;
+  width?: number;
+  height?: number;
   fields: PresetField[];
 }
 export interface TemplateConfig {
   id: string;
   fileId: string;
-  presets: Preset[];
+  presets: TemplatePreset[];
   fields: Field[];
 }

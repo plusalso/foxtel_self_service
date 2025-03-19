@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState } from "react";
-import { TemplateConfig } from "../types/template";
+import { TemplateConfig, TemplatePreset } from "../types/template";
 
 interface OverlayAsset {
   fileId: string;
@@ -13,16 +13,19 @@ export type CustomImageDefaults = {
   width?: string | number;
   height?: string | number;
 };
+
 interface TemplateContextType {
   overlayAssets: OverlayAsset[];
   fileVersion?: string;
-  templateConfig: TemplateConfig;
+  templateConfig: TemplateConfig | null;
+  currentPreset: TemplatePreset | null;
   textInputs: Record<string, string>;
   customImage: string;
   customImageDefaults?: CustomImageDefaults;
   setOverlayAssets: (assets: OverlayAsset[]) => void;
   setFileVersion: (version: string) => void;
-  setTemplateConfig: (config: any) => void;
+  setTemplateConfig: (config: TemplateConfig) => void;
+  setCurrentPreset: (preset: TemplatePreset) => void;
   setTextInputs: (inputs: Record<string, string>) => void;
   setCustomImage: (image: string) => void;
   setCustomImageDefaults: (defaults: CustomImageDefaults) => void;
@@ -35,14 +38,17 @@ const TemplateContext = createContext<TemplateContextType | undefined>(undefined
 export function TemplateProvider({ children }: { children: ReactNode }) {
   const [overlayAssets, setOverlayAssets] = useState<OverlayAsset[]>([]);
   const [fileVersion, setFileVersion] = useState<string>();
-  const [templateConfig, setTemplateConfig] = useState<any>(null);
+  const [templateConfig, setTemplateConfig] = useState<TemplateConfig | null>(null);
+  const [currentPreset, setCurrentPreset] = useState<TemplatePreset | null>(null);
   const [textInputs, setTextInputs] = useState<Record<string, string>>({});
   const [customImage, setCustomImage] = useState<string>("");
   const [customImageDefaults, setCustomImageDefaults] = useState<CustomImageDefaults | undefined>(undefined);
   const [imageVersion, setImageVersion] = useState<number>(Date.now());
+
   const refreshImages = () => {
     setImageVersion(Date.now());
   };
+
   return (
     <TemplateContext.Provider
       value={{
@@ -52,6 +58,8 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
         setFileVersion,
         templateConfig,
         setTemplateConfig,
+        currentPreset,
+        setCurrentPreset,
         textInputs,
         setTextInputs,
         customImage,

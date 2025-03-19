@@ -4,12 +4,21 @@ import { Button, Flex, Select, Text, TextField } from "@radix-ui/themes";
 import { Options } from "html-to-image/lib/types";
 import { LuDownload, LuLoader } from "react-icons/lu";
 import styles from "./DownloadButton.module.scss";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
+
 const DownloadButton = () => {
   const [filename, setFilename] = useState("composited-image");
   const [format, setFormat] = useState("png");
   const [isDownloading, setIsDownloading] = useState(false);
+  const { currentPreset } = useTemplateState();
+
+  // Get dimensions from current preset
+  const width = currentPreset?.width ?? 1920;
+  const height = currentPreset?.height ?? 1080;
 
   const handleDownload = async () => {
+    if (!width || !height) return;
+
     setIsDownloading(true);
     await document.fonts.ready;
 
@@ -18,13 +27,13 @@ const DownloadButton = () => {
       try {
         const options: Options = {
           skipFonts: false,
-          imagePlaceholder: "https://placehold.co/1920x1080?text=Error+loading+image",
-          width: 1920,
-          height: 1080,
+          imagePlaceholder: `https://placehold.co/${width}x${height}?text=Error+loading+image`,
+          width,
+          height,
           pixelRatio: 1,
           style: {
-            width: "1920px",
-            height: "1080px",
+            width: `${width}px`,
+            height: `${height}px`,
             transform: "none",
           },
           fetchRequestInit: {
@@ -68,8 +77,7 @@ const DownloadButton = () => {
           <Text size="2">Filetype</Text>
           <Select.Root value={format} onValueChange={setFormat}>
             <Select.Trigger id="filetype" style={{ marginRight: "10px", width: "100%" }}>
-              {/* todo make size changeable */}
-              {format.toUpperCase()} • (1920x1080)
+              {format.toUpperCase()} • ({width}x{height})
             </Select.Trigger>
             <Select.Content>
               <Select.Item value="png">PNG</Select.Item>

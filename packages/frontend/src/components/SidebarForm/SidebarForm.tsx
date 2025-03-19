@@ -13,6 +13,8 @@ import editorialClippagesConfig from "@/features/figma/templates/editorial-clipp
 import singleEventShowConfig from "@/features/figma/templates/single-event+show.json";
 import bespokeMinisBytesConfig from "@/features/figma/templates/bestpoke-minis+bytes.json";
 import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
+import styles from "./SidebarForm.module.scss";
+import { LuArrowUpRight } from "react-icons/lu";
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
   "Editorial Clippages": editorialClippagesConfig as TemplateConfig,
@@ -27,13 +29,14 @@ interface GroupedAssetState {
 
 export function SidebarForm() {
   const [selectedSource, setSelectedSource] = useState<string>(Object.keys(templateConfigs)[0]);
-  const [selectedPreset, setSelectedPreset] = useState<string>("");
+  const [selectedPresetId, setSelectedPresetId] = useState<string>("");
   const [selectedAssets, setSelectedAssets] = useState<Record<string, { pageName: string; assetId: string }>>({});
   const [groupedAssetSelections, setGroupedAssetSelections] = useState<Record<string, GroupedAssetState>>({});
   const [groupedFields, setGroupedFields] = useState<
     Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
   >({});
-  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs, setCustomImageDefaults } = useTemplateState();
+  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs, setCustomImageDefaults, setCurrentPreset } =
+    useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
   const presets = templateConfig.presets || [];
@@ -41,11 +44,20 @@ export function SidebarForm() {
   // Update selectedPreset when source changes or on initial mount
   useEffect(() => {
     if (presets.length > 0) {
-      setSelectedPreset(presets[0].id);
+      setSelectedPresetId(presets[0].id);
+      setCurrentPreset(presets[0]);
     }
   }, [selectedSource]);
 
-  const selectedPresetConfig = presets.find((preset) => preset.id === selectedPreset);
+  // Update current preset when selection changes
+  useEffect(() => {
+    const preset = presets.find((p) => p.id === selectedPresetId);
+    if (preset) {
+      setCurrentPreset(preset);
+    }
+  }, [selectedPresetId, presets]);
+
+  const selectedPresetConfig = presets.find((preset) => preset.id === selectedPresetId);
 
   // Get all unique assetSourcePages from the template config
   const assetPages = templateConfig.fields
@@ -116,7 +128,7 @@ export function SidebarForm() {
   // Add a separate effect to handle clearing text inputs only when preset changes
   useEffect(() => {
     setTextInputs({});
-  }, [selectedPreset]);
+  }, [selectedPresetId]);
 
   // Create grouped fields when assets or config changes
   useEffect(() => {
@@ -204,9 +216,16 @@ export function SidebarForm() {
       <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>
         <Flex direction="column" gap="4">
           <Flex direction="column" gap="2">
-            <Text as="label" size="2">
-              Source
-            </Text>
+            <Flex direction="row" gap="2" justify="between" align="center">
+              <Text as="label" size="2">
+                Source
+              </Text>
+              <Text size="2" className={styles.openFileLink}>
+                <a href={`https://www.figma.com/design/${templateConfig.fileId}`} target="_blank" rel="noreferrer">
+                  Open File <LuArrowUpRight />
+                </a>
+              </Text>
+            </Flex>
             <Select.Root
               value={selectedSource}
               onValueChange={(value) => {
@@ -232,7 +251,7 @@ export function SidebarForm() {
               <Text as="label" size="2">
                 Preset
               </Text>
-              <Select.Root value={selectedPreset} onValueChange={(value) => setSelectedPreset(value)}>
+              <Select.Root value={selectedPresetId} onValueChange={(value) => setSelectedPresetId(value)}>
                 <Select.Trigger />
                 <Select.Content>
                   {presets.map((preset) => (
@@ -259,7 +278,7 @@ export function SidebarForm() {
                     const groupData = groupedFields[field.fieldId];
                     return groupData ? (
                       <GroupedAssetSelect
-                        key={`${selectedPreset}-${field.fieldId}`}
+                        key={`${selectedPresetId}-${field.fieldId}`}
                         group={{
                           ...groupData,
                           value: field.value,
@@ -274,7 +293,7 @@ export function SidebarForm() {
                   case "textArea":
                     return (
                       <ToggleableTextField
-                        key={`${selectedPreset}-${field.fieldId}`}
+                        key={`${selectedPresetId}-${field.fieldId}`}
                         label={fullField?.label || "Text Field"}
                         value={textInputs[field.fieldId] || ""}
                         onChange={(val) => {

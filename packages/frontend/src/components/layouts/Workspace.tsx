@@ -3,7 +3,8 @@ import { AssetRenderer } from "@/features/figma/components/AssetRenderer/AssetRe
 import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import styles from "./Workspace.module.scss";
 export function Workspace({ children }: { children?: React.ReactNode }) {
-  const { overlayAssets, templateConfig, textInputs, customImage, customImageDefaults } = useTemplateState();
+  const { overlayAssets, templateConfig, textInputs, customImage, customImageDefaults, currentPreset } =
+    useTemplateState();
   // console.log("overlayAssets", overlayAssets);
   return (
     <Box p="6" className={styles.workspace}>
@@ -16,6 +17,7 @@ export function Workspace({ children }: { children?: React.ReactNode }) {
         }))}
         templateConfig={templateConfig}
         textInputs={textInputs}
+        currentPreset={currentPreset}
         customImageDefaults={customImageDefaults}
       />
       {children}
