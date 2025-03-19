@@ -16,12 +16,8 @@
           "value": "Teaser Text"
         },
         {
-          "fieldId": "CenterTextTop",
+          "fieldId": "CenterText",
           "value": "Center Text Top"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "Center Text Bottom"
         }
       ]
     }
@@ -52,76 +48,20 @@
       "assetSourcePage": "Single Event + Show/Background"
     },
     {
-      "id": "bottomRightTextTop",
-      "type": "text",
-      "label": "Top Text",
-      "defaultValue": "Top Text",
-      "containerStyle": {
-        "position": "absolute",
-        "bottom": "143px",
-        "right": "66.62px",
-        "color": "#B1B1BB",
-        "fontSize": "87.872px",
-        "textAlign": "right",
-        "textTransform": "uppercase",
-        "backgroundColor": "#140C11",
-        "padding": "0 100px 0 57px",
-        "marginRight": "-100px",
-        "height": "145px",
-        "zIndex": 100,
-        "display": "flex",
-        "fontFamily": "Gibson",
-        "alignItems": "center",
-        "fontWeight": "400",
-        "letterSpacing": "0.659px",
-        "justifyContent": "flex-end",
-        "transform": "skewX(-21deg)"
-      },
-      "renderer": "CornerTextRenderer"
-    },
-    {
-      "id": "bottomRightTextBottom",
-      "type": "text",
-      "label": "Bottom Text",
-      "defaultValue": "Bottom Text",
-      "containerStyle": {
-        "position": "absolute",
-        "bottom": "0px",
-        "right": "66.62px",
-        "color": "white",
-        "fontSize": "87.872px",
-        "textAlign": "right",
-        "textTransform": "uppercase",
-        "backgroundColor": "#140C11",
-        "padding": "0 100px 0 57px",
-        "marginRight": "-100px",
-        "height": "145px",
-        "zIndex": 100,
-        "display": "flex",
-        "fontFamily": "Gibson",
-        "fontWeight": "500",
-        "alignItems": "center",
-        "letterSpacing": "0.659px",
-        "justifyContent": "flex-end",
-        "transform": "skewX(-21deg)"
-      },
-      "renderer": "CornerTextRenderer"
-    },
-    {
-      "id": "CenterTextTop",
+      "id": "CenterText",
       "type": "textArea",
-      "label": "Top Text",
+      "label": "Center Text",
       "defaultValue": "Top Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "530px",
+        "bottom": "540px",
         "left": "0px",
         "right": "0px",
         "color": "white",
         "textTransform": "uppercase",
         "fontSize": "148px",
         "textAlign": "center",
-        "height": "146px",
+        "height": "0px",
         "zIndex": 100,
         "display": "flex",
         "fontFamily": "Foxtel Text",
@@ -132,30 +72,6 @@
         "lineHeight": "159px"
       },
       "renderer": "TextAreaRenderer"
-    },
-    {
-      "id": "CenterTextBottom",
-      "type": "text",
-      "label": "Bottom Text",
-      "defaultValue": "Bottom Text",
-      "containerStyle": {
-        "position": "absolute",
-        "bottom": "384px",
-        "left": "0px",
-        "right": "0px",
-        "color": "white",
-        "textTransform": "uppercase",
-        "fontSize": "148px",
-        "textAlign": "center",
-        "height": "146px",
-        "zIndex": 100,
-        "display": "flex",
-        "fontFamily": "Foxtel Text",
-        "fontWeight": "700",
-        "alignItems": "center",
-        "justifyContent": "center"
-      },
-      "renderer": "DefaultTextRenderer"
     }
   ]
 }
