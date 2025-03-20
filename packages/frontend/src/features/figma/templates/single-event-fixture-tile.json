@@ -22,6 +22,10 @@
         {
           "fieldId": "CenterTextBottom",
           "value": "Center Text Bottom"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -48,6 +52,10 @@
         {
           "fieldId": "wedge2",
           "value": "Australia"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -74,6 +82,10 @@
         {
           "fieldId": "wedge2",
           "value": "Australia"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -96,6 +108,10 @@
         {
           "fieldId": "CenterTextBottom",
           "value": "CenterTextBottom"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -122,6 +138,10 @@
         {
           "fieldId": "wedge2",
           "value": "Australia"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -148,6 +168,10 @@
         {
           "fieldId": "wedge2",
           "value": "Australia"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -170,6 +194,10 @@
         {
           "fieldId": "CenterTextBottom",
           "value": "Center Text Bottom"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     },
@@ -192,6 +220,10 @@
         {
           "fieldId": "CenterTextBottom",
           "value": "Center Text Bottom"
+        },
+        {
+          "fieldId": "CenterText",
+          "value": "Center Text Top"
         }
       ]
     }
@@ -375,6 +407,32 @@
         "justifyContent": "center"
       },
       "renderer": "DefaultTextRenderer"
+    },
+    {
+      "id": "CenterText",
+      "type": "textArea",
+      "label": "Center Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "540px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "148px",
+        "textAlign": "center",
+        "height": "0px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px",
+        "lineHeight": "159px"
+      },
+      "renderer": "TextAreaRenderer"
     }
   ]
 }
