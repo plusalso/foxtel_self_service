@@ -96,6 +96,7 @@ export const AssetRenderer = ({
         {customImage && (
           <Rnd
             className={styles.draggableImageContainer}
+            scale={scale}
             default={
               customImageDefaults && {
                 x: customImageDefaults.x,
