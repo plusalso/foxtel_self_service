@@ -16,16 +16,12 @@
           "value": "F1 Logo"
         },
         {
-          "fieldId": "CenterTextTop",
-          "value": "Center Text Top"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "Center Text Bottom"
-        },
-        {
           "fieldId": "CenterText",
           "value": "Center Text Top"
+        },
+        {
+          "fieldId": "BottomCenterTextArea",
+          "value": "Bottom Center Text"
         }
       ]
     },
@@ -102,16 +98,12 @@
           "value": "Kayo Event"
         },
         {
-          "fieldId": "CenterTextTop",
-          "value": "CenterTextTop"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "CenterTextBottom"
-        },
-        {
           "fieldId": "CenterText",
           "value": "Center Text Top"
+        },
+        {
+          "fieldId": "BottomCenterTextArea",
+          "value": "Bottom Center Text"
         }
       ]
     },
@@ -188,16 +180,12 @@
           "value": "F1 Logo"
         },
         {
-          "fieldId": "CenterTextTop",
-          "value": "Center Text Top"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "Center Text Bottom"
-        },
-        {
           "fieldId": "CenterText",
           "value": "Center Text Top"
+        },
+        {
+          "fieldId": "BottomCenterTextArea",
+          "value": "Bottom Center Text"
         }
       ]
     },
@@ -214,16 +202,12 @@
           "value": "F1 Logo"
         },
         {
-          "fieldId": "CenterTextTop",
-          "value": "Center Text Top"
-        },
-        {
-          "fieldId": "CenterTextBottom",
-          "value": "Center Text Bottom"
-        },
-        {
           "fieldId": "CenterText",
           "value": "Center Text Top"
+        },
+        {
+          "fieldId": "BottomCenterTextArea",
+          "value": "Bottom Center Text"
         }
       ]
     }
@@ -431,6 +415,31 @@
         "justifyContent": "center",
         "letterSpacing": "5.12px",
         "lineHeight": "159px"
+      },
+      "renderer": "TextAreaRenderer"
+    },
+    {
+      "id": "BottomCenterTextArea",
+      "type": "textArea",
+      "label": "Bottom Center Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "240px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "0px",
+        "lineHeight": "57px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px"
       },
       "renderer": "TextAreaRenderer"
     }
