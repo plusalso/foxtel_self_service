@@ -6,6 +6,37 @@
     {
       "id": "espnMinis",
       "label": "ESPN Minis",
+      "supportsUploadedImages": true,
+      "uploadedImageDefaults": {
+        "x": "960",
+        "y": "0"
+      },
+      "fields": [
+        {
+          "fieldId": "wedgeNBAHome",
+          "value": "Team v Team Fixture - ESPN NBA/Home"
+        },
+        {
+          "fieldId": "wedgeNBAAway",
+          "value": "Team v Team Fixture - ESPN NBA/Away"
+        },
+        {
+          "fieldId": "espnMiniLogo",
+          "value": ""
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "Text Top"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "Text Bottom"
+        }
+      ]
+    },
+    {
+      "id": "espnMiniTile",
+      "label": "ESPN Mini Tile",
       "fields": [
         {
           "fieldId": "nbaHome",
@@ -192,6 +223,18 @@
       "type": "figmaAssetDropdownSelect",
       "label": "Mobile Away",
       "assetSourcePage": "Team v Team Fixture - Mobile NBA/Away"
+    },
+    {
+      "id": "wedgeNBAHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - Wedge NBA/Home"
+    },
+    {
+      "id": "wedgeNBAAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - Wedge NBA/Away"
     },
     {
       "id": "bottomRightTextTop",

@@ -152,6 +152,20 @@ body {
 
 @font-face {
   font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Gibson Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
+  src: url("/fonts/Gibson 1/Gibson Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gibson";
   src: url("/fonts/Gibson 1/Canada Type - Gibson-Light.otf") format("opentype");
   font-weight: 300;
   font-style: normal;
