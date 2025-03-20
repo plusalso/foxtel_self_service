@@ -88,9 +88,11 @@ export const AssetRenderer = ({
             "linear-gradient(45deg, #EBEBEB 25%, transparent 25%), linear-gradient(-45deg, #EBEBEB 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #EBEBEB 75%), linear-gradient(-45deg, transparent 75%, #EBEBEB 75%)",
           backgroundSize: "20px 20px",
           backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
-          overflow: "clip",
         }}
       >
+        {/* Semi-transparent overlay to show boundaries */}
+        <div className={styles.boundaryOverlay} style={{ width: `${width}px`, height: `${height}px` }} />
+
         {customImage && (
           <Rnd
             className={styles.draggableImageContainer}
@@ -103,8 +105,25 @@ export const AssetRenderer = ({
               }
             }
             lockAspectRatio={true}
-            style={{
-              zIndex: 1,
+            resizeHandleStyles={{
+              topLeft: { zIndex: 1000 },
+              topRight: { zIndex: 1000 },
+              bottomLeft: { zIndex: 1000 },
+              bottomRight: { zIndex: 1000 },
+              top: { zIndex: 1000 },
+              right: { zIndex: 1000 },
+              bottom: { zIndex: 1000 },
+              left: { zIndex: 1000 },
+            }}
+            resizeHandleClasses={{
+              topLeft: styles.resizeHandleTopLeft,
+              topRight: styles.resizeHandleTopRight,
+              bottomLeft: styles.resizeHandleBottomLeft,
+              bottomRight: styles.resizeHandleBottomRight,
+              top: styles.resizeHandleTop,
+              right: styles.resizeHandleRight,
+              bottom: styles.resizeHandleBottom,
+              left: styles.resizeHandleLeft,
             }}
           >
             <img

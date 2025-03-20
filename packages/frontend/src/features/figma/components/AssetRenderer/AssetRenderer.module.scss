@@ -1,7 +1,95 @@
 .draggableImageContainer {
+  position: absolute;
   z-index: 1;
 
   &:hover {
     outline: 1px solid #6688ff;
+    cursor: move;
   }
+}
+
+.boundaryOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 199999;
+  box-shadow: 0 0 0 9999px #eeeeee99;
+}
+
+// Base styles for all resize handles
+.resizeHandleTopLeft,
+.resizeHandleTopRight,
+.resizeHandleBottomLeft,
+.resizeHandleBottomRight,
+.resizeHandleTop,
+.resizeHandleRight,
+.resizeHandleBottom,
+.resizeHandleLeft {
+  background-color: #4a8cff;
+  border-radius: 6px;
+  border: 2px solid white;
+  width: 20px !important;
+  height: 20px !important;
+  position: absolute;
+  z-index: 49;
+
+  &:hover {
+    background-color: #2970ff;
+    cursor: pointer;
+  }
+}
+
+// Specific positioning for corner handles
+.resizeHandleTopLeft {
+  top: -10px !important;
+  left: -10px !important;
+  cursor: nwse-resize !important;
+}
+
+.resizeHandleTopRight {
+  top: -10px !important;
+  right: -10px !important;
+  cursor: nesw-resize !important;
+}
+
+.resizeHandleBottomLeft {
+  bottom: -10px !important;
+  left: -10px !important;
+  cursor: nesw-resize !important;
+}
+
+.resizeHandleBottomRight {
+  bottom: -10px !important;
+  right: -10px !important;
+  cursor: nwse-resize !important;
+}
+
+// Specific positioning for edge handles
+.resizeHandleTop {
+  top: -10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  cursor: ns-resize !important;
+}
+
+.resizeHandleRight {
+  top: 50% !important;
+  right: -10px !important;
+  transform: translateY(-50%) !important;
+  cursor: ew-resize !important;
+}
+
+.resizeHandleBottom {
+  bottom: -10px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  cursor: ns-resize !important;
+}
+
+.resizeHandleLeft {
+  top: 50% !important;
+  left: -10px !important;
+  transform: translateY(-50%) !important;
+  cursor: ew-resize !important;
 }
