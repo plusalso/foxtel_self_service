@@ -1,5 +1,5 @@
 import { getS3ImageUrl } from "../../utils/getS3ImageUrl";
-import { useTemplateState } from "@/features/figma/context/TemplateContext";
+import { OverlayAsset, useTemplateState } from "@/features/figma/context/TemplateContext";
 import {
   DefaultTextRenderer,
   CornerTextRenderer,
@@ -12,11 +12,7 @@ import { useState, useEffect, useRef } from "react";
 import { Field, TemplateConfig, TemplatePreset, TextAreaField, TextField } from "../../types/template";
 
 interface AssetRendererProps {
-  selectedAssets: Array<{
-    fileId: string;
-    pageName: string;
-    assetId: string;
-  }>;
+  selectedAssets: OverlayAsset[];
   templateConfig: TemplateConfig | null;
   currentPreset: TemplatePreset | null;
   textInputs: Record<string, string>;
@@ -47,7 +43,8 @@ export const AssetRenderer = ({
   const [scale, setScale] = useState(1);
 
   // Get dimensions from current preset
-  const { width, height } = currentPreset ?? { width: 1920, height: 1080 };
+  const width = currentPreset?.width ?? 1920;
+  const height = currentPreset?.height ?? 1080;
 
   // Filter assets based on whether their corresponding text fields have content
   const filteredAssets = selectedAssets.filter((asset) => {
@@ -61,6 +58,9 @@ export const AssetRenderer = ({
     return Boolean(textInputs[field.id]);
   });
 
+  // And right before rendering
+  console.log("filtered assets:", filteredAssets);
+
   useEffect(() => {
     const updateScale = () => {
       if (containerRef.current) {
@@ -73,9 +73,6 @@ export const AssetRenderer = ({
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
   }, [width]);
-
-  // Add this debug log to see what renderers are available
-  console.log("Available renderers:", Object.keys(renderers));
 
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: `${width}px`, margin: "0 auto", position: "relative" }}>
@@ -122,6 +119,7 @@ export const AssetRenderer = ({
             />
           </Rnd>
         )}
+
         {filteredAssets.map((asset, index) => (
           <div key={asset.assetId} style={{ pointerEvents: "none" }}>
             <OverlayImage
@@ -129,10 +127,11 @@ export const AssetRenderer = ({
               fileId={asset.fileId}
               pageName={asset.pageName}
               assetId={asset.assetId}
-              zIndex={filteredAssets.length - index + 1}
+              zIndex={asset?.zIndex ? asset.zIndex : filteredAssets.length - index + 1}
             />
           </div>
         ))}
+
         {/* Render text fields for the current preset with styles */}
         {Object.entries(textInputs).map(([fieldId, value]) => {
           const field = templateConfig?.fields?.find((field: Field) => {
@@ -147,12 +146,6 @@ export const AssetRenderer = ({
           if (!field) {
             return null;
           }
-
-          // Add these debug logs
-          console.log("Field:", field);
-          console.log("Field renderer:", field?.renderer);
-          console.log("Renderer exists:", renderers[field?.renderer as keyof typeof renderers] ? "yes" : "no");
-
           const RendererComponent = renderers[field.renderer as keyof typeof renderers];
 
           if (!RendererComponent) {
@@ -171,7 +164,7 @@ interface OverlayImageProps {
   fileId: string;
   pageName: string;
   assetId: string;
-  zIndex: number;
+  zIndex?: number;
 }
 
 const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) => {
@@ -189,7 +182,7 @@ const OverlayImage = ({ fileId, pageName, assetId, zIndex }: OverlayImageProps) 
         width: "100%",
         height: "100%",
         objectFit: "contain",
-        zIndex,
+        zIndex: zIndex ?? 1,
       }}
     />
   );

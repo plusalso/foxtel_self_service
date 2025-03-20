@@ -109,7 +109,7 @@ export class FigmaService {
     nodeIds: string[],
   ): Promise<{ images: Record<string, string> }> {
     const response = await fetch(
-      `${this.FIGMA_API_BASE}/images/${fileId}?ids=${nodeIds.join(',')}&format=png&scale=1`,
+      `${this.FIGMA_API_BASE}/images/${fileId}?ids=${nodeIds.join(',')}&format=png&scale=1&use_absolute_bounds=true`,
       {
         headers: {
           'X-Figma-Token': this.figmaToken,
@@ -486,12 +486,24 @@ export class FigmaService {
   ): Promise<FigmaAssetsResponse> {
     // First get just the pages to find the IDs we need
     const allPages = await this.getPages(fileId);
-    const targetPageIds = allPages
-      .filter((page) => pages.includes(page.name))
-      .map((page) => page.id);
 
-    console.log('targetPageIds', targetPageIds);
-    console.log('pages', pages);
+    // Normalize both sets of page names for comparison
+    const normalizePageName = (name: string) =>
+      name
+        .trim() // Remove leading/trailing whitespace
+        .toLowerCase() // Case-insensitive comparison
+        .normalize('NFKD') // Normalize unicode characters
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+        .replace(/\s+/g, ' '); // Normalize multiple spaces to single space
+
+    const trimmedPages = pages.map(normalizePageName);
+    const filteredPages = allPages.filter((page) => {
+      const pageName = normalizePageName(page.name);
+      return trimmedPages.includes(pageName);
+    });
+
+    const targetPageIds = filteredPages.map((page) => page.id);
+
     if (targetPageIds.length === 0) {
       return {
         assets: {},

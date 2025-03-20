@@ -53,7 +53,16 @@ export interface TextAreaField extends BaseField {
 export interface FigmaAssetDropdownSelectField extends BaseField {
   type: "figmaAssetDropdownSelect";
 }
-export type Field = TextField | TextAreaField | FigmaAssetDropdownSelectField;
+
+export interface StaticAssetField extends BaseField {
+  type: "staticAsset";
+  assetSourcePage: string; // Required for static assets
+  assetName: string; // Required for static assets
+  zIndex?: number; // Optional override for zIndex
+}
+
+export type Field = TextField | TextAreaField | FigmaAssetDropdownSelectField | StaticAssetField;
+
 export interface PresetField {
   fieldId: string;
   value: string;
@@ -69,6 +78,7 @@ export interface TemplatePreset {
   height?: number;
   fields: PresetField[];
 }
+
 export interface TemplateConfig {
   id: string;
   fileId: string;

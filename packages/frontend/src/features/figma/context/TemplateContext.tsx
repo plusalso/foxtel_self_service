@@ -1,10 +1,11 @@
 import { createContext, useContext, ReactNode, useState } from "react";
 import { TemplateConfig, TemplatePreset } from "../types/template";
 
-interface OverlayAsset {
+export interface OverlayAsset {
   fileId: string;
   pageName: string;
   assetId: string;
+  zIndex?: number;
 }
 
 export type CustomImageDefaults = {

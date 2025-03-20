@@ -10,11 +10,7 @@ export function Workspace({ children }: { children?: React.ReactNode }) {
     <Box p="6" className={styles.workspace}>
       <AssetRenderer
         customImage={customImage}
-        selectedAssets={overlayAssets.map((asset) => ({
-          fileId: asset.fileId,
-          pageName: asset.pageName,
-          assetId: asset.assetId,
-        }))}
+        selectedAssets={overlayAssets}
         templateConfig={templateConfig}
         textInputs={textInputs}
         currentPreset={currentPreset}

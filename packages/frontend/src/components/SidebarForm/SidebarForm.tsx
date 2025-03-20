@@ -3,7 +3,7 @@ import { Select, Flex, Text, Spinner } from "@radix-ui/themes";
 import { useEffect, useState, useCallback } from "react";
 import { CustomImageDefaults, useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
-import { FigmaTemplateGroup, TemplateConfig } from "@/features/figma/types/template";
+import { FigmaTemplateGroup, StaticAssetField, TemplateConfig } from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
@@ -12,14 +12,17 @@ import { SyncFigmaButton } from "@/features/figma/components/SyncFigmaButton/Syn
 import editorialClippagesConfig from "@/features/figma/templates/editorial-clippages.json";
 import singleEventShowConfig from "@/features/figma/templates/single-event+show.json";
 import bespokeMinisBytesConfig from "@/features/figma/templates/bestpoke-minis+bytes.json";
+import nbaConfig from "@/features/figma/templates/nba.json";
 import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
 import styles from "./SidebarForm.module.scss";
 import { LuArrowUpRight } from "react-icons/lu";
+
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
   "Editorial Clippages": editorialClippagesConfig as TemplateConfig,
   "Single Event + Show": singleEventShowConfig as TemplateConfig,
   "Bespoke Minis + Bites": bespokeMinisBytesConfig as TemplateConfig,
+  NBA: nbaConfig as TemplateConfig,
 };
 
 interface GroupedAssetState {
@@ -61,7 +64,13 @@ export function SidebarForm() {
 
   // Get all unique assetSourcePages from the template config
   const assetPages = templateConfig.fields
-    .filter((field) => (field.type === "figmaAssetDropdownSelect" || field.type === "text") && field.assetSourcePage)
+    .filter((field) => {
+      // Include both dropdown assets and static assets
+      return (
+        (field.type === "figmaAssetDropdownSelect" || field.type === "text" || field.type === "staticAsset") &&
+        field.assetSourcePage
+      );
+    })
     .map((field) => field.assetSourcePage)
     .filter((page): page is string => !!page);
 
@@ -112,7 +121,34 @@ export function SidebarForm() {
       })
       .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset));
 
-    setOverlayAssets([...(textBackgroundAssets || []), ...(backgroundAssets || [])]);
+    // Add static assets
+    const staticAssets = selectedPresetConfig?.fields
+      .map((field) => {
+        const fullField = templateConfig.fields.find(
+          (f): f is StaticAssetField => f.id === field.fieldId && f.type === "staticAsset"
+        );
+        if (!fullField) return null;
+
+        const asset = assetsData?.assets[fullField.assetSourcePage]?.find((a) => a.name === fullField.assetName);
+        if (!asset) return null;
+        console.log("fullfiled zindex", fullField.zIndex);
+        return {
+          templateName: selectedSource,
+          pageName: fullField.assetSourcePage,
+          assetId: asset.id,
+          fileId: templateConfig.fileId,
+          zIndex: fullField.zIndex ?? 50, // Pass zIndex through
+        };
+      })
+      .filter((asset): asset is NonNullable<typeof asset> => Boolean(asset));
+
+    console.log("before setOverlayAssets:", [
+      ...(textBackgroundAssets || []),
+      ...(backgroundAssets || []),
+      ...(staticAssets || []),
+    ]);
+
+    setOverlayAssets([...(textBackgroundAssets || []), ...(backgroundAssets || []), ...(staticAssets || [])]);
 
     //set the custom image defaults
     const customImageDefaults: CustomImageDefaults = {

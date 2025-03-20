@@ -1,0 +1,271 @@
+{
+  "id": "Foxtel-SelfService-NBAv1",
+  "label": "NBA",
+  "fileId": "ivmbQtHQgvb8N5hG6tgBwq",
+  "presets": [
+    {
+      "id": "espnMinis",
+      "label": "ESPN Minis",
+      "fields": [
+        {
+          "fieldId": "nbaHome",
+          "value": "Team v Team Fixture - ESPN NBA/Home"
+        },
+        {
+          "fieldId": "nbaAway",
+          "value": "Team v Team Fixture - ESPN NBA/Away"
+        },
+        {
+          "fieldId": "espnMiniLogo",
+          "value": ""
+        },
+        {
+          "fieldId": "bottomRightTextTop",
+          "value": "Text Top"
+        },
+        {
+          "fieldId": "bottomRightTextBottom",
+          "value": "Text Bottom"
+        }
+      ]
+    },
+    {
+      "id": "foxtelFixture",
+      "label": "Foxtel Fixture",
+      "fields": [
+        {
+          "fieldId": "foxNBAHome",
+          "value": "Team v Team Fixture - Fox NBA/Home"
+        },
+        {
+          "fieldId": "foxNBAAway",
+          "value": "Team v Team Fixture - Fox NBA/Away"
+        },
+        {
+          "fieldId": "nbaLogo",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "foxtelPoster",
+      "label": "Foxtel Poster",
+      "width": 2560,
+      "height": 1440,
+      "fields": [
+        {
+          "fieldId": "posterNbaHome",
+          "value": "Team v Team Fixture - Poster NBA/Home"
+        },
+        {
+          "fieldId": "posterNbaAway",
+          "value": "Team v Team Fixture - Poster NBA/Away"
+        }
+      ]
+    },
+    {
+      "id": "foxtelMobile",
+      "label": "Foxtel Mobile",
+      "width": 750,
+      "height": 1160,
+      "fields": [
+        {
+          "fieldId": "mobileNbaHome",
+          "value": "Team v Team Fixture - Mobile NBA/Home"
+        },
+        {
+          "fieldId": "mobileNbaAway",
+          "value": "Team v Team Fixture - Mobile NBA/Away"
+        }
+      ]
+    },
+    {
+      "id": "hubbl",
+      "label": "Hubbl Fixture",
+      "fields": [
+        {
+          "fieldId": "hubblNBAHome",
+          "value": "Team v Team Fixture - Hubbl NBA/Home"
+        },
+        {
+          "fieldId": "hubblNBAAway",
+          "value": "Team v Team Fixture - Hubbl NBA/Away"
+        }
+      ]
+    },
+    {
+      "id": "kayo",
+      "label": "Kayo Fixture",
+      "fields": [
+        {
+          "fieldId": "kayoNBAHome",
+          "value": "Team v Team Fixture - Kayo NBA/Home"
+        },
+        {
+          "fieldId": "kayoNBAAway",
+          "value": "Team v Team Fixture - Kayo NBA/Away"
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "id": "nbaHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - ESPN NBA/Home"
+    },
+    {
+      "id": "nbaAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - ESPN NBA/Away"
+    },
+    {
+      "id": "foxNBAHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - Fox NBA/Home"
+    },
+    {
+      "id": "foxNBAAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - Fox NBA/Away"
+    },
+    {
+      "id": "kayoNBAHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - Kayo NBA/Home"
+    },
+    {
+      "id": "kayoNBAAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - Kayo NBA/Away"
+    },
+    {
+      "id": "hubblNBAHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - Hubbl NBA/Home"
+    },
+    {
+      "id": "hubblNBAAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - Hubbl NBA/Away"
+    },
+    {
+      "id": "kayoNBAHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Home",
+      "assetSourcePage": "Team v Team Fixture - Kayo NBA/Home"
+    },
+    {
+      "id": "kayoNBAAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Away",
+      "assetSourcePage": "Team v Team Fixture - Kayo NBA/Away"
+    },
+    {
+      "id": "posterNbaHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Poster Home",
+      "assetSourcePage": "Team v Team Fixture - Poster NBA/Home"
+    },
+    {
+      "id": "posterNbaAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Poster Away",
+      "assetSourcePage": "Team v Team Fixture - Poster NBA/Away"
+    },
+    {
+      "id": "mobileNbaHome",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Mobile Home",
+      "assetSourcePage": "Team v Team Fixture - Mobile NBA/Home"
+    },
+    {
+      "id": "mobileNbaAway",
+      "type": "figmaAssetDropdownSelect",
+      "label": "Mobile Away",
+      "assetSourcePage": "Team v Team Fixture - Mobile NBA/Away"
+    },
+    {
+      "id": "bottomRightTextTop",
+      "type": "text",
+      "label": "Top Text",
+      "renderer": "CornerTextRenderer",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "143px",
+        "right": "66.62px",
+        "color": "#B1B1BB",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Gibson",
+        "alignItems": "center",
+        "fontWeight": "400",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)",
+        "whiteSpace": "pre-wrap",
+        "overflow": "hidden"
+      }
+    },
+    {
+      "id": "bottomRightTextBottom",
+      "type": "text",
+      "label": "Bottom Text",
+      "defaultValue": "Bottom Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "0px",
+        "right": "66.62px",
+        "color": "white",
+        "fontSize": "87.872px",
+        "textAlign": "right",
+        "textTransform": "uppercase",
+        "backgroundColor": "#140C11",
+        "padding": "0 100px 0 57px",
+        "marginRight": "-100px",
+        "height": "145px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Gibson",
+        "fontWeight": "500",
+        "alignItems": "center",
+        "letterSpacing": "0.659px",
+        "justifyContent": "flex-end",
+        "transform": "skewX(-21deg)",
+        "whiteSpace": "pre-wrap",
+        "overflow": "hidden"
+      },
+      "renderer": "CornerTextRenderer"
+    },
+    {
+      "id": "nbaLogo",
+      "type": "staticAsset",
+      "assetSourcePage": "Team v Team Fixture - NBA/Overlays",
+      "assetName": "nba-logo",
+      "zIndex": 50
+    },
+    {
+      "id": "espnMiniLogo",
+      "type": "staticAsset",
+      "assetSourcePage": "Team v Team Fixture - NBA/Overlays",
+      "assetName": "espn-mini",
+      "zIndex": 50
+    }
+  ]
+}
