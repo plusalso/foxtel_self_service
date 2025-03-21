@@ -72,11 +72,17 @@ export interface TemplatePreset {
   id: string;
   label: string;
   supportsUploadedImages?: boolean;
-  uploadedImageDefaults?: Record<string, string>;
+  uploadedImageDefaults?: ResizableImageDefaults;
   uploadedImageLabel?: string;
   width?: number;
   height?: number;
   fields: PresetField[];
+}
+export interface ResizableImageDefaults {
+  x: number;
+  y: number;
+  width?: string;
+  height?: string;
 }
 
 export interface TemplateConfig {

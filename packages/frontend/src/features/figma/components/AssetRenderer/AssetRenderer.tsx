@@ -9,7 +9,15 @@ import {
 import { Rnd } from "react-rnd";
 import styles from "./AssetRenderer.module.scss";
 import { useState, useEffect, useRef } from "react";
-import { Field, TemplateConfig, TemplatePreset, TextAreaField, TextField } from "../../types/template";
+import {
+  Field,
+  ResizableImageDefaults,
+  TemplateConfig,
+  TemplatePreset,
+  TextAreaField,
+  TextField,
+} from "../../types/template";
+import { useResizableImage } from "../../hooks/use-resizeable-image";
 
 interface AssetRendererProps {
   selectedAssets: OverlayAsset[];
@@ -17,12 +25,7 @@ interface AssetRendererProps {
   currentPreset: TemplatePreset | null;
   textInputs: Record<string, string>;
   customImage: string;
-  customImageDefaults?: {
-    x: number;
-    y: number;
-    width?: string | number;
-    height?: string | number;
-  };
+  customImageDefaults?: ResizableImageDefaults;
 }
 export const renderers = {
   DefaultTextRenderer: DefaultTextRenderer,
@@ -45,7 +48,17 @@ export const AssetRenderer = ({
   // Get dimensions from current preset
   const width = currentPreset?.width ?? 1920;
   const height = currentPreset?.height ?? 1080;
+  const {
+    position: customImagePosition,
+    size: customImageSize,
+    getRndSize,
+    handleDrag,
+    handleResize,
+  } = useResizableImage(customImage, customImageDefaults);
 
+  console.log("customImageDefaults", customImageDefaults);
+  console.log("customImagePosition", customImagePosition);
+  console.log("customImageSize", customImageSize);
   // Filter assets based on whether their corresponding text fields have content
   const filteredAssets = selectedAssets.filter((asset) => {
     // Find the field in template config that corresponds to this asset
@@ -77,6 +90,60 @@ export const AssetRenderer = ({
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: `${width}px`, margin: "0 auto", position: "relative" }}>
       <div
+        className={styles.handlesContainer}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: `${width}px`,
+          height: `${height}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          pointerEvents: "all", // Change from "none" to "all"
+          zIndex: 2000, // Ensure it's above other elements
+        }}
+      >
+        {customImage && (
+          <Rnd
+            className={styles.handleOnlyContainer}
+            style={{
+              backgroundColor: "transparent",
+              border: "1px dashed rgba(255,0,0,0.5)", // Temporary debugging border
+            }}
+            scale={scale}
+            // Don't use default if you're also using position and size props
+            position={customImagePosition}
+            size={getRndSize()}
+            lockAspectRatio={true}
+            resizeHandleComponent={{
+              topLeft: <div className={styles.resizeHandleTopLeft} />,
+              topRight: <div className={styles.resizeHandleTopRight} />,
+              bottomLeft: <div className={styles.resizeHandleBottomLeft} />,
+              bottomRight: <div className={styles.resizeHandleBottomRight} />,
+              top: <div className={styles.resizeHandleTop} />,
+              right: <div className={styles.resizeHandleRight} />,
+              bottom: <div className={styles.resizeHandleBottom} />,
+              left: <div className={styles.resizeHandleLeft} />,
+            }}
+            onDrag={handleDrag}
+            onDragStop={handleDrag}
+            onResize={handleResize}
+            onResizeStop={handleResize}
+          >
+            {/* The div inside Rnd needs to have pointerEvents enabled */}
+            <div
+              style={{
+                width: "100%",
+                height: "100%",
+                pointerEvents: "auto",
+                position: "relative",
+              }}
+            />
+          </Rnd>
+        )}
+      </div>
+
+      <div
         id="image-overlay"
         style={{
           position: "relative",
@@ -88,43 +155,18 @@ export const AssetRenderer = ({
             "linear-gradient(45deg, #EBEBEB 25%, transparent 25%), linear-gradient(-45deg, #EBEBEB 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #EBEBEB 75%), linear-gradient(-45deg, transparent 75%, #EBEBEB 75%)",
           backgroundSize: "20px 20px",
           backgroundPosition: "0 0, 0 10px, 10px -10px, -10px 0px",
+          overflow: "clip",
         }}
       >
-        {/* Semi-transparent overlay to show boundaries */}
-        <div className={styles.boundaryOverlay} style={{ width: `${width}px`, height: `${height}px` }} />
-
         {customImage && (
-          <Rnd
-            className={styles.draggableImageContainer}
-            scale={scale}
-            default={
-              customImageDefaults && {
-                x: customImageDefaults.x,
-                y: customImageDefaults.y,
-                width: customImageDefaults.width || "auto",
-                height: customImageDefaults.height || "auto",
-              }
-            }
-            lockAspectRatio={true}
-            resizeHandleStyles={{
-              topLeft: { zIndex: 1000 },
-              topRight: { zIndex: 1000 },
-              bottomLeft: { zIndex: 1000 },
-              bottomRight: { zIndex: 1000 },
-              top: { zIndex: 1000 },
-              right: { zIndex: 1000 },
-              bottom: { zIndex: 1000 },
-              left: { zIndex: 1000 },
-            }}
-            resizeHandleClasses={{
-              topLeft: styles.resizeHandleTopLeft,
-              topRight: styles.resizeHandleTopRight,
-              bottomLeft: styles.resizeHandleBottomLeft,
-              bottomRight: styles.resizeHandleBottomRight,
-              top: styles.resizeHandleTop,
-              right: styles.resizeHandleRight,
-              bottom: styles.resizeHandleBottom,
-              left: styles.resizeHandleLeft,
+          <div
+            className={styles.nonDraggableImage}
+            style={{
+              position: "absolute",
+              top: customImagePosition?.y,
+              left: customImagePosition?.x,
+              width: customImageSize?.width,
+              height: customImageSize?.height,
             }}
           >
             <img
@@ -137,9 +179,8 @@ export const AssetRenderer = ({
                 pointerEvents: "none",
               }}
             />
-          </Rnd>
+          </div>
         )}
-
         {filteredAssets.map((asset, index) => (
           <div key={asset.assetId} style={{ pointerEvents: "none" }}>
             <OverlayImage

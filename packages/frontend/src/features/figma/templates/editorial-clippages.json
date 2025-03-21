@@ -8,8 +8,8 @@
       "label": "Editorial Clippages",
       "supportsUploadedImages": true,
       "uploadedImageDefaults": {
-        "x": "960",
-        "y": "0"
+        "x": 960,
+        "y": 0
       },
       "fields": [
         {

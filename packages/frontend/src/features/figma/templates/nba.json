@@ -8,8 +8,10 @@
       "label": "ESPN Minis",
       "supportsUploadedImages": true,
       "uploadedImageDefaults": {
-        "x": "960",
-        "y": "0"
+        "x": 960,
+        "y": 0,
+        "width": "auto",
+        "height": "1080px"
       },
       "fields": [
         {

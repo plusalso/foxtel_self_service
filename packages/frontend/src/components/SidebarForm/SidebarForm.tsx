@@ -152,8 +152,8 @@ export function SidebarForm() {
 
     //set the custom image defaults
     const customImageDefaults: CustomImageDefaults = {
-      x: parseFloat(selectedPresetConfig?.uploadedImageDefaults?.x || "50%"),
-      y: parseFloat(selectedPresetConfig?.uploadedImageDefaults?.y || "0"),
+      x: selectedPresetConfig?.uploadedImageDefaults?.x || 0,
+      y: selectedPresetConfig?.uploadedImageDefaults?.y || 0,
       width: selectedPresetConfig?.uploadedImageDefaults?.width || "auto",
       height: selectedPresetConfig?.uploadedImageDefaults?.height || "auto",
     };
