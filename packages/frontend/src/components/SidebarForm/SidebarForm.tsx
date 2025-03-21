@@ -1,9 +1,14 @@
 import { Form } from "@radix-ui/react-form";
 import { Select, Flex, Text, Spinner } from "@radix-ui/themes";
 import { useEffect, useState, useCallback } from "react";
-import { CustomImageDefaults, useTemplateState } from "@/features/figma/context/TemplateContext";
+import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import singleEventFixtureTileConfig from "@/features/figma/templates/single-event-fixture-tile.json";
-import { FigmaTemplateGroup, StaticAssetField, TemplateConfig } from "@/features/figma/types/template";
+import {
+  FigmaTemplateGroup,
+  ResizableImageDefaults,
+  StaticAssetField,
+  TemplateConfig,
+} from "@/features/figma/types/template";
 import ImageUpload from "../ImageUploader/ImageUploader";
 import DownloadButton from "../DownloadButton/DownloadButton";
 import { GroupedAssetSelect } from "@/components/GroupedAssetSelect/GroupedAssetSelect";
@@ -163,7 +168,7 @@ export function SidebarForm() {
     setOverlayAssets([...(textBackgroundAssets || []), ...(backgroundAssets || []), ...(staticAssets || [])]);
 
     //set the custom image defaults
-    const customImageDefaults: CustomImageDefaults = {
+    const customImageDefaults: ResizableImageDefaults = {
       x: selectedPresetConfig?.uploadedImageDefaults?.x || 0,
       y: selectedPresetConfig?.uploadedImageDefaults?.y || 0,
       width: selectedPresetConfig?.uploadedImageDefaults?.width || "auto",
