@@ -40,6 +40,30 @@ const DownloadButton = () => {
             mode: "cors",
           },
           cacheBust: true,
+          filter: (node) => {
+            if (
+              node.classList &&
+              (node.classList.contains("handlesContainer") || node.classList.contains("handleOnlyContainer"))
+            ) {
+              return false;
+            }
+
+            if (
+              node.classList &&
+              (node.classList.contains("resizeHandleTopLeft") ||
+                node.classList.contains("resizeHandleTopRight") ||
+                node.classList.contains("resizeHandleBottomLeft") ||
+                node.classList.contains("resizeHandleBottomRight") ||
+                node.classList.contains("resizeHandleTop") ||
+                node.classList.contains("resizeHandleRight") ||
+                node.classList.contains("resizeHandleBottom") ||
+                node.classList.contains("resizeHandleLeft"))
+            ) {
+              return false;
+            }
+
+            return true;
+          },
         };
 
         const dataUrl =

@@ -38,8 +38,15 @@ export function SidebarForm() {
   const [groupedFields, setGroupedFields] = useState<
     Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
   >({});
-  const { setOverlayAssets, setTemplateConfig, textInputs, setTextInputs, setCustomImageDefaults, setCurrentPreset } =
-    useTemplateState();
+  const {
+    setOverlayAssets,
+    setTemplateConfig,
+    setCustomImage,
+    textInputs,
+    setTextInputs,
+    setCustomImageDefaults,
+    setCurrentPreset,
+  } = useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
   const presets = templateConfig.presets || [];
@@ -59,6 +66,11 @@ export function SidebarForm() {
       setCurrentPreset(preset);
     }
   }, [selectedPresetId, presets]);
+
+  //remove the custom image when the preset changes
+  useEffect(() => {
+    setCustomImage("");
+  }, [selectedPresetId]);
 
   const selectedPresetConfig = presets.find((preset) => preset.id === selectedPresetId);
 
