@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from "@radix-ui/themes";
+import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import styles from "./Header.module.css";
 import { useEffect, useState } from "react";
 
@@ -42,7 +42,7 @@ function getLogoByEmail(email: string): string {
       return "/logos/Logo-Stream Motion.svg";
     case "foxsports.com.au":
       return "/logos/Logo-Binge.svg";
-    case "howatson.com.au":
+    case "howatsonco.com.au":
       return "/logos/Logo-Howatson.svg";
     case "plusalsostudios.com.au":
       return "/logos/Logo-Pas.svg";
@@ -137,7 +137,7 @@ export function Header() {
             />
           </div>
           <Flex direction={"column"} align="start">
-            {userEmail}
+            <Text size="2">{userEmail}</Text>
             <Button variant="ghost" size="1" onClick={clearAuthCookies} style={{ textDecoration: "underline" }}>
               Logout
             </Button>
