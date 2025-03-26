@@ -312,8 +312,8 @@ export function SidebarForm() {
 
   return (
     <div style={{ height: "100%" }}>
-      <Flex direction="column" gap="0" justify="between" style={{ height: "100%" }}>
-        <Flex direction="column" gap="4">
+      <Flex direction="column" gap="0" justify="between" style={{ height: "100%", overflowY: "auto" }}>
+        <Flex direction="column" gap="4" px="6" py="6">
           <Flex direction="column" gap="2">
             <Flex direction="row" gap="2" justify="between" align="center">
               <Text as="label" size="2">
@@ -418,8 +418,15 @@ export function SidebarForm() {
           direction="column"
           pt="5"
           pb="5"
+          px="6"
           gap="2"
-          style={{ marginTop: "auto", borderTop: "1px solid var(--gray-4)" }}
+          style={{
+            marginTop: "auto",
+            borderTop: "1px solid var(--gray-4)",
+            position: "sticky",
+            bottom: 0,
+            backgroundColor: "white",
+          }}
         >
           <DownloadButton />
         </Flex>
