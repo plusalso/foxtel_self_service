@@ -113,17 +113,26 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
           [styles.comboboxListOpen]: isOpen,
         })}
       >
-        {isOpen &&
-          inputItems.map((item, index) => (
-            <li
-              key={item.id}
-              {...getItemProps({ item, index })}
-              className={`${styles.comboboxItem} ${highlightedIndex === index ? styles.comboboxItemHighlighted : ""}`}
-            >
-              <img src={item.imageUrl} alt={item.name} className={styles.comboboxItemImage} />
-              {item.name}
-            </li>
-          ))}
+        {isOpen && (
+          <>
+            {inputItems.length > 0 ? (
+              inputItems.map((item, index) => (
+                <li
+                  key={item.id}
+                  {...getItemProps({ item, index })}
+                  className={`${styles.comboboxItem} ${
+                    highlightedIndex === index ? styles.comboboxItemHighlighted : ""
+                  }`}
+                >
+                  <img src={item.imageUrl} alt={item.name} className={styles.comboboxItemImage} />
+                  {item.name}
+                </li>
+              ))
+            ) : (
+              <li className={styles.comboboxNoResults}>No results found</li>
+            )}
+          </>
+        )}
       </ul>
     </div>
   );
