@@ -17,7 +17,7 @@
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "defaultValue": "Bottom Center Text"
+          "defaultValue": ""
         }
       ]
     },
@@ -31,11 +31,11 @@
         },
         {
           "fieldId": "bottomRightTextTop",
-          "defaultValue": "bottomRightTextTop"
+          "defaultValue": "Top Text"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "defaultValue": "This is my bottom Right text"
+          "defaultValue": "Bottom Text"
         },
         {
           "fieldId": "wedge1",
@@ -57,11 +57,11 @@
         },
         {
           "fieldId": "bottomRightTextTop",
-          "defaultValue": "bottomRightTextTop"
+          "defaultValue": "Top Text"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "defaultValue": "This is my bottom Right text"
+          "defaultValue": "Bottom Text"
         },
         {
           "fieldId": "wedge1",
@@ -87,15 +87,15 @@
         },
         {
           "fieldId": "CenterText",
-          "defaultValue": "Center Text Top"
+          "defaultValue": ""
         },
         {
           "fieldId": "CenterTextSmall",
-          "defaultValue": "Center Text Small"
+          "defaultValue": ""
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "defaultValue": "Bottom Center Text"
+          "defaultValue": ""
         }
       ]
     },
@@ -109,11 +109,11 @@
         },
         {
           "fieldId": "bottomRightTextTop",
-          "defaultValue": "Bottom Right Text Top"
+          "defaultValue": "Top Text"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "defaultValue": "Bottom Right Text Bottom"
+          "defaultValue": "Bottom Text"
         },
         {
           "fieldId": "wedge1",
@@ -135,11 +135,11 @@
         },
         {
           "fieldId": "bottomRightTextTop",
-          "defaultValue": "bottomRightTextTop"
+          "defaultValue": "Top Text"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "defaultValue": "This is my bottom Right text"
+          "defaultValue": "Bottom Text"
         },
         {
           "fieldId": "wedge1",
@@ -165,7 +165,7 @@
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "defaultValue": "Bottom Center Text"
+          "defaultValue": ""
         }
       ]
     },
@@ -183,7 +183,7 @@
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "defaultValue": "Bottom Center Text"
+          "defaultValue": ""
         }
       ]
     }
