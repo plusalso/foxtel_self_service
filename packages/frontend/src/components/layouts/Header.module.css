@@ -1,3 +1,39 @@
 .header {
   border-bottom: 1px solid var(--gray-5);
 }
+
+.textButton,
+.textButton:hover,
+.textButton:focus,
+.textButton:active {
+  text-decoration: underline;
+  font-family: var(--Typography-Font-family-text, "Plus Jakarta Sans");
+  font-size: var(--Typography-Font-size-1, 12px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--Typography-Line-height-1, 16px); /* 133.333% */
+  letter-spacing: var(--Typography-Letter-spacing-1, 0.04px);
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  color: var(--Colors-Neutral-Neutral-Alpha-11, rgba(0, 7, 20, 0.62));
+}
+.textButton:hover {
+  cursor: pointer;
+  background-color: transparent;
+  color: black;
+}
+.textButtonContainer {
+  display: flex;
+  gap: 10px;
+  color: var(--Colors-Neutral-Neutral-Alpha-11, rgba(0, 7, 20, 0.62));
+
+  /* Typography/1/Regular */
+  font-family: var(--Typography-Font-family-text, "Plus Jakarta Sans");
+  font-size: var(--Typography-Font-size-1, 12px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--Typography-Line-height-1, 16px); /* 133.333% */
+  letter-spacing: var(--Typography-Letter-spacing-1, 0.04px);
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+}

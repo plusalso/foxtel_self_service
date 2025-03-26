@@ -153,9 +153,20 @@ export function Header() {
           </div>
           <Flex direction={"column"} align="start">
             <Text size="2">{userEmail}</Text>
-            <Button variant="ghost" size="1" onClick={clearAuthCookies} style={{ textDecoration: "underline" }}>
-              Logout
-            </Button>
+            <Flex className={styles.textButtonContainer}>
+              <Button className={styles.textButton} variant="ghost" size="1" onClick={clearAuthCookies}>
+                Logout
+              </Button>
+              |
+              <a
+                className={styles.textButton}
+                href="https://intercom.help/plusalsostudios/en/collections/12164508-self-service-tool"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Documentation
+              </a>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
