@@ -70,7 +70,7 @@ function clearAuthCookies() {
   });
 
   // For Cloudflare Pages, redirect to the built-in logout URL
-  window.location.href = "/cdn-cgi/access/logout";
+  window.location.href = "https://foxtel-self-service.pages.dev/cdn-cgi/access/logout";
 }
 
 export function Header() {
