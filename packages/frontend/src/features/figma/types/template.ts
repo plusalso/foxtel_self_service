@@ -82,8 +82,8 @@ export interface TemplatePreset {
 export interface ResizableImageDefaults {
   x: number;
   y: number;
-  width?: string;
-  height?: string;
+  width: string;
+  height: string;
 }
 
 export interface TemplateConfig {
