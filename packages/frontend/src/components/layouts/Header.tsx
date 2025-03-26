@@ -52,10 +52,25 @@ function getLogoByEmail(email: string): string {
 }
 
 function clearAuthCookies() {
-  document.cookie = "CF_AppSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
-  document.cookie = "CF_Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
+  // Clear cookies with all possible path and domain combinations to ensure they're removed
+  const paths = ["/", "/api", ""];
+  const domain = window.location.hostname;
+  const domains = [domain, `.${domain}`, ""];
 
-  window.location.reload();
+  paths.forEach((path) => {
+    domains.forEach((dom) => {
+      // Clear with specific domain and path
+      document.cookie = `CF_Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${
+        dom ? `; domain=${dom}` : ""
+      }; secure; SameSite=Strict`;
+      document.cookie = `CF_AppSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${path}${
+        dom ? `; domain=${dom}` : ""
+      }; secure; SameSite=Strict`;
+    });
+  });
+
+  // For Cloudflare Pages, redirect to the built-in logout URL
+  window.location.href = "/cdn-cgi/access/logout";
 }
 
 export function Header() {
