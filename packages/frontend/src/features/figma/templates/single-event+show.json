@@ -17,17 +17,17 @@
         },
         {
           "fieldId": "CenterText",
-          "defaultValue": "Center Text Top",
+          "defaultValue": "",
           "defaultEnabled": true
         },
         {
           "fieldId": "CenterTextSmall",
-          "defaultValue": "Center Text Small",
+          "defaultValue": "",
           "defaultEnabled": false
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "defaultValue": "Bottom Center Text",
+          "defaultValue": "",
           "defaultEnabled": false
         }
       ]

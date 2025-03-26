@@ -30,7 +30,7 @@
         {
           "fieldId": "bottomRightTextBottom",
           "defaultValue": "Bottom Text",
-          "defaultEnabled": false
+          "defaultEnabled": true
         }
       ]
     }
