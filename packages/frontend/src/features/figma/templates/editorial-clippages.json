@@ -14,15 +14,15 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Fox Mini"
+          "defaultValue": "Fox Mini"
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "Bottom Right Text Top"
+          "defaultValue": "Text Top"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "Bottom Right Text Bottom"
+          "defaultValue": "Text Bottom"
         }
       ]
     }

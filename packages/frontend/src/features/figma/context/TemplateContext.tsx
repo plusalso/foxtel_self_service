@@ -14,17 +14,21 @@ interface TemplateContextType {
   templateConfig: TemplateConfig | null;
   currentPreset: TemplatePreset | null;
   textInputs: Record<string, string>;
+  persistentFieldValues: Record<string, string>;
   customImage: string;
   customImageDefaults?: ResizableImageDefaults;
   setOverlayAssets: (assets: OverlayAsset[]) => void;
   setFileVersion: (version: string) => void;
   setTemplateConfig: (config: TemplateConfig) => void;
   setCurrentPreset: (preset: TemplatePreset) => void;
-  setTextInputs: (inputs: Record<string, string>) => void;
+  setTextInputs: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  setPersistentFieldValue: (fieldId: string, value: string) => void;
   setCustomImage: (image: string) => void;
   setCustomImageDefaults: (defaults: ResizableImageDefaults) => void;
   imageVersion: number;
   refreshImages: () => void;
+  enabledFields: Record<string, boolean>;
+  toggleFieldEnabled: (fieldId: string, enabled: boolean) => void;
 }
 
 const TemplateContext = createContext<TemplateContextType | undefined>(undefined);
@@ -35,12 +39,29 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
   const [templateConfig, setTemplateConfig] = useState<TemplateConfig | null>(null);
   const [currentPreset, setCurrentPreset] = useState<TemplatePreset | null>(null);
   const [textInputs, setTextInputs] = useState<Record<string, string>>({});
+  const [persistentFieldValues, setPersistentFieldValues] = useState<Record<string, string>>({});
   const [customImage, setCustomImage] = useState<string>("");
   const [customImageDefaults, setCustomImageDefaults] = useState<ResizableImageDefaults | undefined>(undefined);
   const [imageVersion, setImageVersion] = useState<number>(Date.now());
+  const [enabledFields, setEnabledFields] = useState<Record<string, boolean>>({});
 
   const refreshImages = () => {
     setImageVersion(Date.now());
+  };
+
+  const setPersistentFieldValue = (fieldId: string, value: string) => {
+    console.log(`Setting persistent value for ${fieldId}: "${value}"`);
+    setPersistentFieldValues((prev) => ({
+      ...prev,
+      [fieldId]: value,
+    }));
+  };
+
+  const toggleFieldEnabled = (fieldId: string, enabled: boolean) => {
+    setEnabledFields((prev) => ({
+      ...prev,
+      [fieldId]: enabled,
+    }));
   };
 
   return (
@@ -56,12 +77,16 @@ export function TemplateProvider({ children }: { children: ReactNode }) {
         setCurrentPreset,
         textInputs,
         setTextInputs,
+        persistentFieldValues,
+        setPersistentFieldValue,
         customImage,
         setCustomImage,
         customImageDefaults,
         setCustomImageDefaults,
         imageVersion,
         refreshImages,
+        enabledFields,
+        toggleFieldEnabled,
       }}
     >
       {children}

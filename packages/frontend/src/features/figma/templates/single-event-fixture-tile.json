@@ -9,15 +9,15 @@
       "fields": [
         {
           "fieldId": "textTeaser",
-          "value": "Text Teaser"
+          "defaultValue": "Text Teaser"
         },
         {
           "fieldId": "background",
-          "value": "F1 Logo"
+          "defaultValue": "F1 Logo"
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "value": "Bottom Center Text"
+          "defaultValue": "Bottom Center Text"
         }
       ]
     },
@@ -27,23 +27,23 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Fox Mini"
+          "defaultValue": "Fox Mini"
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
+          "defaultValue": "bottomRightTextTop"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
+          "defaultValue": "This is my bottom Right text"
         },
         {
           "fieldId": "wedge1",
-          "value": "F1"
+          "defaultValue": "F1"
         },
         {
           "fieldId": "wedge2",
-          "value": "Australia"
+          "defaultValue": "Australia"
         }
       ]
     },
@@ -53,23 +53,23 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Fox Bite"
+          "defaultValue": "Fox Bite"
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
+          "defaultValue": "bottomRightTextTop"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
+          "defaultValue": "This is my bottom Right text"
         },
         {
           "fieldId": "wedge1",
-          "value": "F1"
+          "defaultValue": "F1"
         },
         {
           "fieldId": "wedge2",
-          "value": "Australia"
+          "defaultValue": "Australia"
         }
       ]
     },
@@ -79,23 +79,23 @@
       "fields": [
         {
           "fieldId": "textTeaser",
-          "value": "Text Teaser"
+          "defaultValue": "Text Teaser"
         },
         {
           "fieldId": "background",
-          "value": "Kayo Event"
+          "defaultValue": "Kayo Event"
         },
         {
           "fieldId": "CenterText",
-          "value": "Center Text Top"
+          "defaultValue": "Center Text Top"
         },
         {
           "fieldId": "CenterTextSmall",
-          "value": "Center Text Small"
+          "defaultValue": "Center Text Small"
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "value": "Bottom Center Text"
+          "defaultValue": "Bottom Center Text"
         }
       ]
     },
@@ -105,23 +105,23 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Kayo Mini"
+          "defaultValue": "Kayo Mini"
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "Bottom Right Text Top"
+          "defaultValue": "Bottom Right Text Top"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "Bottom Right Text Bottom"
+          "defaultValue": "Bottom Right Text Bottom"
         },
         {
           "fieldId": "wedge1",
-          "value": "F1"
+          "defaultValue": "F1"
         },
         {
           "fieldId": "wedge2",
-          "value": "Australia"
+          "defaultValue": "Australia"
         }
       ]
     },
@@ -131,23 +131,23 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Kayo Bite"
+          "defaultValue": "Kayo Bite"
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "bottomRightTextTop"
+          "defaultValue": "bottomRightTextTop"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "This is my bottom Right text"
+          "defaultValue": "This is my bottom Right text"
         },
         {
           "fieldId": "wedge1",
-          "value": "F1"
+          "defaultValue": "F1"
         },
         {
           "fieldId": "wedge2",
-          "value": "Australia"
+          "defaultValue": "Australia"
         }
       ]
     },
@@ -157,15 +157,15 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Hubbl Mini"
+          "defaultValue": "Hubbl Mini"
         },
         {
           "fieldId": "background",
-          "value": "F1 Logo"
+          "defaultValue": "F1 Logo"
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "value": "Bottom Center Text"
+          "defaultValue": "Bottom Center Text"
         }
       ]
     },
@@ -175,15 +175,15 @@
       "fields": [
         {
           "fieldId": "overlay",
-          "value": "Hubbl Mini"
+          "defaultValue": "Hubbl Mini"
         },
         {
           "fieldId": "background",
-          "value": "F1 Logo"
+          "defaultValue": "F1 Logo"
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "value": "Bottom Center Text"
+          "defaultValue": "Bottom Center Text"
         }
       ]
     }

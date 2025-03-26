@@ -21,7 +21,7 @@ interface ComboboxProps {
 const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputValueChange, onValueChange }) => {
   const [inputItems, setInputItems] = useState(assets);
   const [isFiltering, setIsFiltering] = useState(false);
-  const ref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isFiltering && inputValue) {
@@ -40,6 +40,7 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
       selectedItem: assets.find((item) => item.id === value) || null,
       defaultHighlightedIndex: -1,
       defaultIsOpen: false,
+      initialIsOpen: false,
       onStateChange: ({ type, selectedItem: newSelectedItem, inputValue: newInputValue }) => {
         switch (type) {
           case useCombobox.stateChangeTypes.InputChange:
@@ -67,17 +68,21 @@ const Combobox: React.FC<ComboboxProps> = ({ assets, value, inputValue, onInputV
       },
     });
 
+  const inputProps = getInputProps({
+    ref: inputRef,
+  });
+
   return (
     <div className={styles.comboboxContainer}>
       {/* <label {...getLabelProps()}>Select Asset:</label> */}
       <div className={styles.comboboxInputContainer}>
-        <input {...getInputProps()} className={styles.comboboxInput} placeholder="Search assets..." ref={ref} />
+        <input {...inputProps} className={styles.comboboxInput} placeholder="Search assets..." />
         <button
           type="button"
           onClick={() => {
             reset();
             onInputValueChange("");
-            ref.current?.focus();
+            inputRef.current?.focus();
           }}
           className={styles.comboboxClearButton}
           aria-label="clear selection"

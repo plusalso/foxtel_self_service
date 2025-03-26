@@ -27,6 +27,7 @@ interface AssetRendererProps {
   textInputs: Record<string, string>;
   customImage: string;
   customImageDefaults?: ResizableImageDefaults;
+  enabledFields: Record<string, boolean>;
 }
 export const renderers = {
   DefaultTextRenderer: DefaultTextRenderer,
@@ -42,6 +43,7 @@ export const AssetRenderer = ({
   templateConfig,
   currentPreset,
   textInputs,
+  enabledFields,
 }: AssetRendererProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
@@ -74,6 +76,9 @@ export const AssetRenderer = ({
 
   // And right before rendering
   console.log("filtered assets:", filteredAssets);
+
+  // Add at the beginning of the component
+  console.log("textInputs in AssetRenderer:", textInputs);
 
   useEffect(() => {
     const updateScale = () => {
@@ -196,6 +201,20 @@ export const AssetRenderer = ({
 
         {/* Render text fields for the current preset with styles */}
         {Object.entries(textInputs).map(([fieldId, value]) => {
+          // First check if the field is enabled
+          if (enabledFields && enabledFields[fieldId] === false) {
+            console.log(`Not rendering field ${fieldId} because it's toggled off`);
+            return null;
+          }
+
+          // Then check if it has a value (this is a separate concern)
+          if (!value) {
+            console.log(`Not rendering field ${fieldId} because it has no value`);
+            return null;
+          }
+
+          // Render the field...
+          console.log(`Rendering field ${fieldId} with value: "${value}"`);
           const field = templateConfig?.fields?.find((field: Field) => {
             if (field.id === fieldId) {
               if (field.type !== "text" && field.type !== "textArea") {

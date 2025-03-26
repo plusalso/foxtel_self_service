@@ -9,23 +9,26 @@
       "fields": [
         {
           "fieldId": "singleEventTextBackground",
-          "value": "Single Event + Show/Background"
+          "defaultValue": "Single Event + Show/Background"
         },
         {
           "fieldId": "textTeaser",
-          "value": "Teaser Text"
+          "defaultValue": "Teaser Text"
         },
         {
           "fieldId": "CenterText",
-          "value": "Center Text Top"
+          "defaultValue": "Center Text Top",
+          "defaultEnabled": true
         },
         {
           "fieldId": "CenterTextSmall",
-          "value": "Center Text Small"
+          "defaultValue": "Center Text Small",
+          "defaultEnabled": false
         },
         {
           "fieldId": "BottomCenterTextArea",
-          "value": "Bottom Center Text"
+          "defaultValue": "Bottom Center Text",
+          "defaultEnabled": false
         }
       ]
     }

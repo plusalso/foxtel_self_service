@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Text, TextField, TextArea, Switch } from "@radix-ui/themes";
 
 interface ToggleableTextFieldProps {
@@ -6,6 +6,10 @@ interface ToggleableTextFieldProps {
   value: string;
   onChange: (newValue: string) => void;
   multiline?: boolean;
+  disabled?: boolean;
+  fieldId: string;
+  defaultEndabled?: boolean;
+  onToggle: (fieldId: string, enabled: boolean) => void;
 }
 
 export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({
@@ -13,35 +17,26 @@ export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({
   value,
   onChange,
   multiline = false,
+  disabled = false,
+  fieldId,
+  onToggle,
+  defaultEndabled = true,
 }) => {
   // Assume the field starts enabled.
-  const [enabled, setEnabled] = useState(true);
-  // Cache the value so we can restore it if the field is toggled back on.
-  const [cachedValue, setCachedValue] = useState(value);
+  const [enabled, setEnabled] = useState(defaultEndabled);
 
-  // If value updates externally while enabled, update the cache.
   useEffect(() => {
-    if (enabled) {
-      setCachedValue(value);
-    }
-  }, [value, enabled]);
+    setEnabled(defaultEndabled);
+    onToggle(fieldId, defaultEndabled);
+  }, [defaultEndabled]);
 
   const handleSwitchChange = (checked: boolean) => {
-    if (checked) {
-      // Toggle on: restore the cached value.
-      setEnabled(true);
-      onChange(cachedValue || "Your Text");
-    } else {
-      // Toggle off: save the current value and clear the parent's value.
-      setCachedValue(value);
-      setEnabled(false);
-      onChange("");
-    }
+    setEnabled(checked);
+    onToggle(fieldId, checked);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     onChange(e.target.value);
-    setCachedValue(e.target.value);
   };
 
   return (
@@ -63,10 +58,11 @@ export const ToggleableTextField: React.FC<ToggleableTextFieldProps> = ({
                 onChange={handleChange}
                 placeholder={`Enter ${label}`}
                 style={{ minHeight: "100px" }}
+                disabled={disabled}
               />
             </>
           ) : (
-            <TextField.Root type="text" value={value} onChange={handleChange} placeholder={`Enter ${label}`} />
+            <TextField.Root value={value} onChange={handleChange} placeholder={`Enter ${label}`} disabled={disabled} />
           )}
         </>
       )}

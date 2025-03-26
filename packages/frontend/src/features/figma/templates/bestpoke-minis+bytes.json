@@ -22,11 +22,13 @@
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "Bespoke Minis + Bites/Top Text"
+          "defaultValue": "Top Text",
+          "defaultEnabled": true
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "Bespoke Minis + Bites/Bottom Text"
+          "defaultValue": "Bottom Text",
+          "defaultEnabled": false
         }
       ]
     }

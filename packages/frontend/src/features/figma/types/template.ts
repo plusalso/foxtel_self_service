@@ -65,7 +65,8 @@ export type Field = TextField | TextAreaField | FigmaAssetDropdownSelectField | 
 
 export interface PresetField {
   fieldId: string;
-  value: string;
+  defaultValue: string;
+  defaultEnabled?: boolean;
 }
 
 export interface TemplatePreset {

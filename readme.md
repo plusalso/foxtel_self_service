@@ -47,6 +47,9 @@ Features
 - How to change the API Base?
 - locally, you use your .env file. When deployed it is set in the cloudflare pages settings. (VITE_API_BASE_URL)
 
+- Why does my textfield/text area have wrong default value?
+- Text fields with the same id as defined in json share the same value. That was asked by client.
+
 # Syncing Assets
 
 - The figma API has rate limits, and it is slow to generate images from a node id. For this reason, we cache all the assets in s3.

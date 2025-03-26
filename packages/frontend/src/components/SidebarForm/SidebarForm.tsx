@@ -44,13 +44,16 @@ export function SidebarForm() {
     Record<string, { name: string; id: string; assets: any[]; defaultValue: any }>
   >({});
   const {
+    textInputs,
+    persistentFieldValues,
     setOverlayAssets,
     setTemplateConfig,
     setCustomImage,
-    textInputs,
     setTextInputs,
+    setPersistentFieldValue,
     setCustomImageDefaults,
     setCurrentPreset,
+    toggleFieldEnabled,
   } = useTemplateState();
 
   const templateConfig = templateConfigs[selectedSource as keyof typeof templateConfigs];
@@ -126,7 +129,7 @@ export function SidebarForm() {
         if (fullField?.type !== "text" || !fullField.assetSourcePage) return null;
 
         const pageAssets = assetsData?.assets[fullField.assetSourcePage] || [];
-        const matchingAsset = pageAssets.find((asset) => asset.name === field.value);
+        const matchingAsset = pageAssets.find((asset) => asset.name === field.defaultValue);
         if (!matchingAsset) return null;
 
         return {
@@ -178,12 +181,30 @@ export function SidebarForm() {
     // Only clear text inputs when preset changes
   }, [selectedPresetConfig, selectedAssets, templateConfig.fields]);
 
-  // Add a separate effect to handle clearing text inputs only when preset changes
+  // Update a separate effect to initialize text inputs from persistent values when preset changes
   useEffect(() => {
-    setTextInputs({});
-  }, [selectedPresetId]);
+    if (!selectedPresetConfig) return;
 
-  // Create grouped fields when assets or config changes
+    const initialTextInputs: Record<string, string> = {};
+
+    selectedPresetConfig.fields.forEach((field) => {
+      const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
+      if (fullField?.type === "text" || fullField?.type === "textArea") {
+        //Check if there's a persistent value first
+        if (persistentFieldValues[field.fieldId] !== undefined) {
+          //Use the persistent value, even if it's an empty string
+          initialTextInputs[field.fieldId] = persistentFieldValues[field.fieldId];
+        } else {
+          //Only use the default value if there's no persistent value
+          initialTextInputs[field.fieldId] = field.defaultValue || "";
+        }
+      }
+    });
+
+    setTextInputs(initialTextInputs);
+  }, [selectedPresetId, persistentFieldValues]);
+
+  //Create grouped fields when assets or config changes
   useEffect(() => {
     if (!assetsData || !selectedPresetConfig) return;
 
@@ -196,7 +217,7 @@ export function SidebarForm() {
           name: fullField.label || "unknown",
           id: field.fieldId,
           assets: assetsData?.assets[fullField.assetSourcePage] || [],
-          defaultValue: field.value,
+          defaultValue: field.defaultValue,
         };
       }
     });
@@ -216,7 +237,7 @@ export function SidebarForm() {
       if (fullField?.type === "figmaAssetDropdownSelect" && fullField.assetSourcePage) {
         const fieldAssets = assetsData.assets[fullField.assetSourcePage] || [];
         const sortedAssets = [...fieldAssets].sort((a, b) => a.name.localeCompare(b.name));
-        const selectedAsset = fieldAssets.find((asset) => asset.name === field.value) || sortedAssets[0];
+        const selectedAsset = fieldAssets.find((asset) => asset.name === field.defaultValue) || sortedAssets[0];
 
         if (selectedAsset) {
           const [mainGroup, itemName] = selectedAsset.name.split("/");
@@ -261,6 +282,27 @@ export function SidebarForm() {
     },
     [templateConfig.fileId]
   );
+
+  // Modify the text field change handler to update both textInputs and persistentFieldValues
+  const handleTextFieldChange = (fieldId: string, value: string) => {
+    console.log(`Field ${fieldId} changed to: "${value}"`);
+    setTextInputs((prev) => ({ ...prev, [fieldId]: value }));
+    setPersistentFieldValue(fieldId, value);
+  };
+
+  // First, add a function to check if a field is enabled
+  const isFieldEnabled = (fieldId: string): boolean => {
+    if (!selectedPresetConfig) return true;
+
+    const presetField = selectedPresetConfig.fields.find((field) => field.fieldId === fieldId);
+    // If defaultEnabled is not specified, default to true
+    return presetField?.defaultEnabled !== false;
+  };
+
+  // Add a handler for toggling fields
+  const handleFieldToggle = (fieldId: string, enabled: boolean) => {
+    toggleFieldEnabled(fieldId, enabled);
+  };
 
   // If assets are loading, show a centered spinner
 
@@ -334,7 +376,7 @@ export function SidebarForm() {
                         key={`${selectedPresetId}-${field.fieldId}`}
                         group={{
                           ...groupData,
-                          value: field.value,
+                          value: field.defaultValue,
                         }}
                         selection={groupedAssetSelections[field.fieldId]}
                         onSelect={handleAssetSelection}
@@ -344,15 +386,19 @@ export function SidebarForm() {
                     ) : null;
                   case "text":
                   case "textArea":
+                    const isEnabled = isFieldEnabled(field.fieldId);
                     return (
                       <ToggleableTextField
                         key={`${selectedPresetId}-${field.fieldId}`}
                         label={fullField?.label || "Text Field"}
                         value={textInputs[field.fieldId] || ""}
                         onChange={(val) => {
-                          setTextInputs({ ...textInputs, [field.fieldId]: val });
+                          handleTextFieldChange(field.fieldId, val);
                         }}
                         multiline={fullField.type === "textArea"}
+                        defaultEndabled={isEnabled}
+                        fieldId={field.fieldId}
+                        onToggle={handleFieldToggle}
                       />
                     );
                 }

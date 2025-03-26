@@ -16,23 +16,23 @@
       "fields": [
         {
           "fieldId": "wedgeNBAHome",
-          "value": "Team v Team Fixture - ESPN NBA/Home"
+          "defaultValue": "Team v Team Fixture - ESPN NBA/Home"
         },
         {
           "fieldId": "wedgeNBAAway",
-          "value": "Team v Team Fixture - ESPN NBA/Away"
+          "defaultValue": "Team v Team Fixture - ESPN NBA/Away"
         },
         {
           "fieldId": "espnMiniLogo",
-          "value": ""
+          "defaultValue": ""
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "Text Top"
+          "defaultValue": "Text Top"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "Text Bottom"
+          "defaultValue": "Text Bottom"
         }
       ]
     },
@@ -42,23 +42,23 @@
       "fields": [
         {
           "fieldId": "nbaHome",
-          "value": "Team v Team Fixture - ESPN NBA/Home"
+          "defaultValue": "Team v Team Fixture - ESPN NBA/Home"
         },
         {
           "fieldId": "nbaAway",
-          "value": "Team v Team Fixture - ESPN NBA/Away"
+          "defaultValue": "Team v Team Fixture - ESPN NBA/Away"
         },
         {
           "fieldId": "espnMiniLogo",
-          "value": ""
+          "defaultValue": ""
         },
         {
           "fieldId": "bottomRightTextTop",
-          "value": "Text Top"
+          "defaultValue": "Text Top"
         },
         {
           "fieldId": "bottomRightTextBottom",
-          "value": "Text Bottom"
+          "defaultValue": "Text Bottom"
         }
       ]
     },
@@ -68,15 +68,15 @@
       "fields": [
         {
           "fieldId": "foxNBAHome",
-          "value": "Team v Team Fixture - Fox NBA/Home"
+          "defaultValue": "Team v Team Fixture - Fox NBA/Home"
         },
         {
           "fieldId": "foxNBAAway",
-          "value": "Team v Team Fixture - Fox NBA/Away"
+          "defaultValue": "Team v Team Fixture - Fox NBA/Away"
         },
         {
           "fieldId": "nbaLogo",
-          "value": ""
+          "defaultValue": ""
         }
       ]
     },
@@ -88,11 +88,11 @@
       "fields": [
         {
           "fieldId": "posterNbaHome",
-          "value": "Team v Team Fixture - Poster NBA/Home"
+          "defaultValue": "Team v Team Fixture - Poster NBA/Home"
         },
         {
           "fieldId": "posterNbaAway",
-          "value": "Team v Team Fixture - Poster NBA/Away"
+          "defaultValue": "Team v Team Fixture - Poster NBA/Away"
         }
       ]
     },
@@ -104,11 +104,11 @@
       "fields": [
         {
           "fieldId": "mobileNbaHome",
-          "value": "Team v Team Fixture - Mobile NBA/Home"
+          "defaultValue": "Team v Team Fixture - Mobile NBA/Home"
         },
         {
           "fieldId": "mobileNbaAway",
-          "value": "Team v Team Fixture - Mobile NBA/Away"
+          "defaultValue": "Team v Team Fixture - Mobile NBA/Away"
         }
       ]
     },
@@ -118,11 +118,11 @@
       "fields": [
         {
           "fieldId": "hubblNBAHome",
-          "value": "Team v Team Fixture - Hubbl NBA/Home"
+          "defaultValue": "Team v Team Fixture - Hubbl NBA/Home"
         },
         {
           "fieldId": "hubblNBAAway",
-          "value": "Team v Team Fixture - Hubbl NBA/Away"
+          "defaultValue": "Team v Team Fixture - Hubbl NBA/Away"
         }
       ]
     },
@@ -132,11 +132,11 @@
       "fields": [
         {
           "fieldId": "kayoNBAHome",
-          "value": "Team v Team Fixture - Kayo NBA/Home"
+          "defaultValue": "Team v Team Fixture - Kayo NBA/Home"
         },
         {
           "fieldId": "kayoNBAAway",
-          "value": "Team v Team Fixture - Kayo NBA/Away"
+          "defaultValue": "Team v Team Fixture - Kayo NBA/Away"
         }
       ]
     }

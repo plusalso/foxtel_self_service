@@ -4,7 +4,7 @@ import { useTemplateState } from "@/features/figma/context/TemplateContext";
 import styles from "./Workspace.module.scss";
 import clsx from "clsx";
 export function Workspace({ children }: { children?: React.ReactNode }) {
-  const { overlayAssets, templateConfig, textInputs, customImage, customImageDefaults, currentPreset } =
+  const { overlayAssets, templateConfig, textInputs, customImage, customImageDefaults, currentPreset, enabledFields } =
     useTemplateState();
   // console.log("overlayAssets", overlayAssets);
   return (
@@ -16,6 +16,7 @@ export function Workspace({ children }: { children?: React.ReactNode }) {
         textInputs={textInputs}
         currentPreset={currentPreset}
         customImageDefaults={customImageDefaults}
+        enabledFields={enabledFields}
       />
       {children}
     </Box>
