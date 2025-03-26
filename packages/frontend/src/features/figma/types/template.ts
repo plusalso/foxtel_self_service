@@ -89,6 +89,7 @@ export interface ResizableImageDefaults {
 export interface TemplateConfig {
   id: string;
   fileId: string;
+  filename?: string;
   presets: TemplatePreset[];
   fields: Field[];
 }

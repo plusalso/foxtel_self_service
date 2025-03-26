@@ -21,6 +21,7 @@ import nbaConfig from "@/features/figma/templates/nba.json";
 import { ToggleableTextField } from "../ToggleableTextField/ToggleableTextField";
 import styles from "./SidebarForm.module.scss";
 import { LuArrowUpRight } from "react-icons/lu";
+import { useTemplateFilenames } from "@/features/figma/hooks/use-template-filenames";
 
 const templateConfigs = {
   "Single Event Fixture Tile": singleEventFixtureTileConfig as TemplateConfig,
@@ -304,6 +305,9 @@ export function SidebarForm() {
     toggleFieldEnabled(fieldId, enabled);
   };
 
+  // Use the custom hook to get filenames
+  const templateFilenames = useTemplateFilenames(templateConfigs);
+
   // If assets are loading, show a centered spinner
 
   return (
@@ -331,7 +335,7 @@ export function SidebarForm() {
               <Select.Content>
                 {Object.keys(templateConfigs).map((source) => (
                   <Select.Item key={source} value={source}>
-                    {source}
+                    {templateFilenames[source] || source}
                   </Select.Item>
                 ))}
               </Select.Content>
