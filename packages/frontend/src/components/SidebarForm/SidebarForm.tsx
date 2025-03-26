@@ -364,7 +364,13 @@ export function SidebarForm() {
             <ImageUpload label={selectedPresetConfig?.uploadedImageLabel || "Custom Image"} />
           )}
         </Flex>
-        <Flex direction="column" pt="5" gap="2" style={{ marginTop: "auto", borderTop: "1px solid var(--gray-4)" }}>
+        <Flex
+          direction="column"
+          pt="5"
+          pb="5"
+          gap="2"
+          style={{ marginTop: "auto", borderTop: "1px solid var(--gray-4)" }}
+        >
           <DownloadButton />
         </Flex>
       </Flex>
