@@ -69,7 +69,33 @@
         "alignItems": "center",
         "justifyContent": "center",
         "letterSpacing": "5.12px",
-        "lineHeight": "159px"
+        "lineHeight": "128px"
+      },
+      "renderer": "TextAreaRenderer"
+    },
+    {
+      "id": "CenterTextSmall",
+      "type": "textArea",
+      "label": "Center Text Small",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "540px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "84px",
+        "textAlign": "center",
+        "height": "0px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px",
+        "lineHeight": "128px"
       },
       "renderer": "TextAreaRenderer"
     }

@@ -1,16 +1,80 @@
 import { Box, Button, Flex } from "@radix-ui/themes";
 import styles from "./Header.module.css";
+import { useEffect, useState } from "react";
+
+function parseJwt(token: string) {
+  try {
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error("Error parsing JWT:", error);
+    return null;
+  }
+}
+
+function getCookie(name: string) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(";").shift();
+  return undefined;
+}
+
+function getLogoByEmail(email: string): string {
+  if (!email || email === "Logged In") return "/logo.svg";
+
+  const domain = email.split("@")[1]?.toLowerCase();
+
+  switch (domain) {
+    case "balboa.agency":
+      return "/logos/Logo-Balboa.svg";
+    case "foxtel.com.au":
+      return "/logos/Logo-Foxtel.svg";
+    case "kayosports.com.au":
+      return "/logos/Logo-Kayo.svg";
+    case "streamotion.com.au":
+      return "/logos/Logo-Stream Motion.svg";
+    case "foxsports.com.au":
+      return "/logos/Logo-Binge.svg";
+    case "howatson.com.au":
+      return "/logos/Logo-Howatson.svg";
+    case "plusalsostudios.com.au":
+      return "/logos/Logo-Pas.svg";
+    default:
+      return "/logo.svg";
+  }
+}
 
 function clearAuthCookies() {
-  // Clear specific cookies if they exist with proper attributes
   document.cookie = "CF_AppSession=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
   document.cookie = "CF_Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; secure; SameSite=Strict";
 
-  // Refresh the page
   window.location.reload();
 }
 
 export function Header() {
+  const [userEmail, setUserEmail] = useState<string>("Logged In");
+  const [logoPath, setLogoPath] = useState<string>("/logo.svg");
+
+  useEffect(() => {
+    const authCookie = getCookie("CF_Authorization");
+
+    if (authCookie) {
+      const decodedToken = parseJwt(authCookie);
+
+      if (decodedToken && decodedToken.email) {
+        setUserEmail(decodedToken.email);
+        setLogoPath(getLogoByEmail(decodedToken.email));
+      }
+    }
+  }, []);
+
   return (
     <Box px="6" py="5" className={styles.header}>
       <Flex justify="between" align="center">
@@ -61,29 +125,19 @@ export function Header() {
         </svg>
 
         <Flex gap="4" align="center">
-          <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M0 6.5C0 3.18629 2.68629 0.5 6 0.5H34C37.3137 0.5 40 3.18629 40 6.5V34.5C40 37.8137 37.3137 40.5 34 40.5H6C2.68629 40.5 0 37.8137 0 34.5V6.5Z"
-              fill="#FF4622"
+          <div style={{ width: "40px", height: "40px", position: "relative" }}>
+            <img
+              src={logoPath}
+              alt="Company Logo"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
             />
-            <g clipPath="url(#clip0_155_4136)">
-              <mask id="mask0_155_4136" maskUnits="userSpaceOnUse" x="5" y="17" width="29" height="7">
-                <path d="M5 17.5H34V23.5H5V17.5Z" fill="white" />
-              </mask>
-              <g mask="url(#mask0_155_4136)">
-                <path
-                  d="M31.5696 22.1589V17.5772H30.1927V23.4087H33.594L33.9989 22.1591H31.5696V22.1589ZM29.0269 18.8268L29.4315 17.5772H25.6256V23.4087H29.0269L29.4315 22.1591H27.0027V21.0426H28.7041L29.108 19.793H27.0025V18.8268H29.0269ZM20.362 18.8268H22.0389V23.4084H23.4155V18.8265H24.8737V17.5772H21.1232L20.362 18.8268ZM20.2407 17.5772H18.7018L17.7381 19.1682L16.7665 17.5772H15.2279L16.969 20.4259L15.1462 23.4074H16.6848L17.7376 21.6914L18.7821 23.4074H20.321L18.507 20.4262L20.2407 17.5772ZM12.5232 22.0673C12.2192 22.0675 11.9225 21.9757 11.6737 21.8043C11.4194 21.6288 11.2232 21.3839 11.1097 21.1C10.9935 20.8114 10.963 20.4965 11.0219 20.1916C11.0791 19.8894 11.2242 19.6099 11.4396 19.3866C11.6499 19.1686 11.9229 19.0187 12.2223 18.9567C12.5191 18.8962 12.8277 18.9277 13.1053 19.0469C13.3876 19.169 13.6261 19.371 13.7902 19.6271C13.9578 19.8859 14.0466 20.1901 14.0456 20.501C14.0456 20.9166 13.8854 21.3149 13.5999 21.6087C13.3142 21.9022 12.9268 22.0673 12.5232 22.0673ZM12.5232 17.5021C12.1391 17.5021 11.7592 17.5797 11.4071 17.7301C11.0507 17.8825 10.7291 18.1035 10.4613 18.3799C10.1886 18.6613 9.9739 18.9917 9.82913 19.3529C9.68239 19.7186 9.60729 20.1081 9.60777 20.501C9.60777 22.151 10.9114 23.4916 12.5232 23.4916C14.1273 23.4916 15.4304 22.1508 15.4304 20.501C15.4304 18.8435 14.1267 17.5026 12.5232 17.5026V17.5021ZM8.92774 18.827L9.33267 17.5775H5.52649V23.4087H6.90359V21.3095H8.60421L9.00915 20.0599H6.90359V18.8268L8.92774 18.827Z"
-                  fill="white"
-                />
-              </g>
-            </g>
-            <defs>
-              <clipPath id="clip0_155_4136">
-                <rect width="29" height="6" fill="white" transform="translate(5 17.5)" />
-              </clipPath>
-            </defs>
-          </svg>
+          </div>
           <Flex direction={"column"} align="start">
+            {userEmail}
             <Button variant="ghost" size="1" onClick={clearAuthCookies} style={{ textDecoration: "underline" }}>
               Logout
             </Button>

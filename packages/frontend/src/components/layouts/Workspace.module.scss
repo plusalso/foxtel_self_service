@@ -1,3 +1,9 @@
 .workspace {
   background-color: var(--gray-2);
+
+  &:hover {
+    .handlesContainer {
+      border: 1px solid #4a8cff;
+    }
+  }
 }

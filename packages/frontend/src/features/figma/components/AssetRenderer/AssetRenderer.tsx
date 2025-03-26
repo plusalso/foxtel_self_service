@@ -18,6 +18,7 @@ import {
   TextField,
 } from "../../types/template";
 import { useResizableImage } from "../../hooks/use-resizeable-image";
+import clsx from "clsx";
 
 interface AssetRendererProps {
   selectedAssets: OverlayAsset[];
@@ -90,7 +91,7 @@ export const AssetRenderer = ({
   return (
     <div ref={containerRef} style={{ width: "100%", maxWidth: `${width}px`, margin: "0 auto", position: "relative" }}>
       <div
-        className={styles.handlesContainer}
+        className={clsx(styles.handlesContainer)}
         style={{
           position: "absolute",
           top: 0,
@@ -105,10 +106,10 @@ export const AssetRenderer = ({
       >
         {customImage && (
           <Rnd
-            className={styles.handleOnlyContainer}
+            className={clsx(styles.handleOnlyContainer, "handleOnlyContainer")}
             style={{
               backgroundColor: "transparent",
-              border: "1px dashed rgba(255,0,0,0.5)", // Temporary debugging border
+              // border: "1px dashed rgba(255,0,0,0.5)", // Temporary debugging border
             }}
             scale={scale}
             // Don't use default if you're also using position and size props
