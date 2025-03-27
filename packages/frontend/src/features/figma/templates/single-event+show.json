@@ -39,6 +39,7 @@
       "type": "text",
       "label": "Teaser Text",
       "assetSourcePage": "Single Event + Show/Teaser Text",
+      "defaultAssetName": "Teaser Text",
       "containerStyle": {
         "position": "absolute",
         "top": "40px",
