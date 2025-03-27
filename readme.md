@@ -104,6 +104,7 @@ Fields define the available inputs and their properties. Each field can be eithe
   "label": "Text Teaser",
   "defaultValue": "Default Text",
   "assetSourcePage": "Optional/Figma/Page/Path",  // If set, displays background asset when text is present
+  "defaultAssetName": "name", // the name of the asset in figma
   "containerStyle": {
     "position": "absolute",
     "top": "40px",
@@ -138,11 +139,11 @@ Presets define pre-configured combinations of field values. Each preset can over
   "fields": [
     {
       "fieldId": "textTeaser",
-      "value": "Text Value"
+      "defaultValue": "Text Value"
     },
     {
       "fieldId": "background",
-      "value": "Asset Name"
+      "defaultValue": "Asset Name"
     }
   ]
 }
@@ -163,11 +164,11 @@ Presets define pre-configured combinations of field values. Each preset can over
       "fields": [
         {
           "fieldId": "textTeaser",
-          "value": "Text Teaser"
+          "defaultValue": "Text Teaser"
         },
         {
           "fieldId": "background",
-          "value": "F1 Logo"
+          "defaultValue": "F1 Logo"
         }
       ]
     }

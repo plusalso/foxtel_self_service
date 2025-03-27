@@ -31,24 +31,6 @@
   ],
   "fields": [
     {
-      "id": "textTeaser",
-      "type": "text",
-      "label": "Text Teaser",
-      "assetSourcePage": "Single Event + Show/Text Teaser",
-      "containerStyle": {
-        "position": "absolute",
-        "top": "40px",
-        "right": "66.62px",
-        "color": "white",
-        "fontSize": "72px",
-        "fontWeight": "700",
-        "textAlign": "right",
-        "textTransform": "uppercase",
-        "zIndex": 100
-      },
-      "renderer": "DefaultTextRenderer"
-    },
-    {
       "id": "overlay",
       "type": "figmaAssetDropdownSelect",
       "label": "Overlay",
