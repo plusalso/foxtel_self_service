@@ -59,9 +59,6 @@ export const AssetRenderer = ({
     handleResize,
   } = useResizableImage(customImage, customImageDefaults);
 
-  console.log("customImageDefaults", customImageDefaults);
-  console.log("customImagePosition", customImagePosition);
-  console.log("customImageSize", customImageSize);
   // Filter assets based on whether their corresponding text fields have content
   const filteredAssets = selectedAssets.filter((asset) => {
     // Find the field in template config that corresponds to this asset
@@ -73,12 +70,6 @@ export const AssetRenderer = ({
     // If it is a text-based asset, only keep it if there's text content
     return Boolean(textInputs[field.id]);
   });
-
-  // And right before rendering
-  console.log("filtered assets:", filteredAssets);
-
-  // Add at the beginning of the component
-  console.log("textInputs in AssetRenderer:", textInputs);
 
   useEffect(() => {
     const updateScale = () => {
@@ -203,18 +194,11 @@ export const AssetRenderer = ({
         {Object.entries(textInputs).map(([fieldId, value]) => {
           // First check if the field is enabled
           if (enabledFields && enabledFields[fieldId] === false) {
-            console.log(`Not rendering field ${fieldId} because it's toggled off`);
             return null;
           }
-
-          // Then check if it has a value (this is a separate concern)
           if (!value) {
-            console.log(`Not rendering field ${fieldId} because it has no value`);
             return null;
           }
-
-          // Render the field...
-          console.log(`Rendering field ${fieldId} with value: "${value}"`);
           const field = templateConfig?.fields?.find((field: Field) => {
             if (field.id === fieldId) {
               if (field.type !== "text" && field.type !== "textArea") {

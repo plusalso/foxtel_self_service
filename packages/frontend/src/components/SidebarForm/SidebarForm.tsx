@@ -54,6 +54,7 @@ export function SidebarForm() {
     setPersistentFieldValue,
     setCustomImageDefaults,
     setCurrentPreset,
+    enabledFields,
     toggleFieldEnabled,
   } = useTemplateState();
 
@@ -127,11 +128,19 @@ export function SidebarForm() {
     const textBackgroundAssets = selectedPresetConfig?.fields
       .map((field) => {
         const fullField = templateConfig.fields.find((f) => f.id === field.fieldId);
-        if (fullField?.type !== "text" || !fullField.assetSourcePage) return null;
+        if (fullField?.type !== "text" || !fullField.assetSourcePage || !fullField.defaultAssetName) return null;
 
         const pageAssets = assetsData?.assets[fullField.assetSourcePage] || [];
-        const matchingAsset = pageAssets.find((asset) => asset.name === field.defaultValue);
+        const matchingAsset = pageAssets.find((asset) => asset.name === fullField.defaultAssetName);
         if (!matchingAsset) return null;
+
+        console.log("enabledFields", enabledFields);
+
+        // If the field is disabled (toggled off), don't show its background
+        if (enabledFields && enabledFields[fullField.id] === false) {
+          console.log(`Filtering out asset for ${fullField.id} because field is disabled`);
+          return null;
+        }
 
         return {
           templateName: selectedSource,
@@ -180,7 +189,7 @@ export function SidebarForm() {
     };
     setCustomImageDefaults(customImageDefaults);
     // Only clear text inputs when preset changes
-  }, [selectedPresetConfig, selectedAssets, templateConfig.fields]);
+  }, [selectedPresetConfig, selectedAssets, templateConfig.fields, enabledFields]);
 
   // Update a separate effect to initialize text inputs from persistent values when preset changes
   useEffect(() => {

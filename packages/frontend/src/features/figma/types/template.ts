@@ -42,11 +42,13 @@ interface BaseField {
 
 export interface TextField extends BaseField {
   type: "text";
+  defaultAssetName?: string;
   renderer?: TextRenderer;
 }
 
 export interface TextAreaField extends BaseField {
   type: "textArea";
+  defaultAssetName?: string;
   renderer?: TextRenderer;
 }
 

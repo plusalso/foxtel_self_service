@@ -200,6 +200,7 @@
       "type": "text",
       "label": "Text Teaser",
       "assetSourcePage": "Single Event Fixture Tile/Text Teaser",
+      "defaultAssetName": "Text Teaser",
       "containerStyle": {
         "position": "absolute",
         "top": "40px",
