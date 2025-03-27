@@ -97,7 +97,7 @@
         "right": "0px",
         "color": "white",
         "textTransform": "uppercase",
-        "fontSize": "84px",
+        "fontSize": "128px",
         "textAlign": "center",
         "height": "0px",
         "zIndex": 100,
@@ -107,7 +107,7 @@
         "alignItems": "center",
         "justifyContent": "center",
         "letterSpacing": "5.12px",
-        "lineHeight": "128px"
+        "lineHeight": "159px"
       },
       "renderer": "TextAreaRenderer"
     },
