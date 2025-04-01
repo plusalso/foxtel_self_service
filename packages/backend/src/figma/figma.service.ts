@@ -52,7 +52,7 @@ export class FigmaService {
     if (options.geometry) params.append('geometry', options.geometry);
 
     const url = `${this.FIGMA_API_BASE}/files/${fileId}${params.toString() ? '?' + params.toString() : ''}`;
-
+    console.log('access token', this.figmaToken);
     const response = await fetch(url, {
       headers: {
         'X-Figma-Token': this.figmaToken,
@@ -61,7 +61,9 @@ export class FigmaService {
     });
 
     if (!response.ok) {
-      throw new Error(`Figma API error for url ${url}: ${response}`);
+      throw new Error(
+        `Figma API error for url ${url}: ${JSON.stringify(response)}`,
+      );
     }
 
     return response.json();
@@ -88,7 +90,9 @@ export class FigmaService {
     });
 
     if (!response.ok) {
-      throw new Error(`Figma API error for url ${url}: ${response}`);
+      throw new Error(
+        `Figma API error for url ${url}: ${JSON.stringify(response)}`,
+      );
     }
 
     return response.json();
