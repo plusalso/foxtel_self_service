@@ -2,6 +2,7 @@ import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import styles from "./Header.module.css";
 import { useEffect, useState } from "react";
 
+console.log("Version 1.0.0");
 function parseJwt(token: string) {
   try {
     const base64Url = token.split(".")[1];
