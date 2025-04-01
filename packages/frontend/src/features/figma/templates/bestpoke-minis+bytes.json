@@ -73,7 +73,7 @@
         "fontSize": "87.872px",
         "textAlign": "right",
         "textTransform": "uppercase",
-        "backgroundColor": "#140C11",
+        "backgroundColor": "rgba(20, 12, 17, 0.9)",
         "padding": "0 100px 0 57px",
         "marginRight": "-100px",
         "height": "145px",
