@@ -62,7 +62,7 @@ export class FigmaService {
 
     if (!response.ok) {
       throw new Error(
-        `Figma API error for url ${url}: ${JSON.stringify(response)}`,
+        `Figma API error for url ${url}: ${JSON.stringify(response)}. Token used: ${this.figmaToken}`,
       );
     }
 
@@ -91,7 +91,7 @@ export class FigmaService {
 
     if (!response.ok) {
       throw new Error(
-        `Figma API error for url ${url}: ${JSON.stringify(response)}`,
+        `Figma API error for url ${url}: ${JSON.stringify(response)}. Token used: ${this.figmaToken}`,
       );
     }
 
