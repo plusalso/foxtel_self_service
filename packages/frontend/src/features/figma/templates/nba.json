@@ -5,7 +5,7 @@
   "presets": [
     {
       "id": "espnMinis",
-      "label": "ESPN Minis",
+      "label": "ESPN Mini - Image",
       "supportsUploadedImages": true,
       "uploadedImageDefaults": {
         "x": 960,
@@ -38,7 +38,7 @@
     },
     {
       "id": "espnMiniTile",
-      "label": "ESPN Mini Tile",
+      "label": "ESPN Mini - Logo Generic",
       "fields": [
         {
           "fieldId": "nbaHome",
