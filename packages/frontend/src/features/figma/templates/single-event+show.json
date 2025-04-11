@@ -4,8 +4,8 @@
   "fileId": "mWejZJzWnozWP5AsouOdok",
   "presets": [
     {
-      "id": "singleEvent",
-      "label": "Single Event + Show",
+      "id": "singleEvent-headline-only",
+      "label": "Headline Only",
       "fields": [
         {
           "fieldId": "singleEventTextBackground",
@@ -19,16 +19,30 @@
           "fieldId": "CenterText",
           "defaultValue": "",
           "defaultEnabled": true
+        }
+      ]
+    },
+    {
+      "id": "singleEvent-headline-subtitle",
+      "label": "Headline + Subtitle",
+      "fields": [
+        {
+          "fieldId": "singleEventTextBackground",
+          "defaultValue": "Single Event + Show/Background"
         },
         {
-          "fieldId": "CenterTextSmall",
+          "fieldId": "textTeaser",
+          "defaultValue": "Teaser Text"
+        },
+        {
+          "fieldId": "CenterTextBotAlign",
           "defaultValue": "",
-          "defaultEnabled": false
+          "defaultEnabled": true
         },
         {
           "fieldId": "BottomCenterTextArea",
           "defaultValue": "",
-          "defaultEnabled": false
+          "defaultEnabled": true
         }
       ]
     }
@@ -86,6 +100,32 @@
       "renderer": "TextAreaRenderer"
     },
     {
+      "id": "CenterTextBotAlign",
+      "type": "textArea",
+      "label": "Center Text",
+      "defaultValue": "Top Text",
+      "containerStyle": {
+        "position": "absolute",
+        "bottom": "502px",
+        "left": "0px",
+        "right": "0px",
+        "color": "white",
+        "textTransform": "uppercase",
+        "fontSize": "148px",
+        "textAlign": "center",
+        "height": "0px",
+        "zIndex": 100,
+        "display": "flex",
+        "fontFamily": "Foxtel Text",
+        "fontWeight": "700",
+        "alignItems": "flex-end",
+        "justifyContent": "center",
+        "letterSpacing": "5.12px",
+        "lineHeight": "128px"
+      },
+      "renderer": "TextAreaRenderer"
+    },
+    {
       "id": "CenterTextSmall",
       "type": "textArea",
       "label": "Center Text Small",
@@ -118,10 +158,11 @@
       "defaultValue": "Bottom Text",
       "containerStyle": {
         "position": "absolute",
-        "bottom": "240px",
+        "top": "645px",
         "left": "0px",
         "right": "0px",
         "color": "white",
+        "textTransform": "uppercase",
         "fontSize": "84px",
         "lineHeight": "86px",
         "textAlign": "center",
@@ -130,9 +171,9 @@
         "display": "flex",
         "fontFamily": "Foxtel Text",
         "fontWeight": "700",
-        "alignItems": "center",
+        "alignItems": "flex-start",
         "justifyContent": "center",
-        "letterSpacing": "5.12px"
+        "letterSpacing": "5.04px"
       },
       "renderer": "TextAreaRenderer"
     }

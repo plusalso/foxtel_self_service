@@ -332,6 +332,7 @@
         "color": "white",
         "fontSize": "148px",
         "textAlign": "center",
+        "textTransform": "uppercase",
         "height": "0px",
         "zIndex": 100,
         "display": "flex",
@@ -356,6 +357,7 @@
         "right": "0px",
         "color": "white",
         "fontSize": "128px",
+        "textTransform": "uppercase",
         "textAlign": "center",
         "height": "0px",
         "zIndex": 100,
@@ -388,6 +390,7 @@
         "display": "flex",
         "fontFamily": "Foxtel Text",
         "fontWeight": "700",
+        "textTransform": "uppercase",
         "alignItems": "center",
         "justifyContent": "center",
         "letterSpacing": "5.12px"
