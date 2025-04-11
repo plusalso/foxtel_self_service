@@ -13,4 +13,5 @@
 .workspace {
   flex: 1;
   overflow-y: auto; /* Allows scrolling in main content area */
+  background-color: var(--gray-2);
 }
