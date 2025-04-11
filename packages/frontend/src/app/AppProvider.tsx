@@ -5,16 +5,16 @@ import { theme } from "../config/theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TemplateProvider } from "@/features/figma/context/TemplateContext";
 import "./theme.css";
+import { ZoomProvider } from "@/features/figma/context/ZoomContext";
 const queryClient = new QueryClient();
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <TemplateProvider>
-        <Theme {...theme}>
-          {children}
-          {/* <QueryProvider>{children}</QueryProvider> */}
-        </Theme>
+        <ZoomProvider>
+          <Theme {...theme}>{children}</Theme>
+        </ZoomProvider>
       </TemplateProvider>
     </QueryClientProvider>
   );

@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import styles from "./Header.module.css";
 import { useEffect, useState } from "react";
+import { ZoomControls } from "@/features/figma/components/ZoomControls/ZoomControls";
 
 console.log("Version 1.0.0");
 function parseJwt(token: string) {
@@ -141,17 +142,21 @@ export function Header() {
         </svg>
 
         <Flex gap="4" align="center">
-          <div style={{ width: "40px", height: "40px", position: "relative" }}>
-            <img
-              src={logoPath}
-              alt="Company Logo"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </div>
+          <Flex gap="8" align="center">
+            <ZoomControls />
+
+            <div style={{ width: "40px", height: "40px", position: "relative" }}>
+              <img
+                src={logoPath}
+                alt="Company Logo"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                }}
+              />
+            </div>
+          </Flex>
           <Flex direction={"column"} align="start">
             <Text size="2">{userEmail}</Text>
             <Flex className={styles.textButtonContainer}>

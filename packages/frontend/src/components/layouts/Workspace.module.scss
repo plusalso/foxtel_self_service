@@ -1,5 +1,8 @@
 .workspace {
   background-color: var(--gray-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     .handlesContainer {

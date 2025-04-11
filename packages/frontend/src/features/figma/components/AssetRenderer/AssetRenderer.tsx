@@ -19,6 +19,7 @@ import {
 } from "../../types/template";
 import { useResizableImage } from "../../hooks/use-resizeable-image";
 import clsx from "clsx";
+import { useZoom } from "../../context/ZoomContext";
 
 interface AssetRendererProps {
   selectedAssets: OverlayAsset[];
@@ -45,8 +46,9 @@ export const AssetRenderer = ({
   textInputs,
   enabledFields,
 }: AssetRendererProps) => {
+  const { scaleFactor } = useZoom();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
+  const [calculatedScale, setCalculatedScale] = useState(1);
 
   // Get dimensions from current preset
   const width = currentPreset?.width ?? 1920;
@@ -74,18 +76,31 @@ export const AssetRenderer = ({
   useEffect(() => {
     const updateScale = () => {
       if (containerRef.current) {
-        const containerWidth = containerRef.current.clientWidth;
-        setScale(Math.min(1, containerWidth / (width ?? 1920)));
+        if (scaleFactor === "fit") {
+          // Calculate scale based on container dimensions and image dimensions
+          // This is similar to object-fit: contain in CSS
+          const containerWidth = containerRef.current.clientWidth;
+          const containerHeight = containerRef.current.clientHeight || window.innerHeight * 0.7;
+
+          const widthRatio = containerWidth / width;
+          const heightRatio = containerHeight / height;
+
+          // Use the smaller ratio to ensure the entire image fits
+          setCalculatedScale(Math.min(widthRatio, heightRatio));
+        } else {
+          // Use the provided scale directly
+          setCalculatedScale(scaleFactor);
+        }
       }
     };
 
     updateScale();
     window.addEventListener("resize", updateScale);
     return () => window.removeEventListener("resize", updateScale);
-  }, [width]);
+  }, [width, height, scaleFactor]);
 
   return (
-    <div ref={containerRef} style={{ width: "100%", maxWidth: `${width}px`, margin: "0 auto", position: "relative" }}>
+    <div ref={containerRef} className={styles.assetRendererContainer} style={{ maxWidth: `${width}px` }}>
       <div
         className={clsx(styles.handlesContainer)}
         style={{
@@ -94,10 +109,10 @@ export const AssetRenderer = ({
           left: 0,
           width: `${width}px`,
           height: `${height}px`,
-          transform: `scale(${scale})`,
+          transform: `scale(${calculatedScale})`,
           transformOrigin: "top left",
-          pointerEvents: "all", // Change from "none" to "all"
-          zIndex: 2000, // Ensure it's above other elements
+          pointerEvents: "all",
+          zIndex: 2000,
         }}
       >
         {customImage && (
@@ -107,7 +122,7 @@ export const AssetRenderer = ({
               backgroundColor: "transparent",
               // border: "1px dashed rgba(255,0,0,0.5)", // Temporary debugging border
             }}
-            scale={scale}
+            scale={calculatedScale}
             // Don't use default if you're also using position and size props
             position={customImagePosition}
             size={getRndSize()}
@@ -147,7 +162,7 @@ export const AssetRenderer = ({
           width: `${width}px`,
           height: `${height}px`,
           transformOrigin: "top left",
-          transform: `scale(${scale})`,
+          transform: `scale(${calculatedScale})`,
           backgroundImage:
             "linear-gradient(45deg, #EBEBEB 25%, transparent 25%), linear-gradient(-45deg, #EBEBEB 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #EBEBEB 75%), linear-gradient(-45deg, transparent 75%, #EBEBEB 75%)",
           backgroundSize: "20px 20px",
