@@ -25,24 +25,20 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
 };
 
 export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => {
+  //NOTE - textTransform:UPPERCASE will BREAK hyphens on chrome with certain fonts. Need fake soft hyphens as workaround.
+
   return (
     <div style={field.containerStyle}>
       <div
         style={{
-          // Basic styling
           width: "100%",
           maxWidth: "100%",
           whiteSpace: "pre-line",
-          // Word breaking properties
           overflowWrap: "break-word",
-          wordWrap: "break-word", // For older browsers
-
-          // Hyphenation properties (still useful as fallback)
+          wordWrap: "break-word",
           hyphens: "auto",
           WebkitHyphens: "auto",
           msHyphens: "auto",
-
-          // Don't override any text-transform that might be in containerStyle
           ...field.textStyle,
         }}
         lang="en"
