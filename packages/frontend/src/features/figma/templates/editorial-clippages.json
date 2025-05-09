@@ -62,7 +62,6 @@
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
         "transform": "skewX(-21deg)",
-        "whiteSpace": "pre-wrap",
         "overflow": "hidden"
       }
     },
@@ -91,7 +90,6 @@
         "letterSpacing": "0.659px",
         "justifyContent": "flex-end",
         "transform": "skewX(-21deg)",
-        "whiteSpace": "pre-wrap",
         "overflow": "hidden"
       },
       "renderer": "CornerTextRenderer"

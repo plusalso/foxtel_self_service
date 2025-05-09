@@ -81,8 +81,9 @@
       "containerStyle": {
         "position": "absolute",
         "bottom": "540px",
-        "left": "0px",
-        "right": "0px",
+        "left": "50%",
+        "width": "1600px",
+        "transform": "translateX(-50%)",
         "color": "white",
         "textTransform": "uppercase",
         "fontSize": "148px",
@@ -159,8 +160,9 @@
       "containerStyle": {
         "position": "absolute",
         "top": "645px",
-        "left": "0px",
-        "right": "0px",
+        "left": "50%",
+        "width": "1600px",
+        "transform": "translateX(-50%)",
         "color": "white",
         "textTransform": "uppercase",
         "fontSize": "84px",

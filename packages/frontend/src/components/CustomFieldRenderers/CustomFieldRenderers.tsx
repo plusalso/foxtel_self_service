@@ -26,7 +26,22 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
 
 export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => (
   <div style={field.containerStyle}>
-    <span style={{ whiteSpace: "pre-line" }}>{value}</span>
+    <div
+      style={{
+        hyphens: "auto",
+        WebkitHyphens: "auto",
+        msHyphens: "auto",
+        wordWrap: "break-word",
+        width: "100%",
+        overflowWrap: "break-word",
+        wordBreak: "break-word",
+        maxWidth: "100%",
+        whiteSpace: "pre-wrap",
+      }}
+      lang="en"
+    >
+      {value}
+    </div>
   </div>
 );
 

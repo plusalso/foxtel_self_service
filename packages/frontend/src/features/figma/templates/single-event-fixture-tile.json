@@ -206,7 +206,7 @@
         "top": "40px",
         "right": "66.62px",
         "color": "white",
-        "fontSize": "72px",
+        "fontSize": "84px",
         "fontWeight": "700",
         "textAlign": "right",
         "textTransform": "uppercase",
@@ -242,7 +242,7 @@
         "top": "70px",
         "right": "66.62px",
         "color": "white",
-        "fontSize": "72px",
+        "fontSize": "84px",
         "textAlign": "right",
         "zIndex": 100
       },
@@ -379,21 +379,23 @@
       "containerStyle": {
         "position": "absolute",
         "bottom": "240px",
-        "left": "0px",
-        "right": "0px",
         "color": "white",
         "fontSize": "84px",
         "lineHeight": "86px",
         "textAlign": "center",
         "height": "0px",
         "zIndex": 100,
+        "left": "50%",
+        "width": "1600px",
+        "transform": "translateX(-50%)",
         "display": "flex",
         "fontFamily": "Foxtel Text",
         "fontWeight": "700",
         "textTransform": "uppercase",
         "alignItems": "center",
         "justifyContent": "center",
-        "letterSpacing": "5.12px"
+        "letterSpacing": "5.12px",
+        "hyphens": "auto"
       },
       "renderer": "TextAreaRenderer"
     }
