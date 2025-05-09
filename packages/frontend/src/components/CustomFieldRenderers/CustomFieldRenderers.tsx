@@ -24,34 +24,7 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
   );
 };
 
-// Reusable function to add soft hyphens to text
-export const addSoftHyphens = (text: string, interval = 5) => {
-  if (!text) return "";
-
-  return text
-    .split(" ")
-    .map((word) => {
-      // Only add hyphens to longer words
-      if (word.length > interval + 2) {
-        let result = "";
-        for (let i = 0; i < word.length; i++) {
-          result += word[i];
-          // Add soft hyphen after every few characters, but not at the beginning or end
-          if (i > 0 && i < word.length - 2 && (i + 1) % interval === 0) {
-            result += "\u00AD"; // Unicode soft hyphen
-          }
-        }
-        return result;
-      }
-      return word;
-    })
-    .join(" ");
-};
-
 export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => {
-  // Apply soft hyphens to the text
-  const processedValue = addSoftHyphens(value);
-
   return (
     <div style={field.containerStyle}>
       <div
@@ -59,7 +32,7 @@ export const TextAreaRenderer = ({ field, value }: { field: any; value: string }
           // Basic styling
           width: "100%",
           maxWidth: "100%",
-
+          whiteSpace: "pre-line",
           // Word breaking properties
           overflowWrap: "break-word",
           wordWrap: "break-word", // For older browsers
@@ -74,7 +47,7 @@ export const TextAreaRenderer = ({ field, value }: { field: any; value: string }
         }}
         lang="en"
       >
-        {processedValue}
+        {value}
       </div>
     </div>
   );
