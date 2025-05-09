@@ -203,10 +203,11 @@
       "defaultAssetName": "Text Teaser",
       "containerStyle": {
         "position": "absolute",
-        "top": "40px",
+        "top": "70px",
         "right": "66.62px",
         "color": "white",
         "fontSize": "84px",
+        "lineHeight": "62px",
         "fontWeight": "700",
         "textAlign": "right",
         "textTransform": "uppercase",
@@ -243,6 +244,7 @@
         "right": "66.62px",
         "color": "white",
         "fontSize": "84px",
+        "lineHeight": "62px",
         "textAlign": "right",
         "zIndex": 100
       },
