@@ -24,26 +24,61 @@ export const CornerTextRenderer = ({ field, value }: { field: any; value: string
   );
 };
 
-export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => (
-  <div style={field.containerStyle}>
-    <div
-      style={{
-        hyphens: "auto",
-        WebkitHyphens: "auto",
-        msHyphens: "auto",
-        wordWrap: "break-word",
-        width: "100%",
-        overflowWrap: "break-word",
-        wordBreak: "break-word",
-        maxWidth: "100%",
-        whiteSpace: "pre-wrap",
-      }}
-      lang="en"
-    >
-      {value}
+// Reusable function to add soft hyphens to text
+export const addSoftHyphens = (text: string, interval = 5) => {
+  if (!text) return "";
+
+  return text
+    .split(" ")
+    .map((word) => {
+      // Only add hyphens to longer words
+      if (word.length > interval + 2) {
+        let result = "";
+        for (let i = 0; i < word.length; i++) {
+          result += word[i];
+          // Add soft hyphen after every few characters, but not at the beginning or end
+          if (i > 0 && i < word.length - 2 && (i + 1) % interval === 0) {
+            result += "\u00AD"; // Unicode soft hyphen
+          }
+        }
+        return result;
+      }
+      return word;
+    })
+    .join(" ");
+};
+
+export const TextAreaRenderer = ({ field, value }: { field: any; value: string }) => {
+  // Apply soft hyphens to the text
+  const processedValue = addSoftHyphens(value);
+
+  return (
+    <div style={field.containerStyle}>
+      <div
+        style={{
+          // Basic styling
+          width: "100%",
+          maxWidth: "100%",
+
+          // Word breaking properties
+          overflowWrap: "break-word",
+          wordWrap: "break-word", // For older browsers
+
+          // Hyphenation properties (still useful as fallback)
+          hyphens: "auto",
+          WebkitHyphens: "auto",
+          msHyphens: "auto",
+
+          // Don't override any text-transform that might be in containerStyle
+          ...field.textStyle,
+        }}
+        lang="en"
+      >
+        {processedValue}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const ResizableImageRenderer = ({ field, value }: { field: any; value: string }) => (
   <Rnd
