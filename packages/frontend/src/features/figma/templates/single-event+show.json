@@ -109,10 +109,12 @@
       "containerStyle": {
         "position": "absolute",
         "bottom": "502px",
-        "left": "0px",
-        "right": "0px",
+
         "color": "white",
         "textTransform": "uppercase",
+        "width": "1600px",
+        "left": "50%",
+        "transform": "translateX(-50%)",
         "fontSize": "148px",
         "textAlign": "center",
         "height": "0px",
